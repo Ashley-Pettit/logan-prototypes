@@ -1,0 +1,75 @@
+<!doctype html><html lang="en-AU"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"></head><body>
+<title>AI Pipeline Preview</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* One quiet card on the council-blue canvas the apps use */
+:root{--bg:#F3F5F8;--card:#fff;--ink:#1B2430;--muted:#566273;--rule:#DDE3EA;--brand:#003F75;--on-brand:#fff;--bad:#8E1650;--warn-bg:#fff3cd;--warn-ink:#5c4300;--warn-line:#ecd48a;--sans:Arial,Helvetica,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F141B;--card:#18202C;--ink:#E7ECF2;--muted:#A3AFBF;--rule:#2B3546;--brand:#8EC1EC;--on-brand:#06233D;--bad:#F49CC0;--warn-bg:#3a2f10;--warn-ink:#ffe3a1;--warn-line:#6b5720;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0F141B;--card:#18202C;--ink:#E7ECF2;--muted:#A3AFBF;--rule:#2B3546;--brand:#8EC1EC;--on-brand:#06233D;--bad:#F49CC0;--warn-bg:#3a2f10;--warn-ink:#ffe3a1;--warn-line:#6b5720;color-scheme:dark}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--sans)}
+.strip{height:4px;background:linear-gradient(100deg,#003F75 0 32%,#420A42 32% 48%,#C6246B 48% 61%,#F27E35 61% 76%,#F7A042 76% 89%,#FEC95A 89%)}
+.banner{background:var(--warn-bg);color:var(--warn-ink);border-bottom:1px solid var(--warn-line);font-size:13px;padding-block:7px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+main{padding-block:12vh 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;justify-items:center}
+.card{width:100%;max-width:400px;background:var(--card);border:1px solid var(--rule);border-radius:14px;padding:28px 24px;box-shadow:0 8px 24px rgba(16,32,56,.07)}
+h1{margin:0;font-size:22px;line-height:1.2;color:var(--brand);text-wrap:balance}
+.sub{margin:6px 0 20px;color:var(--muted);font-size:14px}
+label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
+.row{display:flex;gap:8px}
+input{flex:1;min-width:0;min-height:46px;padding:0 14px;border:1px solid var(--rule);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit;font-size:16px}
+input:focus-visible,button:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+button{min-height:46px;padding:0 18px;border:0;border-radius:10px;background:var(--brand);color:var(--on-brand);font:inherit;font-weight:600;cursor:pointer}
+button[disabled]{opacity:.6;cursor:default}
+.err{min-height:20px;margin:8px 0 0;color:var(--bad);font-size:13px}
+.foot{margin-top:16px;color:var(--muted);font-size:12px}
+</style>
+<div class="strip" aria-hidden="true"></div>
+<div class="banner" role="note"><b>Rapid prototype, not an endorsed tool.</b> Invented council, people and figures.</div>
+<main>
+  <form class="card" id="f" autocomplete="off">
+    <h1>AI &amp; Automation Pipeline</h1>
+    <p class="sub">Prototype for management review. Enter the password to open it.</p>
+    <label for="pw">Password</label>
+    <div class="row"><input id="pw" type="password" inputmode="text" autocomplete="current-password" required><button id="go" type="submit">Open</button></div>
+    <p class="err" id="err" role="alert"></p>
+    <p class="foot">The page stays locked until the right password is entered. Nothing you type here is sent anywhere.</p>
+  </form>
+</main>
+<script>
+(() => {
+  const P = {"s":"U1q/pbJqdDmaZUG+NxMCcA==","i":"urSWCdCQfNPogD+y","d":"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","n":250000}, KEY = 'aap-pass';
+  const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+  async function open(pw)
+  {
+    const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveKey']);
+    const key = await crypto.subtle.deriveKey({name: 'PBKDF2', salt: b64(P.s), iterations: P.n, hash: 'SHA-256'}, base, {name: 'AES-GCM', length: 256}, false, ['decrypt']);
+    const zipped = await crypto.subtle.decrypt({name: 'AES-GCM', iv: b64(P.i)}, key, b64(P.d));
+    return await new Response(new Blob([zipped]).stream().pipeThrough(new DecompressionStream('gzip'))).text();
+  }
+  function show(html) { document.open(); document.write(html); document.close() }
+  const f = document.getElementById('f'), pw = document.getElementById('pw'), err = document.getElementById('err'), go = document.getElementById('go');
+  f.addEventListener('submit', async e =>
+  {
+    e.preventDefault();
+    err.textContent = '';
+    go.disabled = true; go.textContent = 'Opening…';
+    try
+    {
+      const html = await open(pw.value);
+      try { sessionStorage.setItem(KEY, pw.value) } catch (x) { /* fine without it */ }
+      show(html);
+    }
+    catch (x)
+    {
+      go.disabled = false; go.textContent = 'Open';
+      err.textContent = "That password didn't open it. Check it and try again.";
+      pw.select();
+    }
+  });
+  let saved = null;
+  try { saved = sessionStorage.getItem(KEY) } catch (x) { /* no storage */ }
+  if (saved) open(saved).then(show).catch(() => { try { sessionStorage.removeItem(KEY) } catch (x) {} pw.focus() });
+  else pw.focus();
+})();
+</script>
+</body></html>
