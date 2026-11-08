@@ -19,6 +19,61 @@
    "status": "Built",
    "url": "https://claude.ai/artifact/Ns9D2SRfRpVFBWBGLSA2Z2",
    "version": "1"
+  },
+  "APP-10": {
+   "lastUpdated": "2026-11-08",
+   "places": {
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
+   },
+   "status": "In progress"
+  },
+  "APP-17": {
+   "lastUpdated": "2026-11-08",
+   "places": {
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
+   },
+   "status": "In progress"
+  },
+  "APP-19": {
+   "lastUpdated": "2026-11-08",
+   "places": {
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
+   },
+   "status": "In progress"
+  },
+  "APP-23": {
+   "lastUpdated": "2026-11-08",
+   "places": {
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
+   },
+   "status": "In progress"
+  },
+  "APP-27": {
+   "lastUpdated": "2026-11-08",
+   "places": {
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
+   },
+   "status": "In progress"
   }
  }
 }
