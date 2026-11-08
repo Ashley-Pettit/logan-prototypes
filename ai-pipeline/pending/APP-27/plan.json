@@ -18,14 +18,14 @@
    "Load the approved Business Continuity Plans and the continuity framework into Blob Storage with an Azure AI Search index, so scenarios use each branch's real critical functions and workarounds.",
    "Read branch plans from the council's document management system through Boomi or Logic Apps, so the tool always uses the approved version.",
    "Save finished evidence reports to the records system against the branch plan.",
-   "Send activation status changes to the Crisis Management Team through a Teams channel or email using Logic Apps.",
+   "Send activation status changes to the Crisis Management Team through a Teams channel or email using Logic Apps, with an alert when an activated branch is close to a critical function's maximum acceptable outage. Record when the disruption actually started, not just when the status changed, so the outage clock is right.",
    "Role-based access: branch coordinators edit their own branch, Crisis and Disaster Management see and change everything.",
    "Security review against the OWASP Top 10 and the OWASP Top 10 for LLM apps, including prompt injection through typed observations.",
    "Dev, Test and Prod resource groups, Application Insights logging and cost alerts, and Azure DevOps CI/CD pipelines for each environment."
   ],
   "business": [
    "Confirm the business owner (Crisis and Disaster Management Program), the scope and success measures, such as every plan tested within 12 months and improvement actions closed on time, and raise an Azure DevOps card (why and how).",
-   "Agree the activation levels, who can change them and how changes are communicated.",
+   "Agree the activation levels, who can change them, that every change needs a reason, and how changes are communicated.",
    "Name knowledge owners: each branch's BCP coordinator keeps their plan current; Crisis and Disaster Management owns the framework and templates.",
    "Build a test plan and an AI evaluation set (scenarios checked by experienced facilitators for realism and accuracy against each plan), then run UAT with two or three branches.",
    "Train BCP coordinators to build, run and record exercises, and set up support: who to ask and how to report a poor scenario.",

@@ -15,6 +15,7 @@
    "Keep the approved Word templates in a controlled SharePoint library or Blob Storage, with content controls for each field, and only offer the current approved version.",
    "An Azure Function App fills the Word template (Open XML) from the data and returns a .docx in the council's styles, so formatting stays exactly as approved.",
    "Read project, budget and contract values from the council's project register, finance system and contract register through the Data Warehouse, Boomi or Logic Apps (read only).",
+   "Until the register link is approved, let staff upload a project register export (the prototype's Add project data step), checked against each template's field list, with unmatched columns shown to the officer.",
    "Model calls go through the same Function App, with Claude through Microsoft Foundry or the council's Anthropic agreement (an ICT-DA exception, as it's outside the listed stack). Keys live in Key Vault, never in the page.",
    "Only the free-text sections go to the model. Names, phone numbers and emails are swapped for placeholders first and put back after, as the prototype does.",
    "Store each generated document and who checked each drafted section in SQL or Cosmos DB, and save the final document to the records system against the project.",

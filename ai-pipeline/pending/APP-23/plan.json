@@ -18,14 +18,14 @@
    "Answer only from retrieved clauses, and say clearly when the library does not cover a question.",
    "Swap names, phone numbers, email addresses and vehicle registrations for placeholders before a question goes to the model.",
    "Store flagged gaps, quiz results and feedback in Azure SQL or Cosmos DB, with a weekly gap report to the knowledge owners.",
-   "Send module completions to the council's learning system through Boomi or Logic Apps, so training records stay in one place.",
+   "Send module completions to the council's learning system through Boomi or Logic Apps, and read each person's role pathway and progress back from it for the supervisor's crew progress view, so training records stay in one place.",
    "Security review against the OWASP Top 10 and the OWASP Top 10 for LLM apps, including prompt injection through questions and uploaded documents.",
    "Dev, Test and Prod resource groups, Application Insights logging and cost alerts, and Azure DevOps CI/CD pipelines for each environment."
   ],
   "business": [
    "Confirm the business owner in City Fleet, the scope and success measures (for example fewer questions to supervisors, induction finished in the first week, and quiz pass rates), and raise an Azure DevOps card (why and how).",
    "Name a knowledge owner for each document set (safety, onboarding, training, CoR) who keeps it current and answers flagged gaps.",
-   "Have the Fleet Safety Advisor and CoR Officer sign off the answer rules and the quiz questions.",
+   "Have the Fleet Safety Advisor and CoR Officer sign off the answer rules, the quiz questions and the learning pathway for each role.",
    "Build a test plan and an AI evaluation set (40 to 60 real-style questions with the expected answer and clause), including questions the library must refuse, then run UAT with drivers, operators and supervisors.",
    "Train supervisors to use it for inductions and toolbox talks, and set up support: who to ask and how to report a wrong answer.",
    "Get ICT-DA, CAB, PGG and Business System Owner approval, with a Go Live plan, service transition document and support playbook."

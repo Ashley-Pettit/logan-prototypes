@@ -1,0 +1,56 @@
+{
+ "recommend": "claude",
+ "why": "Most of the value is in drafting minutes, emails and reports from the council's own templates, which the council's enterprise Claude can do now, with the decision and risk log kept in a SharePoint list it can read and update.",
+ "knowledge": [
+  "The council's Word templates for meeting minutes, project status reports and briefing notes.",
+  "The council's project management framework and project lifecycle guide (phases, gates, what each report needs).",
+  "The council's risk management framework and risk matrix (likelihood, consequence and rating bands).",
+  "The council's rules for a project's overall status (on track, at risk, off track), so status reports and the prototype's suggested status match how the program is reported.",
+  "The council's writing style guide and email signature standard.",
+  "Standard contract terms on variations, latent conditions and notices, so drafts never commit the council to a cost.",
+  "Common engineering shorthand used in site notes (chainage, TC, stg, wk) and what it means.",
+  "Each project's decision, risk and action register (current SharePoint lists or spreadsheets)."
+ ],
+ "azure": {
+  "technical": [
+   "Move the prototype into an Azure DevOps repo and rebuild the front end in Vue and Bootstrap, hosted on Azure App Service with council (Entra ID) sign-in.",
+   "Move all AI calls into an Azure Function App, with Claude through Microsoft Foundry or the council's Anthropic agreement (an ICT-DA exception, as it's outside the listed stack). Keys live in Key Vault, never in the page.",
+   "Swap names, email addresses and phone numbers for placeholders before anything goes to the model, and put them back after, as the prototype does.",
+   "Store the decision, risk and action log in Azure SQL (one table each, linked to the project), with an audit trail of who changed what and when, and the log health checks (no owner, no mitigation, overdue) run as rules.",
+   "Load the council's templates, project framework and risk matrix into Blob Storage with an Azure AI Search index, so drafts follow the approved wording and can cite it.",
+   "Pull the project list, budget and percent complete from the council's project and financial systems through Boomi or Logic Apps (read only).",
+   "Save final minutes and reports to the council's records system against the project, through Boomi or Logic Apps.",
+   "Microsoft Graph (delegated) to create a draft email in the engineer's own Outlook, so nothing is sent without them pressing Send.",
+   "Security review against the OWASP Top 10 and the OWASP Top 10 for LLM apps, including prompt injection from pasted emails and notes.",
+   "Dev, Test and Prod resource groups, Application Insights logging and cost alerts, and Azure DevOps CI/CD pipelines for each environment."
+  ],
+  "business": [
+   "Confirm the business owner in Transport Planning and Assets, the scope and success measures (for example hours saved per week on minutes and reports, and fewer overdue actions), and raise an Azure DevOps card (why and how).",
+   "Agree which templates are the approved versions and who owns them, and match the risk rating to the council's risk management framework.",
+   "Name a process owner for how decision and risk logs are kept across projects, so every project uses the same fields.",
+   "Build a test plan and an AI evaluation set (20 to 30 real-style sets of meeting notes and emails, anonymised, with the expected decisions, risks and actions), then run UAT with project engineers.",
+   "Train project engineers and managers with a short walkthrough, and set up support: who to ask and how to report a wrong draft.",
+   "Get ICT-DA, CAB, PGG and Business System Owner approval, with a Go Live plan, service transition document and support playbook."
+  ]
+ },
+ "claude": {
+  "technical": [
+   "Set up a Claude Project for Transport Planning and Assets in the council's enterprise Claude, with the prototype's drafting rules (plain English, no invented figures, never approve costs) as the project instructions.",
+   "Add the council's minutes, report and email templates, the project management framework and the risk matrix as project files, or connect the SharePoint library they live in.",
+   "Build a Claude skill for each output (minutes, stakeholder email including chasing overdue actions, monthly status report) that always uses the approved template and lists the decisions, risks and actions it found.",
+   "Keep each project's decision, risk and action log in a SharePoint list, and use the Microsoft 365 connector so Claude can read it for status reports and add new entries when the engineer says so.",
+   "Use the Microsoft 365 connector to read a selected email thread and save a draft reply in Outlook, never to send.",
+   "Admin settings checked: data retention, sharing, which connectors are on, and that pasted personal information is kept to a minimum."
+  ],
+  "business": [
+   "Confirm the business owner, who will use it and what it must never do (it drafts and suggests log entries, a person checks and sends).",
+   "Agree the approved templates and the standard fields for the decision, risk and action lists.",
+   "Test it with 20 to 30 real-style meeting notes and emails and record how often it finds the right decisions, risks and actions.",
+   "Pilot with one project team for four weeks, give them a 30-minute walkthrough, and track time saved and log quality.",
+   "Enterprise Claude seats for project engineers and managers in the pilot team.",
+   "A project owner who keeps the instructions, skills and templates up to date.",
+   "Clear rules on what can be pasted in (no resident personal details beyond what the job needs).",
+   "Get the use case approved (ICT-DA and PGG) and confirm privacy settings before rolling it out wider."
+  ]
+ }
+}

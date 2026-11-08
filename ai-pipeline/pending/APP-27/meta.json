@@ -2,9 +2,9 @@
  "id": "APP-27",
  "name": "BCP Scenario Generator",
  "area": "Safety",
- "desc": "Shows each branch's continuity plan status on an activation dashboard, writes branch-specific desktop exercises, and records the results as evidence of testing.",
- "notes": "New build with six sample branch plans: an activation dashboard with status changes, a log and a copyable update, AI desktop exercises with timed injects tied to each branch's critical functions, a run and record step and an AI evidence report that saves to an evidence register and updates the last tested date, with template scenarios and reports when AI is off; the 12 month testing cycle, outage times and plans are samples and names are swapped for roles before AI. Steps to productionise and Draft in Outlook added.",
+ "desc": "Shows each branch's continuity plan status on an activation dashboard with time left against outage limits, writes branch-specific desktop exercises, and records the results as evidence of testing.",
+ "notes": "New build with six sample branch plans: an activation dashboard where status changes need a reason and are logged, an activated plan shows time left before its most urgent function passes its outage limit with the plan's workaround, AI writes desktop exercises with timed injects tied to each branch's critical functions, and results are recorded into an AI evidence report that saves to an evidence register and updates the last tested date, with template scenarios and reports when AI is off; the 12 month testing cycle, outage times and plans are samples, names are swapped for roles before AI, and Steps to productionise and Draft in Outlook were added.",
  "recommend": "azure",
  "dice": false,
- "tested": "Template mode at 1280 light and 390 dark: status change logs, exercise built, run blocked until an outcome is recorded, sample results, evidence report, save to register, evidence tab, no page errors, no horizontal overflow, productionise panel opens, Draft in Outlook links present on copy buttons."
+ "tested": "Template, mocked AI and failing AI at 1280 light and 390 dark: status change blocked without a reason then logged, exercise built, report blocked until an outcome is recorded, sample results, evidence report, save to register with saved report viewable and copyable, a second exercise can be saved, no page errors, no horizontal overflow, productionise panel opens, Draft in Outlook links present on copy buttons."
 }

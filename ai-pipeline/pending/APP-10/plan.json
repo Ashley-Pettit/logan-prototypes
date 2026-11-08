@@ -4,7 +4,7 @@
  "knowledge": [
   "Manufacturers' service schedules and intervals for each make and model in the fleet.",
   "Workshop manuals and fault code guides for the main vehicle and plant types.",
-  "City Fleet's service and repair history, including past breakdowns and what fixed them (export from the council's fleet management system).",
+  "City Fleet's service and repair history, including past breakdowns and what fixed them, which feeds both the risk score and the likely causes (export from the council's fleet management system).",
   "Telematics fault codes, engine hours and odometer readings (export from the council's telematics platform).",
   "Oil sample results from the council's oil analysis provider.",
   "Prestart check and defect reports from operators.",
@@ -20,7 +20,7 @@
    "Move all AI calls (likely causes, health summaries, plan notes) into the Function App, with Claude through Microsoft Foundry or the council's Anthropic agreement (an ICT-DA exception, as it's outside the listed stack). Keys live in Key Vault, never in the page.",
    "Remove operator names and contact details from defect reports before anything goes to the model.",
    "Load workshop manuals and fault code guides into Blob Storage with an Azure AI Search index, so suggested causes and checks can quote their source.",
-   "Write approved work orders back to the council's fleet management system through Boomi or Logic Apps, rather than people retyping them.",
+   "Write approved work orders and booked workshop visits (including repairs booked from a diagnosis and tag-outs) back to the council's fleet management system through Boomi or Logic Apps, rather than people retyping them.",
    "Power BI report on predicted versus actual failures, so the scoring can be tuned and trusted.",
    "Security review against the OWASP Top 10 and the OWASP Top 10 for LLM apps, including prompt injection from free-text defect reports.",
    "Dev, Test and Prod resource groups, Application Insights logging and cost alerts, and Azure DevOps CI/CD pipelines for each environment."
@@ -28,7 +28,7 @@
   "business": [
    "Confirm the business owner in City Fleet, the scope and success measures (for example fewer roadside breakdowns, less unplanned downtime, higher first-time fix rate), and raise an Azure DevOps card (why and how).",
    "Name a process owner for maintenance planning and a knowledge owner for service schedules, manuals and the fault code guide.",
-   "Agree the rules for when a vehicle is tagged out of service, so the tool's safety advice matches City Fleet's procedures and Chain of Responsibility duties.",
+   "Agree the rules for when a vehicle is tagged out, the repair priorities and hour allowances, and workshop bay capacity, so the tool's safety advice and bookings match City Fleet's procedures and Chain of Responsibility duties.",
    "Back-test the predictions against the last two years of breakdowns, then build a test plan and an AI evaluation set (30 to 50 past faults with the confirmed cause) and record how often the right cause is in the top three.",
    "Run UAT with workshop supervisors and mechanics using anonymised history, and a three-month side-by-side trial against the current service schedule.",
    "Train fleet officers and mechanics, and set up support: who to ask and how to report a wrong prediction.",

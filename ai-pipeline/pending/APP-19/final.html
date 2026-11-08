@@ -90,6 +90,11 @@ h1,h2,h3,h4{text-wrap:balance}
 .st.partly{background:var(--med-bg);color:var(--med)}
 .st.gap{background:var(--hi-bg);color:var(--hi)}
 .st.ai{background:var(--accent-soft);color:var(--link)}
+.st.rk-high{background:var(--hi-bg);color:var(--hi)}
+.st.rk-med{background:var(--med-bg);color:var(--med)}
+.st.rk-low{background:var(--low-bg);color:var(--low)}
+.src{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.src.ai{color:var(--link)}
 
 /* buttons */
 .btn{background:var(--accent);color:var(--on-accent);border:0;border-radius:999px;padding:10px 18px;font-weight:700;min-height:42px;display:inline-flex;align-items:center;gap:8px;justify-content:center;text-decoration:none}
@@ -109,6 +114,8 @@ h1,h2,h3,h4{text-wrap:balance}
 .facts > div > span{display:block;font-size:12px;color:var(--muted)}
 .facts b{font-size:14px;overflow-wrap:anywhere}
 .facts b.big{font-size:20px;font-family:var(--f-head);font-variant-numeric:tabular-nums}
+.facts small{font-size:12px;color:var(--muted);margin-left:4px}
+.lead{margin:4px 0 0;font-size:14px;color:var(--muted);max-width:75ch}
 .tabs{display:flex;gap:4px;padding:4px;background:var(--raised);border:1px solid var(--line);border-radius:999px;width:fit-content;max-width:100%;overflow-x:auto}
 .tabs button{border:0;border-radius:999px;background:transparent;color:var(--muted);padding:8px 16px;font-weight:700;font-size:14px;white-space:nowrap}
 .tabs button[aria-selected="true"]{background:var(--accent);color:var(--on-accent)}
@@ -124,12 +131,18 @@ h1,h2,h3,h4{text-wrap:balance}
 /* matrix */
 .tbl-wrap{border:1px solid var(--line);border-radius:8px;overflow-x:auto;position:relative}
 table.mx{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
-.mx th,.mx td{padding:7px 6px;border-bottom:1px solid var(--line);text-align:center;vertical-align:middle}
+.mx th,.mx td{padding:7px 4px;border-bottom:1px solid var(--line);text-align:center;vertical-align:middle}
 .mx thead th{font-size:11.5px;color:var(--muted);font-weight:700;background:var(--raised);line-height:1.2}
-.mx th[scope="row"]{text-align:left;font-weight:700;font-family:var(--f-head);font-size:13.5px;min-width:170px}
+.mx th[scope="row"]{text-align:left;font-weight:700;font-family:var(--f-head);font-size:13.5px;min-width:160px;padding-left:8px}
+.mx thead th:first-child{padding-left:8px}
+.mx td:last-child{padding-right:8px}
 .mx th[scope="row"] button{background:none;border:0;color:var(--link);padding:0;text-align:left;font:inherit;text-decoration:underline;text-underline-offset:2px}
 .mx th[scope="row"] small{display:block;font-weight:500;color:var(--muted);font-family:var(--f-body);font-size:12px}
 .mx tr:last-child td,.mx tr:last-child th{border-bottom:0}
+/* keep the role name in view while the matrix scrolls sideways on small screens */
+.mx tbody th[scope="row"]{position:sticky;left:0;z-index:1;background:var(--surface)}
+.mx thead th:first-child{position:sticky;left:0;z-index:1}
+.narrow{display:none}
 .cell{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:8px;font-weight:800;font-size:14px;border:0}
 .cell.covered{background:var(--low-bg);color:var(--low)}
 .cell.partly{background:var(--med-bg);color:var(--med)}
@@ -155,10 +168,21 @@ button.cell:hover{outline:2px solid var(--accent);outline-offset:1px}
 .area.hl{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
 .area .top{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;justify-content:space-between}
 .area .top b{font-family:var(--f-head)}
+.area .top > span:first-child{flex:1 1 200px;min-width:0}
 .area q{display:block;font-size:13.5px;color:var(--muted);border-left:3px solid var(--line);padding-left:10px;quotes:none}
 .area .sugg{font-size:14px;background:var(--raised);border-radius:6px;padding:8px 10px}
 .area .why{font-size:13.5px;margin:0}
-.area select{width:auto;font-size:13px;padding:4px 6px}
+.area select{width:auto;font-size:13px;padding:4px 6px;font-weight:700}
+.area select.covered{background:var(--low-bg);color:var(--low);border-color:var(--low)}
+.area select.partly{background:var(--med-bg);color:var(--med);border-color:var(--med)}
+.area select.gap{background:var(--hi-bg);color:var(--hi);border-color:var(--hi)}
+.area select.na{background:var(--info-bg);color:var(--info)}
+.area select option{background:var(--surface);color:var(--ink)}
+.prog{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--raised)}
+.prog > .hint{flex:1 1 280px}
+.bar{flex:0 1 160px;height:8px;border-radius:999px;background:var(--line);overflow:hidden;min-width:100px}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:999px}
+.risk-key{font-size:13px;color:var(--muted);margin:0}
 .tag{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--hi)}
 
 input,textarea,select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--field);border-radius:8px;padding:9px 11px;min-width:0;width:100%}
@@ -201,6 +225,8 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
   .wrap[data-m="ws"] #side{display:none}
   input,textarea,select{font-size:16px}
   .tabs{width:100%}
+  .narrow{display:block}
+  .mx th[scope="row"]{min-width:140px;max-width:150px}
   .tabs button{flex:1;padding:8px 10px}
 }
 @media (max-width:640px){
@@ -231,7 +257,7 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
 </main>
 
 <footer class="foot gut"><div class="foot-in">
-  <div><b>How it works.</b> Each position description is checked against a sample list of Chain of Responsibility duty areas, using the role's party type (for example scheduler, loader or executive) to decide which duties it should carry. Rules give a first pass straight away; AI reads the whole description, quotes the line that covers each duty and suggests wording for the gaps. You can change any result before copying the gap summary for HR or the manager.</div>
+  <div><b>How it works.</b> Each position description is checked against a sample list of Chain of Responsibility duty areas, using the role's party type (for example scheduler, loader or executive) to decide which duties it should carry. Rules give a first pass straight away; AI reads the whole description, quotes the line that covers each duty and suggests wording for the gaps. Each role gets a risk rating from its missing duties. You can change any result before copying the gap summary for HR or the manager.</div>
   <details><summary>Prototype handover notes</summary>
     <ul>
       <li>In the LCC stack for production: HTML, CSS and JavaScript front end (move to Vue and Bootstrap) on Azure App Service, an Azure Function App for model calls, SQL for roles, duty mappings and review history, Entra ID sign-in.</li>
@@ -296,6 +322,18 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
   ];
   var DUTY = {};
   DUTIES.forEach(function (d) { DUTY[d.id] = d; });
+
+  // Sample party types and the duty areas each one would usually carry. Used to pre-tick the add form.
+  var PARTIES = [
+    { id: 'driver', label: 'Driver', duties: ['primary', 'speed', 'fatigue', 'mass', 'maint', 'records', 'training'] },
+    { id: 'scheduler', label: 'Scheduler', duties: ['primary', 'speed', 'fatigue', 'schedule', 'records'] },
+    { id: 'loader', label: 'Loader or loading manager', duties: ['primary', 'mass', 'records', 'training'] },
+    { id: 'operator', label: 'Operator or maintainer', duties: ['primary', 'maint', 'records', 'training'] },
+    { id: 'consignor', label: 'Consignor or contract manager', duties: ['primary', 'contracts', 'records'] },
+    { id: 'exec', label: 'Executive officer', duties: ['primary', 'exec', 'contracts', 'records', 'training'] },
+    { id: 'other', label: 'Other (tick the duties below)', duties: ['primary', 'records'] }
+  ];
+  var RISK = { high: 'High risk', med: 'Medium risk', low: 'Low risk' };
 
   /* ---------- Sample position descriptions (made up) ---------- */
   var ROLES = [
@@ -385,7 +423,7 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
   var ICON = { covered: '✓', partly: '~', gap: '✕', na: '·' };
 
   /* ---------- State ---------- */
-  var state = { rid: 'PD-114', tab: 'matrix', focus: '', results: {}, busy: false, error: '', adding: false, formErr: '' };
+  var state = { rid: 'PD-114', tab: 'matrix', focus: '', results: {}, busy: false, error: '', adding: false, formErr: '', batch: null, batchMsg: '' };
   var sample = null, ctl = null, ownCount = 0;
 
   /* ---------- Helpers ---------- */
@@ -455,11 +493,35 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
     });
     return { exp: exp.length, cov: cov, part: part, gaps: gaps, high: high };
   }
+  // Risk rating for a role: High if a high priority duty is missing, Medium if any other gap
+  // or a high priority duty is only partly covered, otherwise Low.
+  function roleRisk(r)
+  {
+    var s = roleScore(r);
+    if (s.high) { return 'high'; }
+    var partHigh = r.expected.some(function (did) { return DUTY[did].high && statusOf(r, did) === 'partly'; });
+    return (s.gaps || partHigh) ? 'med' : 'low';
+  }
+  function riskPill(r, short)
+  {
+    var k = roleRisk(r);
+    return '<span class="st rk-' + k + '">' + (short ? RISK[k].replace(' risk', '') : RISK[k]) + '</span>';
+  }
   function totals()
   {
-    var t = { exp: 0, cov: 0, part: 0, gaps: 0, high: 0 };
-    ROLES.forEach(function (r) { var s = roleScore(r); Object.keys(t).forEach(function (k) { t[k] += s[k]; }); });
+    var t = { exp: 0, cov: 0, part: 0, gaps: 0, high: 0, hiRoles: 0 };
+    ROLES.forEach(function (r)
+    {
+      var s = roleScore(r);
+      ['exp', 'cov', 'part', 'gaps', 'high'].forEach(function (k) { t[k] += s[k]; });
+      if (roleRisk(r) === 'high') { t.hiRoles++; }
+    });
     return t;
+  }
+  function hasOverrides(r)
+  {
+    var res = state.results[r.id];
+    return !!res && Object.keys(res.areas).some(function (did) { return !!res.areas[did].override; });
   }
 
   /* ---------- AI ---------- */
@@ -481,11 +543,11 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
   {
     switch (code)
     {
-      case 'not_granted': return 'AI was not allowed for this page, so the results below come from the rules check.';
-      case 'rate_limited': case 'queue_overflow': return 'AI is busy right now, so the results below come from the rules check. Try again in a minute.';
-      case 'invalid_json': case 'empty_completion': return 'AI sent back something the page could not read, so the results below come from the rules check.';
-      case 'cancelled': return 'You stopped the AI check, so the results below come from the rules check.';
-      default: return 'AI could not check this role just now, so the results below come from the rules check.';
+      case 'not_granted': return 'AI was not allowed for this page, so the results below stay as the earlier check. The page now uses its keyword rules.';
+      case 'rate_limited': case 'queue_overflow': return 'AI is busy right now, so the results below stay as the earlier check. Try again in a minute.';
+      case 'invalid_json': case 'empty_completion': return 'AI sent back something the page could not read, so the results below stay as the earlier check. Try again.';
+      case 'cancelled': return 'You stopped the AI check, so the results below stay as the earlier check.';
+      default: return 'AI could not check this role just now, so the results below stay as the earlier check. Try again in a minute.';
     }
   }
 
@@ -494,7 +556,11 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
   {
     var t = String(text || '');
     if (r.contact && r.contact.name) { t = t.split(r.contact.name).join('[CONTACT]'); }
-    return t.replace(/[\w.+-]+@[\w-]+\.[\w.]+/g, '[EMAIL]').replace(/(\+?61|0)[\d ]{8,12}\d/g, '[PHONE]');
+    return t.replace(/[\w.+-]+@[\w-]+\.[\w.]+/g, '[EMAIL]')
+      .replace(/(\+?61|0)[\d ]{8,12}\d/g, '[PHONE]')
+      // Titles with a name (Mr Smith, Dr Jo Bloggs) and names after "contact" or "name" in pasted text.
+      .replace(/\b(Mr|Mrs|Ms|Miss|Dr)\.? [A-Z][a-z'-]+( [A-Z][a-z'-]+)?/g, '[NAME]')
+      .replace(/\b(contact|name|incumbent)(:| is)? [A-Z][a-z'-]+ [A-Z][a-z'-]+/gi, function (m, w) { return w + ' [NAME]'; });
   }
 
   function aiPrompt(r)
@@ -510,10 +576,12 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
       '- "not_needed": expectedForThisRole is false and nothing in the description covers it.',
       'Rules:',
       '- "evidence": copy ONE line from the description word for word that supports covered or partly. Empty string for gap or not_needed. Never invent a quote.',
-      '- "reason": one plain English sentence.',
+      '- "reason": one plain English sentence that refers only to what the description says or leaves out.',
       '- "suggestion": for partly or gap only, one or two sentences of wording to add to the description, starting with a verb, written for this role. Empty string otherwise.',
-      '- Australian English, short sentences, no em dashes or en dashes. Keep placeholders like [CONTACT] as written.',
-      '- "summary": two sentences on the biggest CoR risk in this description.',
+      '- Use only the facts in the description and the duty area summaries below. Do not cite section numbers or penalties.',
+      '- Australian English, short sentences, no em dashes or en dashes. Keep placeholders like [CONTACT], [NAME], [EMAIL] and [PHONE] exactly as written.',
+      '- "summary": two sentences on the biggest CoR risk in this description, for a manager.',
+      '- Return one entry in "areas" for each of the ' + DUTIES.length + ' duty area ids, in the same order.',
       'Return only JSON: {"summary": string, "areas": [{"id": string, "status": "covered"|"partly"|"gap"|"not_needed", "evidence": string, "reason": string, "suggestion": string}]}',
       '',
       'Duty areas (JSON):', JSON.stringify(duties),
@@ -528,15 +596,18 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
   // Checks AI output: valid statuses only, and every quote must really be in the description.
   function cleanAi(r, out)
   {
+    if (out && typeof out.text === 'string') { try { out = JSON.parse(out.text.replace(/^```(json)?|```$/g, '')); } catch (e) { return null; } }
     if (!out || !Array.isArray(out.areas)) { return null; }
-    var base = rulesCheck(r), used = 0, body = norm(lines(r).join(' '));
+    var base = rulesCheck(r), used = 0, body = norm(lines(r).join(' ')), bodyR = norm(redact(r, lines(r).join(' ')));
+    function str(v, max) { return typeof v === 'string' ? noDash(v).trim().slice(0, max) : ''; }
     out.areas.forEach(function (x)
     {
-      if (!x || !DUTY[x.id]) { return; }
+      if (!x || typeof x.id !== 'string' || !DUTY[x.id]) { return; }
       var st = { covered: 'covered', partly: 'partly', gap: 'gap', not_needed: 'na' }[x.status];
       if (!st) { return; }
-      var a = { status: st, evidence: noDash(x.evidence || '').trim(), reason: noDash(x.reason || ''), suggestion: noDash(x.suggestion || ''), ai: true };
-      if (a.evidence && body.indexOf(norm(a.evidence)) === -1)
+      var a = { status: st, evidence: str(x.evidence, 400), reason: str(x.reason, 400), suggestion: str(x.suggestion, 500), ai: true };
+      var q = norm(a.evidence);
+      if (a.evidence && (q.length < 8 || (body.indexOf(q) === -1 && bodyR.indexOf(q) === -1)))
       {
         a.reason = (a.reason ? a.reason + ' ' : '') + 'The quote AI gave is not in the description, so check this by hand.';
         a.evidence = '';
@@ -548,8 +619,39 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
     });
     if (!used) { return null; }
     base.source = 'ai';
-    base.summary = noDash(out.summary || '');
+    base.summary = str(out.summary, 600);
     return base;
+  }
+
+  // Keeps any results the officer changed by hand when a fresh check comes back.
+  function keepOverrides(r, fresh)
+  {
+    var old = state.results[r.id];
+    if (!old) { return fresh; }
+    Object.keys(old.areas).forEach(function (did)
+    {
+      var o = old.areas[did].override, a = fresh.areas[did];
+      if (o && a && o !== a.status)
+      {
+        a.override = o;
+        if ((o === 'gap' || o === 'partly') && !a.suggestion) { a.suggestion = DUTY[did].wording; }
+      }
+    });
+    return fresh;
+  }
+
+  // One AI read of one role. Resolves with a checked result, or rejects with {code}.
+  function aiCheck(r, signal)
+  {
+    return sample.json(aiPrompt(r), { signal: signal, modelTier: 'default', cache: false }).then(function (out)
+    {
+      var c = cleanAi(r, out);
+      if (!c) { throw { code: 'invalid_json' }; }
+      return keepOverrides(r, c);
+    }, function (e)
+    {
+      throw { code: signal.aborted ? 'cancelled' : (e && e.code) || 'error' };
+    });
   }
 
   function runAi()
@@ -559,23 +661,21 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
     state.error = '';
     if (!sample)
     {
+      // AI is off: this button only shows when there are hand changes, and it clears them.
       state.results[r.id] = rulesCheck(r);
-      render(); toast('Checked with rules'); return;
+      render(); toast('Your changes were cleared'); return;
     }
     state.busy = true; render();
     ctl = new AbortController();
     var id = r.id;
-    sample.json(aiPrompt(r), { signal: ctl.signal, modelTier: 'default', cache: false }).then(function (out)
+    aiCheck(r, ctl.signal).then(function (c)
     {
-      var c = cleanAi(r, out);
-      if (!c) { throw { code: 'invalid_json' }; }
       state.results[id] = c;
       toast('AI check ready');
-    }).catch(function (e)
+    }, function (e)
     {
-      state.results[id] = rulesCheck(r);
-      state.error = aiErrorCopy(e && e.code);
-      if (e && e.code === 'not_granted') { sample = null; setAi('off'); }
+      state.error = aiErrorCopy(e.code);
+      if (e.code === 'not_granted') { sample = null; setAi('off'); }
     }).then(function ()
     {
       state.busy = false; ctl = null; render();
@@ -583,11 +683,70 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
     });
   }
 
+  // Reads every position description with AI, one after another, so the matrix fills in as it goes.
+  function runAll()
+  {
+    if (!sample || state.busy) { return; }
+    var list = ROLES.slice(), i = 0, failed = 0, done = 0, stopCode = '';
+    state.busy = true; state.batchMsg = ''; state.batch = { done: 0, n: list.length, name: list[0].title };
+    ctl = new AbortController();
+    var signal = ctl.signal;
+    render();
+    function finish(stopped, code)
+    {
+      state.busy = false; state.batch = null; ctl = null;
+      if (code === 'not_granted')
+      {
+        state.batchMsg = 'AI was not allowed for this page, so ' + (list.length - done) + ' roles keep the rules result.';
+      }
+      else if (stopped)
+      {
+        state.batchMsg = 'You stopped the AI check after ' + done + ' of ' + list.length + ' roles. The rest keep their earlier result.';
+      }
+      else if (failed)
+      {
+        state.batchMsg = 'AI could not read ' + failed + ' of ' + list.length + ' roles just now, so ' + (failed === 1 ? 'that role keeps' : 'those roles keep') + ' the rules result. Try again in a minute.';
+      }
+      render();
+      toast(stopped ? 'AI check stopped' : 'AI check finished');
+      var b = $('runall') || $('tab-matrix'); if (b) { b.focus(); }
+    }
+    function next()
+    {
+      if (signal.aborted) { finish(true); return; }
+      if (i >= list.length) { finish(false); return; }
+      var r = list[i++];
+      state.batch.name = r.title; render();
+      aiCheck(r, signal).then(function (c)
+      {
+        state.results[r.id] = c; done++;
+      }, function (e)
+      {
+        if (e.code === 'cancelled') { return; }
+        failed++;
+        if (e.code === 'not_granted') { sample = null; setAi('off'); stopCode = 'not_granted'; }
+      }).then(function ()
+      {
+        if (stopCode) { finish(false, stopCode); return; }
+        if (state.batch) { state.batch.done = i; }
+        next();
+      });
+    }
+    next();
+  }
+
   /* ---------- Text to copy ---------- */
   function gapSummary()
   {
-    var t = totals(), L = ['Chain of Responsibility coverage check (DRAFT, sample data)', 'As at ' + today() + '. ' + ROLES.length + ' position descriptions checked against ' + DUTIES.length + ' sample duty areas.', 'Expected duties covered: ' + t.cov + ' of ' + t.exp + '. Partly covered: ' + t.part + '. Gaps: ' + t.gaps + ' (' + t.high + ' high priority).', ''];
-    var hi = [], other = [];
+    var t = totals(), L = ['Chain of Responsibility coverage check (DRAFT, sample data)', 'As at ' + today() + '. ' + ROLES.length + ' position descriptions checked against ' + DUTIES.length + ' sample duty areas.', 'Expected duties covered: ' + t.cov + ' of ' + t.exp + '. Partly covered: ' + t.part + '. Gaps: ' + t.gaps + ' (' + t.high + ' high priority). Roles rated high risk: ' + t.hiRoles + '.', ''];
+    var hi = [], other = [], rank = { high: 0, med: 1, low: 2 };
+    L.push('ROLES BY RISK');
+    ROLES.slice().sort(function (a, b) { return rank[roleRisk(a)] - rank[roleRisk(b)]; }).forEach(function (r)
+    {
+      var s = roleScore(r);
+      L.push('- ' + r.title + ' (' + r.id + '): ' + RISK[roleRisk(r)] + '. ' + s.cov + ' of ' + s.exp + ' covered, ' + s.gaps + ' gap' + (s.gaps === 1 ? '' : 's') + ', ' + s.part + ' partly covered. Checked by ' + (state.results[r.id].source === 'ai' ? 'AI' : 'rules') + '.');
+    });
+    L.push('');
     ROLES.forEach(function (r)
     {
       r.expected.forEach(function (did)
@@ -605,7 +764,7 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
   }
   function roleWording(r)
   {
-    var L = ['Suggested Chain of Responsibility wording for: ' + r.title + ' (' + r.id + ', sample)', 'Party type: ' + r.party, ''];
+    var L = ['Suggested Chain of Responsibility wording for: ' + r.title + ' (' + r.id + ', sample)', 'Party type: ' + r.party + '. Rating: ' + RISK[roleRisk(r)] + '.', ''];
     var n = 0;
     r.expected.forEach(function (did)
     {
@@ -633,19 +792,20 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
       var s = roleScore(r);
       return '<li><button type="button" data-rid="' + esc(r.id) + '" aria-current="' + (r.id === state.rid && state.tab !== 'matrix') + '">' +
         '<span class="nm">' + esc(r.title) + '</span><span class="ad">' + esc(r.party) + '</span>' +
-        '<span class="rw"><span class="mono">' + esc(r.id) + '</span><span class="st covered">' + s.cov + ' of ' + s.exp + ' covered</span>' +
-        (s.gaps ? '<span class="st gap">' + s.gaps + ' gap' + (s.gaps === 1 ? '' : 's') + '</span>' : '') + '</span></button></li>';
+        '<span class="rw"><span class="mono">' + esc(r.id) + '</span>' + riskPill(r) + '<span class="hint" style="font-size:12px">' + s.cov + ' of ' + s.exp + ' covered' +
+        (s.gaps ? ', ' + s.gaps + ' gap' + (s.gaps === 1 ? '' : 's') : '') + '</span></span></button></li>';
     }).join('');
   }
 
   function renderTop()
   {
     var t = totals(), pct = t.exp ? Math.round(t.cov / t.exp * 100) : 0;
-    return '<div class="ws-top"><div><p class="label">City Fleet · Chain of Responsibility</p><h2 class="ttl">Who carries which CoR duty?</h2></div>' +
+    return '<div class="ws-top"><div><p class="label">City Fleet · Chain of Responsibility</p><h2 class="ttl">Who carries which CoR duty?</h2>' +
+      '<p class="lead">Checks each position description against Chain of Responsibility duty areas, rates each role\'s risk and suggests wording to close the gaps.</p></div>' +
       '<div class="facts"><div><span>Position descriptions</span><b class="big">' + ROLES.length + '</b></div>' +
       '<div><span>Expected duties covered</span><b class="big">' + pct + '%</b></div>' +
-      '<div><span>Gaps</span><b class="big">' + t.gaps + '</b></div>' +
-      '<div><span>High priority gaps</span><b class="big">' + t.high + '</b></div></div>' +
+      '<div><span>Roles rated high risk</span><b class="big">' + t.hiRoles + '</b></div>' +
+      '<div><span>Gaps to fix</span><b class="big">' + t.gaps + '</b><small>' + t.high + ' high priority</small></div></div>' +
       '<div class="tabs" role="tablist" aria-label="Workspace">' +
       [['matrix', 'Coverage matrix'], ['role', 'Check a role'], ['duties', 'Duty list']].map(function (x)
       {
@@ -662,22 +822,40 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
   {
     var h = '<div class="panel-b" role="tabpanel" id="tp" aria-labelledby="tab-matrix"><div class="sect">';
     h += '<div class="out-h"><h3>Coverage matrix</h3>' + legend() + '</div>';
-    h += '<p class="hint">Each row is a position description; each column is a sample CoR duty area. Select a cell to see the evidence and suggested wording.</p>';
+    h += '<p class="hint">Each row is a position description; each column is a sample CoR duty area. Select a cell to see the evidence and suggested wording.<span class="narrow">Scroll the table sideways to see every duty and the risk rating.</span></p>';
+    if (state.batch)
+    {
+      var pc = Math.round(state.batch.done / state.batch.n * 100);
+      h += '<div class="prog" aria-live="polite"><span class="hint" style="color:var(--ink)">AI is reading <b>' + esc(state.batch.name) + '</b> (' + Math.min(state.batch.done + 1, state.batch.n) + ' of ' + state.batch.n + '). Rows update as each one finishes; each takes 10 to 40 seconds.</span>' +
+        '<span class="bar" role="progressbar" aria-label="AI check progress" aria-valuemin="0" aria-valuemax="' + state.batch.n + '" aria-valuenow="' + state.batch.done + '"><i style="width:' + pc + '%"></i></span>' +
+        '<button class="ghost" type="button" id="stopall">Stop</button></div>';
+    }
+    else if (sample)
+    {
+      var nAi = ROLES.filter(function (r) { return state.results[r.id].source === 'ai'; }).length;
+      h += '<div class="prog"><span class="hint">' + (nAi ? nAi + ' of ' + ROLES.length + ' roles read by AI; the rest use the keyword rules.' : 'These first results come from keyword rules. AI reads every line and quotes the evidence. Names, emails and phone numbers are swapped for placeholders first.') + '</span>' +
+        '<button class="btn sm" type="button" id="runall">' + (nAi ? 'Check all again with AI' : 'Check all roles with AI') + '</button></div>';
+    }
+    else
+    {
+      h += '<div class="callout info"><b>AI is off, so this is rules mode</b><span>Results come from keyword rules on each description. Open any role to see the matching line and change the result by hand.</span></div>';
+    }
+    if (state.batchMsg) { h += '<div class="callout warn" role="alert"><b>Heads up</b><span>' + esc(state.batchMsg) + '</span></div>'; }
     h += '<div class="tbl-wrap"><table class="mx"><caption class="sr">Chain of Responsibility duty coverage by role</caption><thead><tr><th scope="col" style="text-align:left">Role</th>' +
-      DUTIES.map(function (d) { return '<th scope="col" title="' + esc(d.label) + '">' + esc(d.short) + '</th>'; }).join('') + '<th scope="col">Covered</th></tr></thead><tbody>';
+      DUTIES.map(function (d) { return '<th scope="col" title="' + esc(d.label) + '">' + esc(d.short) + '</th>'; }).join('') + '<th scope="col">Covered</th><th scope="col">Risk</th></tr></thead><tbody>';
     ROLES.forEach(function (r)
     {
-      var s = roleScore(r);
-      h += '<tr><th scope="row"><button type="button" data-open="' + r.id + '">' + esc(r.title) + '</button><small>' + esc(r.party) + '</small></th>';
+      var s = roleScore(r), isAi = state.results[r.id].source === 'ai';
+      h += '<tr><th scope="row"><button type="button" data-open="' + r.id + '">' + esc(r.title) + '</button><small>' + esc(r.party) + ' · <span class="src' + (isAi ? ' ai' : '') + '">' + (isAi ? 'AI checked' : 'Rules') + '</span></small></th>';
       DUTIES.forEach(function (d)
       {
         var st = statusOf(r, d.id);
         h += '<td>' + (st === 'na' ? '<span class="cell na" title="Not needed">' + ICON.na + '<span class="sr">Not needed</span></span>' :
           '<button type="button" class="cell ' + st + '" data-open="' + r.id + '" data-duty="' + d.id + '" aria-label="' + esc(r.title + ', ' + d.label + ': ' + STATUS[st]) + '">' + ICON[st] + '</button>') + '</td>';
       });
-      h += '<td class="score">' + s.cov + '/' + s.exp + '</td></tr>';
+      h += '<td class="score">' + s.cov + '/' + s.exp + '</td><td>' + riskPill(r, true) + '</td></tr>';
     });
-    h += '</tbody></table></div></div>';
+    h += '</tbody></table></div><p class="risk-key">Risk rating: High if a high priority duty (safety, speed, fatigue, scheduling, loading or maintenance) is missing; Medium if any other duty is missing or a high priority duty is only partly covered; Low otherwise.</p></div>';
     h += '<div class="sect"><div class="out-h"><h3>Gap summary for HR and the manager</h3><div class="actions"><button class="btn sm" type="button" id="copysum">Copy gap summary</button></div></div>' +
       '<div class="paper"><label class="sr" for="sumtxt">Gap summary</label><textarea id="sumtxt" readonly>' + esc(gapSummary()) + '</textarea></div></div>';
     return h + '</div>';
@@ -699,13 +877,16 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
     var r = role(), res = state.results[r.id], s = roleScore(r);
     var h = '<div class="panel-b" role="tabpanel" id="tp" aria-labelledby="tab-role"><div class="sect">';
     h += '<div class="out-h"><div><p class="label" style="margin:0">' + esc(r.id) + ' · ' + esc(r.party) + '</p><h3 id="res-h" tabindex="-1">' + esc(r.title) + '</h3></div>' +
-      '<span class="st ' + (res.source === 'ai' ? 'ai' : '') + '">' + (res.source === 'ai' ? 'AI check' : 'Rules check') + ' · ' + s.cov + ' of ' + s.exp + ' covered</span></div>';
+      '<span class="actions">' + riskPill(r) + '<span class="st ' + (res.source === 'ai' ? 'ai' : '') + '">' + (res.source === 'ai' ? 'AI check' : 'Rules check') + ' · ' + s.cov + ' of ' + s.exp + ' covered</span></span></div>';
     if (state.error) { h += '<div class="callout warn" role="alert"><b>Heads up</b><span>' + esc(state.error) + '</span></div>'; }
     if (res.summary) { h += '<div class="callout info"><b>AI summary</b><span>' + esc(res.summary) + '</span></div>'; }
-    h += '<div class="actions">' + (state.busy ? '<button class="btn" type="button" disabled>Checking…</button><button class="ghost" type="button" id="stop">Stop</button>' :
-      '<button class="btn" type="button" id="runai">' + (sample ? 'Check with AI' : 'Check with rules') + '</button>') +
-      '<button class="btn sec" type="button" id="copyrole">Copy suggested wording</button>' +
-      '<span class="hint">' + (sample ? 'Names, emails and phone numbers are swapped for placeholders before AI reads the description.' : 'AI is not available here, so the page uses its keyword rules. You can still change any result.') + '</span></div></div>';
+    var run = '';
+    if (state.busy) { run = '<button class="btn" type="button" disabled>Checking…</button><button class="ghost" type="button" id="stop">Stop</button>'; }
+    else if (sample) { run = '<button class="btn" type="button" id="runai">' + (res.source === 'ai' ? 'Check again with AI' : 'Check with AI') + '</button>'; }
+    else if (hasOverrides(r)) { run = '<button class="ghost" type="button" id="runai">Clear my changes</button>'; }
+    h += '<div class="actions">' + run +
+      '<button class="btn' + (run && !state.busy && sample ? ' sec' : '') + '" type="button" id="copyrole">Copy suggested wording</button>' +
+      '<span class="hint">' + (sample ? 'Names, emails and phone numbers are swapped for placeholders before AI reads the description.' : 'AI is off, so these results come from keyword rules. You can change any result below.') + '</span></div></div>';
     h += '<div class="sect"><div class="two"><div style="display:grid;gap:8px;min-width:0"><p class="label" style="margin:0">Position description (highlighted lines are used as evidence)</p>' + pdHtml(r, res) + '</div>';
     if (state.busy)
     {
@@ -722,7 +903,7 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
       {
         var a = res.areas[d.id], st = a.override || a.status;
         return '<div class="area' + (state.focus === d.id ? ' hl' : '') + '" id="area-' + d.id + '"><div class="top"><span><b>' + esc(d.label) + '</b>' + (st === 'gap' && d.high ? ' <span class="tag">High priority</span>' : '') + '</span>' +
-          '<span class="actions"><span class="st ' + st + '">' + STATUS[st] + '</span><label class="sr" for="ov-' + d.id + '">Change result for ' + esc(d.label) + '</label><select id="ov-' + d.id + '" data-ov="' + d.id + '">' +
+          '<span class="actions"><label class="sr" for="ov-' + d.id + '">Result for ' + esc(d.label) + ' (change if needed)</label><select class="' + st + '" id="ov-' + d.id + '" data-ov="' + d.id + '" title="Change this result">' +
           ['covered', 'partly', 'gap', 'na'].map(function (k) { return '<option value="' + k + '"' + (k === st ? ' selected' : '') + '>' + STATUS[k] + '</option>'; }).join('') + '</select></span></div>' +
           (a.evidence ? '<q>' + esc(a.evidence) + '</q>' : '') +
           (a.reason ? '<p class="why">' + esc(a.reason) + (a.override ? ' You changed this result.' : '') + '</p>' : '') +
@@ -741,9 +922,12 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
   function renderAdd()
   {
     return '<div class="panel-b"><form class="sect" id="addf" novalidate><div class="out-h"><h3 id="add-h" tabindex="-1">Add a position description</h3><button class="ghost" type="button" id="canceladd">Cancel</button></div>' +
-      '<p class="hint">Paste the key responsibilities, one per line. Remove names and contact details first; the page also swaps any it finds before AI sees them.</p>' +
+      '<p class="hint">Paste the purpose and key responsibilities, one per line (the first line is read as the purpose). Remove names and contact details first; the page also swaps any it finds before AI sees them.</p>' +
       '<div class="fld"><label for="nf-title">Role title</label><input id="nf-title" autocomplete="off"></div>' +
-      '<div class="fld"><label for="nf-text">Responsibilities</label><textarea id="nf-text" rows="8" aria-describedby="nf-err"></textarea></div>' +
+      '<div class="fld"><label for="nf-text">Purpose and responsibilities</label><textarea id="nf-text" rows="8" aria-describedby="nf-err"></textarea></div>' +
+      '<div class="fld"><label for="nf-party">Party type in the chain</label><select id="nf-party">' +
+      PARTIES.map(function (p) { return '<option value="' + p.id + '"' + (p.id === 'other' ? ' selected' : '') + '>' + esc(p.label) + '</option>'; }).join('') + '</select>' +
+      '<span class="hint">Choosing a party type ticks the duties it usually carries. Change the ticks if this role is different.</span></div>' +
       '<fieldset class="fld" style="border:0;padding:0;margin:0"><legend class="lb" style="padding:0;margin-bottom:6px">Which duties should this role carry?</legend><div class="checks-grid">' +
       DUTIES.map(function (d) { return '<label><input type="checkbox" value="' + d.id + '"' + (d.id === 'primary' || d.id === 'records' ? ' checked' : '') + '>' + esc(d.label) + '</label>'; }).join('') + '</div></fieldset>' +
       (state.formErr ? '<p class="err" id="nf-err" role="alert">' + esc(state.formErr) + '</p>' : '<p class="hint" id="nf-err">The rules check runs straight away; use Check with AI for a full read.</p>') +
@@ -754,7 +938,9 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
   {
     renderSide();
     var body = state.adding ? renderAdd() : state.tab === 'matrix' ? renderMatrix() : state.tab === 'role' ? renderRole() : renderDuties();
+    var keep = document.activeElement && document.activeElement.id;
     $('ws').innerHTML = (state.adding ? '' : renderTop()) + body;
+    if (keep && $(keep) && document.activeElement === document.body) { $(keep).focus({ preventScroll: true }); }
   }
 
   /* ---------- Events ---------- */
@@ -777,17 +963,18 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
   }
 
   $('rlist').addEventListener('click', function (e) { var b = e.target.closest('[data-rid]'); if (b) { openRole(b.getAttribute('data-rid')); } });
-  $('addpd').addEventListener('click', function () { if (state.busy) { return; } state.adding = true; state.formErr = ''; render(); setMobile('ws'); $('nf-title').focus(); });
+  $('addpd').addEventListener('click', function () { if (state.busy) { toast('Wait for the check to finish, or press Stop'); return; } state.adding = true; state.formErr = ''; render(); setMobile('ws'); $('nf-title').focus(); });
 
   var ws = $('ws');
   ws.addEventListener('click', function (e)
   {
     var t = e.target.closest('button');
     if (!t) { return; }
-    if (t.dataset.tab) { if (state.busy) { return; } state.tab = t.dataset.tab; state.focus = ''; render(); $('tab-' + state.tab).focus(); return; }
+    if (t.dataset.tab) { if (state.busy) { toast('Wait for the check to finish, or press Stop'); return; } state.tab = t.dataset.tab; state.focus = ''; state.batchMsg = ''; render(); $('tab-' + state.tab).focus(); return; }
     if (t.dataset.open) { openRole(t.dataset.open, t.dataset.duty); return; }
     if (t.id === 'runai') { runAi(); return; }
-    if (t.id === 'stop') { if (ctl) { ctl.abort(); } return; }
+    if (t.id === 'stop' || t.id === 'stopall') { if (ctl) { ctl.abort(); t.disabled = true; t.textContent = 'Stopping…'; } return; }
+    if (t.id === 'runall') { runAll(); return; }
     if (t.id === 'copysum') { copyText(gapSummary(), 'Gap summary copied'); return; }
     if (t.id === 'copyrole') { copyText(roleWording(role()), 'Suggested wording copied'); return; }
     if (t.id === 'canceladd') { state.adding = false; render(); $('addpd').focus(); return; }
@@ -796,6 +983,13 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
   ws.addEventListener('change', function (e)
   {
     var t = e.target;
+    if (t.id === 'nf-party')
+    {
+      // Tick the duties this party type usually carries.
+      var p = PARTIES.find(function (x) { return x.id === t.value; });
+      ws.querySelectorAll('.checks-grid input').forEach(function (c) { c.checked = p.duties.indexOf(c.value) > -1; });
+      return;
+    }
     if (!t.dataset.ov) { return; }
     var a = state.results[state.rid].areas[t.dataset.ov];
     a.override = t.value === a.status ? '' : t.value;
@@ -812,18 +1006,19 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
     e.preventDefault();
     var title = $('nf-title').value.trim(), text = $('nf-text').value.trim();
     var exp = Array.prototype.map.call(ws.querySelectorAll('.checks-grid input:checked'), function (c) { return c.value; });
+    var party = $('nf-party').value, partyObj = PARTIES.find(function (x) { return x.id === party; });
     if (!title || text.length < 40 || !exp.length)
     {
       state.formErr = !title ? 'Add a role title.' : text.length < 40 ? 'Paste at least a few responsibilities (40 characters or more).' : 'Tick at least one duty this role should carry.';
       var keepT = title, keepX = text;
-      render(); $('nf-title').value = keepT; $('nf-text').value = keepX;
+      render(); $('nf-title').value = keepT; $('nf-text').value = keepX; $('nf-party').value = party;
       ws.querySelectorAll('.checks-grid input').forEach(function (c) { c.checked = exp.indexOf(c.value) > -1; });
       (!title ? $('nf-title') : $('nf-text')).focus();
       return;
     }
     ownCount++;
     var L = text.split('\n').map(function (l) { return l.replace(/^[-*•]\s*/, '').trim(); }).filter(Boolean);
-    var r = { id: 'PD-OWN' + ownCount, title: noDash(title), branch: 'Added by you', level: '', reportsTo: 'not stated', party: 'As ticked',
+    var r = { id: 'PD-OWN' + ownCount, title: noDash(title), branch: 'Added by you', level: '', reportsTo: 'not stated', party: party === 'other' ? 'Not stated (duties ticked by hand)' : partyObj.label,
       expected: exp, contact: null, purpose: L[0], duties: L.slice(1).length ? L.slice(1) : [L[0]] };
     if (r.duties[0] === r.purpose) { r.purpose = 'Purpose not stated.'; }
     ROLES.push(r);
@@ -897,7 +1092,7 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
 #lpx-prod button:focus-visible{outline:2px solid #1F6FBF;outline-offset:2px}
 @media (pointer:coarse){#lpx-prod .lpx-seg button,#lpx-prod .lpx-x{min-height:44px;min-width:44px}}
 </style>
-<script type="application/json" id="lpx-prod-plan">{"recommend": "claude", "why": "This is a periodic review of position descriptions against a fixed duty list, which the council's enterprise Claude can do now from a controlled SharePoint library, with no new system to build or support.", "knowledge": ["The council's position description library (current approved versions) for City Fleet and other branches whose roles touch heavy vehicles.", "The council's Chain of Responsibility procedure and CoR duty register, once agreed.", "The Heavy Vehicle National Law (Queensland) and the regulator's Chain of Responsibility guidance.", "The council's position description template and wording guide from People and Culture.", "The council's organisational chart, so each role can be matched to its party type (scheduler, loader, operator, executive and so on).", "Transport, haulage and plant hire contract templates, to check CoR clauses for roles that manage contracts."], "azure": {"technical": ["Move the prototype into an Azure DevOps repo and rebuild the front end in Vue and Bootstrap, hosted on Azure App Service with council (Entra ID) sign-in.", "Move all AI calls into an Azure Function App, with Claude through Microsoft Foundry or the council's Anthropic agreement (an ICT-DA exception, as it's outside the listed stack). Keys live in Key Vault, never in the page.", "Swap names, email addresses and phone numbers for placeholders before a position description goes to the model.", "Pull approved position descriptions from the council's HR system or its document library through Boomi or Logic Apps (read only), and store the text in Blob Storage.", "Keep the CoR duty register, role to party type mapping, review results and officer overrides in Azure SQL, with an audit trail of who changed what.", "Index the Heavy Vehicle National Law extracts, regulator guidance and the council's CoR procedure in Azure AI Search, so each finding can cite its source.", "Check every AI quote against the position description text (as the prototype does) and log the pass rate in Application Insights.", "Power BI report over the SQL results for the coverage matrix by branch, for the CoR steering group.", "Security review against the OWASP Top 10 and the OWASP Top 10 for LLM apps, including prompt injection from uploaded documents.", "Dev, Test and Prod resource groups, cost alerts, and Azure DevOps CI/CD pipelines for each environment."], "business": ["Confirm the business owner (City Fleet manager or the CoR steering group), the scope (which branches and roles) and success measures, such as percent of high-risk duties covered and time to review a branch.", "Agree the CoR duty register and party type for each role with the CoR lead and Legal Services.", "Name People and Culture as the process owner for any position description changes, and agree the wording guide.", "Build a test plan and an AI evaluation set (30 or so real-style position descriptions, anonymised, with expert-marked coverage), then run UAT with the CoR lead and HR business partners.", "Train the CoR lead and HR business partners, and set up support: who to ask and how to report a wrong result.", "Get ICT-DA, CAB, PGG and Business System Owner approval, with a Go Live plan, service transition document and support playbook."]}, "claude": {"technical": ["Set up a Claude Project for the CoR review in the council's enterprise Claude, with the prototype's rules (quote the exact line, never invent evidence, suggest wording only for gaps) as the project instructions.", "Add the CoR duty register, the council's CoR procedure, the regulator's guidance and the position description template as project files.", "Connect the SharePoint library that holds approved position descriptions with the Microsoft 365 connector, read only.", "Build a Claude skill that checks one position description or a whole branch and returns the coverage matrix, gap summary and suggested wording in the council's format.", "Admin settings checked: data retention, sharing, connector permissions, and that only role documents (not staff files) are in scope."], "business": ["Confirm the business owner, who will use it (CoR lead, HR business partners, branch managers) and what it must never do (it suggests, People and Culture decides).", "Agree the duty register and each role's party type with the CoR lead and Legal Services before the first review.", "Test it on 20 to 30 position descriptions already reviewed by hand and record how often it agrees.", "Pilot with City Fleet for one review cycle, then extend to Road Maintenance, Depot Operations, Procurement and Waste Services.", "Enterprise Claude seats for the CoR lead and HR business partners.", "A project owner who keeps the duty register, instructions and templates current when the law or guidance changes.", "Get the use case approved (ICT-DA and PGG) and confirm privacy settings before rolling it out wider."]}, "stakeholders": [{"role": "Raised the request", "who": "Person 005", "detail": "Ticket 334123: Chain of Responsibility risk assessment. team not stated, City Fleet, Transport Services. Asked for: \"Chain of responsibility risk assessment opportunity\". Triage: AI-assisted capability."}, {"role": "Business owner (to confirm)", "who": "City Fleet manager", "detail": "Owns the process, agrees what good looks like and signs off going live."}, {"role": "Knowledge owners (to confirm)", "who": "Owners of the source documents", "detail": "Keep the documents the tool relies on current and approved."}, {"role": "Delivery", "who": "AI team, Information Technology Services", "detail": "Builds the solution, runs testing and hands over to support."}, {"role": "Approvals", "who": "ICT-DA, CAB, PGG and the Business System Owner", "detail": "Approve the design, the change and going live."}]}</script>
+<script type="application/json" id="lpx-prod-plan">{"recommend": "claude", "why": "This is a periodic review of position descriptions against a fixed duty list, which the council's enterprise Claude can do now from a controlled SharePoint library, with no new system to build or support.", "knowledge": ["The council's position description library (current approved versions) for City Fleet and other branches whose roles touch heavy vehicles.", "The council's Chain of Responsibility procedure and CoR duty register, once agreed.", "The Heavy Vehicle National Law (Queensland) and the regulator's Chain of Responsibility guidance.", "The council's position description template and wording guide from People and Culture.", "The council's organisational chart, so each role can be matched to its party type (scheduler, loader, operator, executive and so on).", "Transport, haulage and plant hire contract templates, to check CoR clauses for roles that manage contracts."], "azure": {"technical": ["Move the prototype into an Azure DevOps repo and rebuild the front end in Vue and Bootstrap, hosted on Azure App Service with council (Entra ID) sign-in.", "Move all AI calls into an Azure Function App, with Claude through Microsoft Foundry or the council's Anthropic agreement (an ICT-DA exception, as it's outside the listed stack). Keys live in Key Vault, never in the page.", "Swap names, email addresses and phone numbers for placeholders before a position description goes to the model.", "Pull approved position descriptions from the council's HR system or its document library through Boomi or Logic Apps (read only), and store the text in Blob Storage.", "Keep the CoR duty register, role to party type mapping, the risk rating rules, review results and officer overrides in Azure SQL, with an audit trail of who changed what.", "Run whole-branch checks as a queued background job in the Function App, one position description at a time, so a slow or failed read does not stop the rest.", "Index the Heavy Vehicle National Law extracts, regulator guidance and the council's CoR procedure in Azure AI Search, so each finding can cite its source.", "Check every AI quote against the position description text (as the prototype does) and log the pass rate in Application Insights.", "Power BI report over the SQL results for the coverage matrix by branch, for the CoR steering group.", "Security review against the OWASP Top 10 and the OWASP Top 10 for LLM apps, including prompt injection from uploaded documents.", "Dev, Test and Prod resource groups, cost alerts, and Azure DevOps CI/CD pipelines for each environment."], "business": ["Confirm the business owner (City Fleet manager or the CoR steering group), the scope (which branches and roles) and success measures, such as percent of high-risk duties covered and time to review a branch.", "Agree the CoR duty register, the party type for each role and the risk rating rules with the CoR lead and Legal Services.", "Name People and Culture as the process owner for any position description changes, and agree the wording guide.", "Build a test plan and an AI evaluation set (30 or so real-style position descriptions, anonymised, with expert-marked coverage), then run UAT with the CoR lead and HR business partners.", "Train the CoR lead and HR business partners, and set up support: who to ask and how to report a wrong result.", "Get ICT-DA, CAB, PGG and Business System Owner approval, with a Go Live plan, service transition document and support playbook."]}, "claude": {"technical": ["Set up a Claude Project for the CoR review in the council's enterprise Claude, with the prototype's rules (quote the exact line, never invent evidence, suggest wording only for gaps) as the project instructions.", "Add the CoR duty register, the council's CoR procedure, the regulator's guidance and the position description template as project files.", "Connect the SharePoint library that holds approved position descriptions with the Microsoft 365 connector, read only.", "Build a Claude skill that checks one position description or a whole branch and returns the coverage matrix, a High, Medium or Low risk rating per role, the gap summary and suggested wording in the council's format.", "Admin settings checked: data retention, sharing, connector permissions, and that only role documents (not staff files) are in scope."], "business": ["Confirm the business owner, who will use it (CoR lead, HR business partners, branch managers) and what it must never do (it suggests, People and Culture decides).", "Agree the duty register, each role's party type and the risk rating rules (what makes a role High, Medium or Low) with the CoR lead and Legal Services before the first review.", "Test it on 20 to 30 position descriptions already reviewed by hand and record how often it agrees.", "Pilot with City Fleet for one review cycle, then extend to Road Maintenance, Depot Operations, Procurement and Waste Services.", "Enterprise Claude seats for the CoR lead and HR business partners.", "A project owner who keeps the duty register, instructions and templates current when the law or guidance changes.", "Get the use case approved (ICT-DA and PGG) and confirm privacy settings before rolling it out wider."]}, "stakeholders": [{"role": "Raised the request", "who": "Person 005", "detail": "Ticket 334123: Chain of Responsibility risk assessment. team not stated, City Fleet, Transport Services. Asked for: \"Chain of responsibility risk assessment opportunity\". Triage: AI-assisted capability."}, {"role": "Business owner (to confirm)", "who": "City Fleet manager", "detail": "Owns the process, agrees what good looks like and signs off going live."}, {"role": "Knowledge owners (to confirm)", "who": "Owners of the source documents", "detail": "Keep the documents the tool relies on current and approved."}, {"role": "Delivery", "who": "AI team, Information Technology Services", "detail": "Builds the solution, runs testing and hands over to support."}, {"role": "Approvals", "who": "ICT-DA, CAB, PGG and the Business System Owner", "detail": "Approve the design, the change and going live."}]}</script>
 <script>
 (function(){
   if (window.__lpxProd) return; window.__lpxProd = true;

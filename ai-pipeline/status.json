@@ -3,12 +3,12 @@
  "apps": {
   "APP-08": {
    "area": "Transport",
-   "desc": "Drafts meeting minutes, stakeholder emails and monthly status reports from rough notes, and keeps each project's decision, risk and action log up to date.",
+   "desc": "Drafts meeting minutes, stakeholder emails and monthly status reports from rough notes, and keeps each project's decision, risk and action log up to date, flagging gaps and overdue actions to fix or chase.",
    "lastUpdated": "2026-11-08",
    "name": "Engineering Project Writer",
-   "notes": "New build with four sample engineering projects: AI turns rough meeting notes, a received email or the project log into minutes, an email or a monthly status report, lists the decisions, risks and actions it found to add to a decision, risk and action log with a sample 5 by 5 rating and health checks, and falls back to template drafts when AI is off; names and contact details are swapped for placeholders before AI. Steps to productionise and Draft in Outlook added.",
+   "notes": "New build with four sample engineering projects: AI (or template rules when AI is off) turns rough meeting notes, a received email or the project log into minutes, an email to a chosen contact (reply, update, chase actions, ask, confirm a decision) or a monthly status report with a rule-based overall status, lists decisions, risks and actions to add to a log that flags gaps you can fix in place or chase by email, uses a sample 5 by 5 risk rating, swaps names and contact details for placeholders before AI, and has Steps to productionise and Draft in Outlook added.",
    "places": {
-    "github": true,
+    "github": false,
     "list": false,
     "mock": false,
     "polish": false,

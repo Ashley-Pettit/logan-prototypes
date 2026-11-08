@@ -276,6 +276,13 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
 .oc.Met{background:var(--low-bg);color:var(--low)}.oc.Partly{background:var(--med-bg);color:var(--med)}.oc.Not{background:var(--hi-bg);color:var(--hi)}
 .paperv{background:var(--paper);color:var(--paper-ink);border:1px solid var(--line);border-radius:6px;padding:4px;box-shadow:0 10px 30px -18px rgba(0,30,60,.35)}
 .paperv textarea{border:0;background:transparent;color:var(--paper-ink);min-height:340px;padding:16px clamp(12px,3vw,24px);font-size:14px;line-height:1.6}
+.ghost.sm{min-height:34px;padding:6px 14px;font-size:14px}
+.bc .since{font-size:13px;color:var(--muted);margin:0}
+.bc .since b{color:var(--ink)}
+.bc .callout{font-size:13px;padding:10px 12px}
+.bc.act{border-color:var(--hi)}
+details.saved summary{cursor:pointer;color:var(--link);font-weight:600;font-size:13px;margin-top:6px}
+details.saved pre{white-space:pre-wrap;overflow-wrap:anywhere;font-family:var(--f-body);font-size:13px;background:var(--raised);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:8px 0;max-height:320px;overflow-y:auto}
 @media (max-width:900px){.dtiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:640px){
   .cfg{grid-template-columns:minmax(0,1fr)}
@@ -309,7 +316,7 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
 </main>
 
 <footer class="foot gut"><div class="foot-in">
-  <div><b>How it works.</b> The dashboard shows each branch's plan status, when it was last tested and whether it is activated. Pick a branch to build a desktop exercise: AI writes a realistic scenario with timed injects tied to that branch's critical functions. Run it with the team, record what happened against each inject, then let AI draft the evidence report and improvement actions. Saving it updates the evidence register and the branch's last tested date.</div>
+  <div><b>How it works.</b> The dashboard shows each branch's plan status, when it was last tested and whether it is activated. Change a status with a reason and it goes in the activation log; an activated plan shows the time left before its most urgent critical function passes its maximum acceptable outage, with the plan's workaround. Pick a branch to build a desktop exercise: AI writes a realistic scenario with timed injects tied to that branch's critical functions. Run it with the team, record what happened against each inject, then let AI draft the evidence report and improvement actions. Saving it updates the evidence register and the branch's last tested date.</div>
   <details><summary>Prototype handover notes</summary>
     <ul>
       <li>In the LCC stack for production: HTML, CSS and JavaScript front end (move to Vue and Bootstrap) on Azure App Service, an Azure Function App for model calls, SQL for plans, exercises, evidence and activation history, Entra ID sign-in.</li>
@@ -353,7 +360,7 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
       alt: 'Staff work from home on laptops, calls overflow to the after hours call service, counters take card payments offline.'
     },
     {
-      id: 'ITS', name: 'Information Technology Services', area: 'Networks, sign-in and business systems', version: '2.4', approved: rel(-120), lastTest: rel(-150), level: 'Standby',
+      id: 'ITS', name: 'Information Technology Services', area: 'Networks, sign-in and business systems', version: '2.4', approved: rel(-120), lastTest: rel(-150), level: 'Activated',
       people: [{ name: 'Avery Mock', role: 'BCP coordinator' }, { name: 'Sam Trial', role: 'Infrastructure manager' }, { name: 'Lee Specimen', role: 'Service desk lead', phone: '0400 000 222' }],
       functions: [
         { name: 'Network and internet access', mao: '4 hours', rto: '2 hours', deps: ['core switches', 'internet links', 'data centre power'] },
@@ -417,6 +424,7 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
   var DURATION = ['60 minutes', '90 minutes', 'Half day'];
   var ROLES = ['Branch manager', 'BCP coordinator', 'Team leaders', 'Communications', 'ICT contact', 'Crisis and Disaster Management'];
   var LEVELS = ['Normal', 'Standby', 'Activated', 'Stand-down'];
+  var LEVELS_RANK = { Activated: 0, Standby: 1, 'Stand-down': 2, Normal: 3 };
 
   // Evidence register: past exercises (sample).
   var EXERCISES = [
@@ -436,6 +444,7 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
   ];
 
   var LOG = [
+    { at: hoursAgo(1.2), bid: 'ITS', from: 'Standby', to: 'Activated', reason: 'Staff at two sample sites cannot sign in to email. Vendor now expects the fix to take more than 2 hours.', by: 'Avery Mock' },
     { at: hoursAgo(2.5), bid: 'ITS', from: 'Normal', to: 'Standby', reason: 'Cloud email vendor reports degraded service across the region.', by: 'Avery Mock' },
     { at: hoursAgo(26), bid: 'WO', from: 'Activated', to: 'Stand-down', reason: 'Power restored to all sample pump stations.', by: 'Morgan Demo' },
     { at: hoursAgo(31), bid: 'WO', from: 'Normal', to: 'Activated', reason: 'Storm cut power to three sample pump stations.', by: 'Morgan Demo' }
@@ -449,7 +458,9 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
     busy: false,
     error: '',
     onlyBranch: false,
-    levelReason: {}
+    levelReason: {},  // branch id -> reason typed for a status change
+    levelPick: {},    // branch id -> status picked but not yet applied
+    levelErr: {}      // branch id -> message shown on that branch card
   };
   var sample = null, ctl = null;
 
@@ -497,6 +508,44 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
     EXERCISES.forEach(function (e) { if (!bid || e.bid === bid) { e.actions.forEach(function (a) { if (a.status === 'Open' && daysSince(a.due) > 0) { n++; } }); } });
     return n;
   }
+  /* ---------- Activation clock: time since activation against the shortest maximum acceptable outage ---------- */
+  function maoHours(s)
+  {
+    var m = String(s || '').match(/(\d+(?:\.\d+)?)\s*(minute|hour|day)/i);
+    if (!m) { return null; }
+    var n = parseFloat(m[1]), u = m[2].toLowerCase();
+    return u === 'minute' ? n / 60 : u === 'day' ? n * 24 : n;
+  }
+  function hm(h)
+  {
+    var m = Math.max(0, Math.round(h * 60));
+    if (m < 1) { return 'under a minute'; }
+    if (m < 60) { return m + ' min'; }
+    return Math.floor(m / 60) + ' h' + (m % 60 ? ' ' + (m % 60) + ' min' : '');
+  }
+  // The most recent log entry that put the branch on its current status.
+  function sinceEntry(b)
+  {
+    return LOG.find(function (l) { return l.bid === b.id && l.to === b.level; }) || null;
+  }
+  function activationClock(b)
+  {
+    if (b.level !== 'Activated') { return null; }
+    var l = sinceEntry(b);
+    if (!l) { return null; }
+    var elapsed = (Date.now() - l.at) / 3600000;
+    var f = b.functions.slice().sort(function (x, y) { return maoHours(x.mao) - maoHours(y.mao); })[0];
+    return { elapsed: elapsed, fn: f, left: maoHours(f.mao) - elapsed };
+  }
+  function clockLine(b)
+  {
+    var c = activationClock(b);
+    if (!c) { return ''; }
+    return c.left > 0
+      ? 'About ' + hm(c.left) + ' left before ' + c.fn.name.toLowerCase() + ' passes its outage limit of ' + c.fn.mao + '.'
+      : c.fn.name + ' has passed its outage limit of ' + c.fn.mao + '. Escalate to the Crisis Management Team.';
+  }
+
   function exState(b)
   {
     if (!state.ex[b.id])
@@ -524,6 +573,12 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
       sample = s || null; setAi(sample ? 'ok' : 'off'); render();
     }, function () { setAi('off'); render(); });
   }
+  // Pressing Stop rejects with an AbortError that has no code, so treat it as cancelled.
+  function errCode(e)
+  {
+    if (!e) { return ''; }
+    return e.code || (e.name === 'AbortError' ? 'cancelled' : '');
+  }
   function aiErrorCopy(code)
   {
     switch (code)
@@ -537,10 +592,12 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
   }
 
   /* ---------- Privacy: swap people's names and contact details for their role before AI ---------- */
+  // Checks the branch's own people first, then everyone else in the sample plans, so a name typed from another branch is also swapped.
   function redact(b, text)
   {
     var t = String(text || '');
-    b.people.forEach(function (p)
+    var people = b.people.concat.apply(b.people, BRANCHES.filter(function (x) { return x !== b; }).map(function (x) { return x.people; }));
+    people.forEach(function (p)
     {
       if (p.email) { t = t.split(p.email).join('[email]'); }
       if (p.phone) { t = t.split(p.phone).join('[phone]'); }
@@ -601,7 +658,8 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
       '- Realistic for a council, Australian English, plain English, short sentences. No em dashes or en dashes.',
       '- 4 or 5 injects with times from 0:00 that fit the exercise length. Each inject escalates or adds a twist.',
       '- Every inject names one critical function from the list exactly in "fn" and tests it against its maximum acceptable outage.',
-      '- Do not name real people, companies or places. Use roles only.',
+      '- Build the disruption from the dependencies listed. Expected actions must use the workarounds given and say when to escalate to the Crisis Management Team.',
+      '- Do not name real people, companies or places. Use roles only. Keep any text in square brackets exactly as written.',
       '- 2 or 3 questions and 2 or 3 expected actions per inject.',
       'Return only JSON in this shape:',
       '{"title": string, "objectives": [string], "context": string, "injects": [{"time": string, "title": string, "detail": string, "fn": string, "questions": [string], "expected": [string]}], "facilitatorNotes": [string], "debrief": [string]}'
@@ -632,7 +690,7 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
     {
       ex.pack = pack; ex.source = src; ex.step = 'build';
       ex.run = { date: iso(today()), facilitator: b.people[0].name, attendees: '', results: pack.injects.map(function () { return { outcome: '', obs: '' }; }) };
-      ex.report = null;
+      ex.report = null; ex.repText = null; ex.saved = false;
     }
     if (!sample)
     {
@@ -648,8 +706,8 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
     }).catch(function (e)
     {
       done(templatePack(b, ex.cfg), 'template');
-      state.error = aiErrorCopy(e && e.code);
-      if (e && e.code === 'not_granted') { sample = null; setAi('off'); }
+      state.error = aiErrorCopy(errCode(e));
+      if (errCode(e) === 'not_granted') { sample = null; setAi('off'); }
     }).then(function () { state.busy = false; ctl = null; render(); focusPack(); });
   }
   function focusPack() { var h = $('pack-h'); if (h) { h.focus(); } }
@@ -691,21 +749,24 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
     return [
       'You write the evidence report for a council business continuity desktop exercise. Use only the facts below.',
       'Branch: ' + b.name + '. Exercise: ' + ex.pack.title + '. Objectives: ' + ex.pack.objectives.join(' ') + '.',
+      'Overall result (worked out from the outcomes, do not change it): ' + overallFrom(ex.run.results) + '.',
       'Results per inject (JSON):', JSON.stringify(data, null, 1),
       '',
-      'Rules: Australian English, plain English, short sentences, no em dashes or en dashes. Do not invent results. Refer to people by role only.',
-      '"overall" is one of "Met", "Partly met", "Not met". "actions" are specific improvements to the plan or training, each with an owner role and dueInDays (14 to 120).',
-      'Return only JSON: {"overall": string, "summary": string, "strengths": [string], "gaps": [string], "actions": [{"text": string, "owner": string, "dueInDays": number}]}'
+      'Rules: Australian English, plain English, short sentences, no em dashes or en dashes. Use only the facts above and do not invent results, times or numbers. Refer to people by role only and keep any text in square brackets exactly as written.',
+      '"summary" is 2 or 3 sentences. "strengths" come from injects that were met. "gaps" come from injects that were partly met or not met.',
+      '"actions" are specific improvements to the plan or training, one for each gap, each with an owner role and dueInDays (14 to 120, sooner for "Not met"). Use an empty list if there are no gaps.',
+      'Return only JSON: {"summary": string, "strengths": [string], "gaps": [string], "actions": [{"text": string, "owner": string, "dueInDays": number}]}'
     ].join('\n');
   }
   function cleanReport(out, fallback)
   {
-    if (!out || typeof out.summary !== 'string') { return null; }
+    if (!out || typeof out.summary !== 'string' || !out.summary.trim()) { return null; }
     function s(v) { return noDash(typeof v === 'string' ? v : '').trim(); }
     function arr(v) { return (Array.isArray(v) ? v : []).slice(0, 8).map(s).filter(Boolean); }
-    var ov = ['Met', 'Partly met', 'Not met'].indexOf(out.overall) > -1 ? out.overall : fallback.overall;
+    var st = arr(out.strengths), gp = arr(out.gaps);
+    // The overall result always comes from the recorded outcomes, never from AI.
     return {
-      overall: ov, summary: s(out.summary), strengths: arr(out.strengths), gaps: arr(out.gaps),
+      overall: fallback.overall, summary: s(out.summary), strengths: st.length ? st : fallback.strengths, gaps: gp.length ? gp : fallback.gaps,
       actions: (Array.isArray(out.actions) ? out.actions : []).slice(0, 8).map(function (a) { var n = parseInt(a && a.dueInDays, 10); return { text: s(a && a.text), owner: s(a && a.owner) || 'BCP coordinator', dueInDays: isNaN(n) ? 60 : Math.max(7, Math.min(180, n)) }; }).filter(function (a) { return a.text; })
     };
   }
@@ -715,7 +776,8 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
     if (state.busy) { return; }
     var recorded = ex.run.results.filter(function (r) { return r.outcome; }).length;
     if (!recorded) { state.error = 'Record an outcome for at least one inject first, so the report has something to say.'; render(); return; }
-    state.error = '';
+    if (ex.run.date > iso(today())) { state.error = 'The exercise date is in the future. Evidence can only cover an exercise that has happened, so change the date first.'; render(); return; }
+    state.error = ''; ex.repText = null; ex.saved = false;
     var base = templateReport(b, ex);
     if (!sample) { ex.report = base; ex.reportSource = 'template'; ex.step = 'report'; render(); focusPack(); toast('Report made from the standard template'); return; }
     state.busy = true; ex.step = 'report'; render();
@@ -728,8 +790,8 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
     }).catch(function (e)
     {
       ex.report = base; ex.reportSource = 'template';
-      state.error = aiErrorCopy(e && e.code);
-      if (e && e.code === 'not_granted') { sample = null; setAi('off'); }
+      state.error = aiErrorCopy(errCode(e));
+      if (errCode(e) === 'not_granted') { sample = null; setAi('off'); }
     }).then(function () { state.busy = false; ctl = null; render(); focusPack(); });
   }
 
@@ -786,8 +848,9 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
       L.push('Branches not at Normal:');
       act.forEach(function (b)
       {
-        var last = LOG.filter(function (l) { return l.bid === b.id; })[0];
-        L.push('- ' + b.name + ': ' + b.level + (last ? ' since ' + fmtTime(last.at) + '. ' + last.reason : '.'));
+        var last = sinceEntry(b), cl = clockLine(b);
+        L.push('- ' + b.name + ': ' + b.level + (last ? ' since ' + fmtTime(last.at) + '. ' + last.reason : '.') + (cl ? ' ' + cl : ''));
+        if (b.level === 'Activated') { L.push('  Workaround in the plan: ' + b.alt); }
       });
     }
     var overdue = BRANCHES.filter(function (b) { return testStatus(b).k === 'bad'; });
@@ -852,13 +915,25 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
     var h = '<div class="panel-b" role="tabpanel" id="tp" aria-labelledby="tab-dash"><div class="sect">';
     h += '<div class="dtiles"><div><b>' + act + '</b><span>Plans activated</span></div><div><b>' + sb + '</b><span>On standby</span></div><div><b>' + tested + ' of ' + BRANCHES.length + '</b><span>Tested in last 12 months</span></div><div><b>' + openActions() + '</b><span>Open actions (' + overdueActions() + ' overdue)</span></div></div>';
     h += '<div class="out-h"><h3>All branches</h3><div class="actions"><button class="btn sec sm" type="button" id="copyact">Copy activation update</button></div></div>';
-    h += '<div class="bgrid">' + BRANCHES.map(function (b)
+    // Branches that are not at Normal go first, so anything live is at the top.
+    var order = BRANCHES.slice().sort(function (x, y) { return LEVELS_RANK[x.level] - LEVELS_RANK[y.level]; });
+    h += '<div class="bgrid">' + order.map(function (b)
     {
-      return '<div class="bc' + (b.id === state.bid ? ' sel' : '') + '"><h4>' + esc(b.name) + '</h4>' +
-        '<div class="row"><span class="lv ' + b.level + '">' + b.level + '</span>' + stPill(b) + '<span class="hint">Last tested ' + esc(fmt(b.lastTest)) + '</span></div>' +
-        '<div class="lvsel"><div class="fld"><label for="lv-' + b.id + '">Change status</label><select id="lv-' + b.id + '" data-lv="' + b.id + '">' + LEVELS.map(function (l) { return '<option' + (l === b.level ? ' selected' : '') + '>' + l + '</option>'; }).join('') + '</select></div>' +
+      var pick = state.levelPick[b.id] || b.level, last = sinceEntry(b), c = activationClock(b), card = '';
+      if (b.level !== 'Normal' && last)
+      {
+        card += '<p class="since"><b>' + b.level + ' for ' + hm((Date.now() - last.at) / 3600000) + '.</b> ' + esc(last.reason) + '</p>';
+      }
+      if (c)
+      {
+        card += '<div class="callout ' + (c.left > 1 ? 'warn' : 'bad') + '"><b>' + esc(clockLine(b)) + '</b><span>Workaround in the plan: ' + esc(b.alt) + '</span></div>';
+      }
+      return '<div class="bc' + (b.id === state.bid ? ' sel' : '') + (b.level === 'Activated' ? ' act' : '') + '"><h4>' + esc(b.name) + '</h4>' +
+        '<div class="row"><span class="lv ' + b.level + '">' + b.level + '</span>' + stPill(b) + '<span class="hint">Last tested ' + esc(fmt(b.lastTest)) + '</span></div>' + card +
+        '<div class="lvsel"><div class="fld"><label for="lv-' + b.id + '">Change status to</label><select id="lv-' + b.id + '" data-lv="' + b.id + '">' + LEVELS.map(function (l) { return '<option' + (l === pick ? ' selected' : '') + '>' + l + '</option>'; }).join('') + '</select></div>' +
         '<div class="fld"><label for="rs-' + b.id + '">Reason</label><input id="rs-' + b.id + '" data-rs="' + b.id + '" autocomplete="off" placeholder="What has happened" value="' + esc(state.levelReason[b.id] || '') + '"></div></div>' +
-        '<div class="actions"><button class="ghost" type="button" data-plan="' + b.id + '">Plan an exercise</button></div></div>';
+        (state.levelErr[b.id] ? '<p class="err" role="alert">' + esc(state.levelErr[b.id]) + '</p>' : '') +
+        '<div class="actions"><button class="btn sm" type="button" data-setlv="' + b.id + '">Update status</button><button class="ghost sm" type="button" data-plan="' + b.id + '">Plan an exercise</button></div></div>';
     }).join('') + '</div>';
     h += '<div class="out-h"><h3>Activation log</h3><span class="hint">Most recent first</span></div>';
     h += LOG.length ? '<ul class="log">' + LOG.map(function (l)
@@ -932,7 +1007,7 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
   function renderRun(b, ex)
   {
     var r = ex.run;
-    var h = '<div class="grid2"><div class="fld"><label for="r-date">Exercise date</label><input id="r-date" type="date" value="' + esc(r.date) + '"></div>' +
+    var h = '<div class="grid2"><div class="fld"><label for="r-date">Exercise date</label><input id="r-date" type="date" max="' + iso(today()) + '" value="' + esc(r.date) + '"></div>' +
       '<div class="fld"><label for="r-fac">Facilitator</label><select id="r-fac">' + b.people.map(function (p) { return '<option' + (p.name === r.facilitator ? ' selected' : '') + '>' + esc(p.name) + '</option>'; }).join('') + '</select></div></div>' +
       '<div class="fld"><label for="r-att">Who attended</label><input id="r-att" autocomplete="off" placeholder="Names or roles, for example 6 staff from the contact centre" value="' + esc(r.attendees) + '"></div>';
     h += '<p class="hint">For each inject, record how the team went and anything worth noting. Names you type are swapped for roles before AI sees them.</p>';
@@ -955,8 +1030,8 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
     var h = '<div class="out-h"><span>Overall result: <span class="oc ' + r.overall.split(' ')[0] + '">' + esc(r.overall) + '</span></span><span class="hint">' + (ex.reportSource === 'ai' ? 'Report drafted by AI. Check it before sending.' : 'Report built from the standard template.') + '</span></div>';
     if (state.error) { h += '<div class="callout warn" role="alert"><b>Heads up</b><span>' + esc(state.error) + '</span></div>'; }
     h += '<div class="paperv"><label class="sr" for="rep">Evidence report text</label><textarea id="rep" spellcheck="true">' + esc(ex.repText != null ? ex.repText : reportText(b, ex)) + '</textarea></div>';
-    h += '<div class="actions"><button class="btn sec sm" type="button" id="copyrep">Copy evidence report</button>' + (ex.saved ? '<span class="st ok">Saved to the evidence register</span>' : '<button class="btn" type="button" id="save">Save to evidence register</button>') + '</div>';
-    if (r.actions.length) { h += '<p class="hint">Saving adds ' + r.actions.length + ' improvement action' + (r.actions.length === 1 ? '' : 's') + ' and sets the branch\'s last tested date to ' + esc(fmt(ex.run.date)) + '.</p>'; }
+    h += '<div class="actions"><button class="btn sec sm" type="button" id="copyrep">Copy evidence report</button>' + (ex.saved ? '<span class="st ok">Saved to the evidence register</span><button class="ghost sm" type="button" data-tab="ev">Open evidence register</button>' : '<button class="btn" type="button" id="save">Save to evidence register</button>') + '</div>';
+    if (!ex.saved) { h += '<p class="hint">Saving keeps this report as evidence, ' + (r.actions.length ? 'adds ' + r.actions.length + ' improvement action' + (r.actions.length === 1 ? '' : 's') + ' ' : '') + 'and sets the branch\'s last tested date to ' + esc(fmt(ex.run.date)) + '. Edits you make to the text above are saved with it.</p>'; }
     return h;
   }
 
@@ -969,7 +1044,7 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
     h += '<div class="out-h"><label style="display:inline-flex;gap:8px;align-items:center;font-size:14px"><input type="checkbox" id="onlyb" style="width:auto"' + (state.onlyBranch ? ' checked' : '') + '> Show ' + esc(branch().name) + ' only</label><div class="actions"><button class="btn sec sm" type="button" id="copyev">Copy evidence summary</button></div></div>';
     h += list.length ? '<div class="tbl-wrap"><table><thead><tr><th>Date</th><th>Branch</th><th>Exercise</th><th>Result</th><th>Facilitator</th></tr></thead><tbody>' + list.map(function (e)
     {
-      return '<tr><td style="white-space:nowrap">' + esc(fmt(e.date)) + '</td><td>' + esc(branch(e.bid).name) + '</td><td>' + esc(e.title) + '<span class="small">' + esc(SCEN[e.type].label) + ' · ' + e.attendees + ' attendees. ' + esc(e.summary) + '</span></td><td><span class="oc ' + e.outcome.split(' ')[0] + '">' + esc(e.outcome) + '</span></td><td>' + esc(e.facilitator) + '</td></tr>';
+      return '<tr><td data-label="Date" style="white-space:nowrap">' + esc(fmt(e.date)) + '</td><td data-label="Branch">' + esc(branch(e.bid).name) + '</td><td class="wide" data-label="Exercise">' + esc(e.title) + '<span class="small">' + esc(SCEN[e.type].label) + ' · ' + e.attendees + ' attendees. ' + esc(e.summary) + '</span>' + (e.reportText ? '<details class="saved"><summary>Show saved report</summary><pre>' + esc(e.reportText) + '</pre><div class="actions"><button class="btn sec sm" type="button" data-copysaved="' + e.id + '">Copy saved report</button></div></details>' : '') + '</td><td data-label="Result"><span class="oc ' + e.outcome.split(' ')[0] + '">' + esc(e.outcome) + '</span></td><td data-label="Facilitator">' + esc(e.facilitator) + '</td></tr>';
     }).join('') + '</tbody></table></div>' : '<div class="empty"><b>No exercises on file for this branch</b><span>Build and run an exercise, then save the report here.</span></div>';
     var acts = [];
     list.forEach(function (e) { e.actions.forEach(function (a) { acts.push({ e: e, a: a }); }); });
@@ -977,7 +1052,7 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
     h += acts.length ? '<div class="tbl-wrap"><table><thead><tr><th>Action</th><th>Branch</th><th>Owner</th><th>Due</th><th>Status</th></tr></thead><tbody>' + acts.map(function (x)
     {
       var od = x.a.status === 'Open' && daysSince(x.a.due) > 0;
-      return '<tr class="' + (x.a.status === 'Done' ? 'closed' : '') + '"><td>' + esc(x.a.text) + '<span class="small">From ' + esc(x.e.id) + '</span></td><td>' + esc(branch(x.e.bid).name) + '</td><td>' + esc(x.a.owner) + '</td><td style="white-space:nowrap">' + esc(fmt(x.a.due)) + (od ? ' <span class="st bad">Overdue</span>' : '') + '</td><td><label class="sr" for="as-' + x.e.id + '-' + x.a.id + '">Status</label><select id="as-' + x.e.id + '-' + x.a.id + '" data-as="' + x.e.id + '|' + x.a.id + '"><option' + (x.a.status === 'Open' ? ' selected' : '') + '>Open</option><option' + (x.a.status === 'Done' ? ' selected' : '') + '>Done</option></select></td></tr>';
+      return '<tr class="' + (x.a.status === 'Done' ? 'closed' : '') + '"><td class="wide" data-label="Action">' + esc(x.a.text) + '<span class="small">From ' + esc(x.e.id) + '</span></td><td data-label="Branch">' + esc(branch(x.e.bid).name) + '</td><td data-label="Owner">' + esc(x.a.owner) + '</td><td data-label="Due">' + esc(fmt(x.a.due)) + (od ? ' <span class="st bad">Overdue</span>' : '') + '</td><td data-label="Status"><label class="sr" for="as-' + x.e.id + '-' + x.a.id + '">Status</label><select id="as-' + x.e.id + '-' + x.a.id + '" data-as="' + x.e.id + '|' + x.a.id + '"><option' + (x.a.status === 'Open' ? ' selected' : '') + '>Open</option><option' + (x.a.status === 'Done' ? ' selected' : '') + '>Done</option></select></td></tr>';
     }).join('') + '</tbody></table></div>' : '<div class="empty"><b>No improvement actions</b></div>';
     return h + '</div></div>';
   }
@@ -986,6 +1061,32 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
   {
     renderSide();
     $('ws').innerHTML = renderTop() + (state.tab === 'dash' ? renderDash() : state.tab === 'ex' ? renderEx() : renderEv());
+  }
+
+  /* ---------- Status changes ---------- */
+  function setLevel(id)
+  {
+    var tb = branch(id), from = tb.level, to = state.levelPick[id] || from, reason = noDash((state.levelReason[id] || '').trim());
+    if (to === from) { state.levelErr[id] = 'Pick a different status first. ' + tb.name + ' is already at ' + from + '.'; }
+    else if (!reason) { state.levelErr[id] = 'Add a short reason, so the log shows why the status changed.'; }
+    else { state.levelErr[id] = ''; }
+    if (state.levelErr[id])
+    {
+      render();
+      var f = to === from ? $('lv-' + id) : $('rs-' + id); if (f) { f.focus(); }
+      return;
+    }
+    LOG.unshift({ at: new Date(), bid: id, from: from, to: to, reason: reason, by: tb.people[0].name });
+    tb.level = to; state.levelReason[id] = ''; delete state.levelPick[id];
+    render(); toast(tb.name + ' is now ' + to + '. Logged below.');
+    var back = $('lv-' + id); if (back) { back.focus(); }
+  }
+  // Counts attendees from a number in the text, or from a comma separated list of names or roles.
+  function attendeeCount(txt)
+  {
+    var n = parseInt(txt, 10);
+    if (!isNaN(n) && n > 0) { return n; }
+    return Math.max(1, String(txt || '').split(/,| and /).filter(function (x) { return x.trim(); }).length);
   }
 
   /* ---------- Events ---------- */
@@ -1015,6 +1116,12 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
     if (!t) { return; }
     var b = branch(), ex = exState(b);
     if (t.dataset.tab) { state.tab = t.dataset.tab; state.error = ''; render(); $('tab-' + state.tab).focus(); return; }
+    if (t.dataset.setlv) { setLevel(t.dataset.setlv); return; }
+    if (t.dataset.copysaved)
+    {
+      var se = EXERCISES.find(function (x) { return x.id === t.dataset.copysaved; });
+      copyText(se ? se.reportText : '', 'Saved report copied'); return;
+    }
     if (t.dataset.plan) { if (state.busy) { return; } state.bid = t.dataset.plan; state.tab = 'ex'; state.error = ''; render(); var g = $('gen'); if (g) { g.focus(); } return; }
     if (t.dataset.step) { ex.step = t.dataset.step; state.error = ''; render(); return; }
     if (t.id === 'gen') { generate(); return; }
@@ -1036,8 +1143,10 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
     }
     if (t.id === 'save')
     {
-      var n = EXERCISES.length + 101;
-      EXERCISES.push({ id: 'EX-' + n, bid: b.id, date: ex.run.date, type: ex.cfg.type, title: ex.pack.title, facilitator: ex.run.facilitator, attendees: parseInt(ex.run.attendees, 10) || 1, outcome: ex.report.overall, summary: ex.report.summary,
+      if (ex.run.date > iso(today())) { state.error = 'The exercise date is in the future. Go back to Run and record and change it before saving.'; render(); return; }
+      var n = EXERCISES.length + 101, rp2 = $('rep');
+      EXERCISES.push({ id: 'EX-' + n, bid: b.id, date: ex.run.date, type: ex.cfg.type, title: ex.pack.title, facilitator: ex.run.facilitator, attendees: attendeeCount(ex.run.attendees), outcome: ex.report.overall, summary: ex.report.summary,
+        reportText: rp2 ? rp2.value : reportText(b, ex),
         actions: ex.report.actions.map(function (a, i) { return { id: 'A-' + (i + 1), text: a.text, owner: a.owner, due: rel(a.dueInDays), status: 'Open' }; }) });
       if (!b.lastTest || ex.run.date > b.lastTest) { b.lastTest = ex.run.date; }
       ex.saved = true; render(); toast('Saved. ' + b.name + ' now shows as tested on ' + fmt(ex.run.date));
@@ -1048,7 +1157,7 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
   ws.addEventListener('input', function (e)
   {
     var t = e.target, b = branch(), ex = exState(b);
-    if (t.dataset.rs) { state.levelReason[t.dataset.rs] = t.value; return; }
+    if (t.dataset.rs) { state.levelReason[t.dataset.rs] = t.value; if (state.levelErr[t.dataset.rs]) { state.levelErr[t.dataset.rs] = ''; var pe = t.closest('.bc').querySelector('.err'); if (pe) { pe.remove(); } } return; }
     if (t.dataset.ob != null && ex.run) { ex.run.results[+t.dataset.ob].obs = t.value; return; }
     if (t.id === 'r-att') { ex.run.attendees = t.value; return; }
     if (t.id === 'rep') { ex.repText = t.value; return; }
@@ -1057,16 +1166,8 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
   ws.addEventListener('change', function (e)
   {
     var t = e.target, b = branch(), ex = exState(b);
-    if (t.dataset.lv)
-    {
-      var tb = branch(t.dataset.lv), from = tb.level, reason = (state.levelReason[tb.id] || '').trim();
-      if (t.value === from) { return; }
-      LOG.unshift({ at: new Date(), bid: tb.id, from: from, to: t.value, reason: noDash(reason) || 'No reason given.', by: tb.people[0].name });
-      tb.level = t.value; state.levelReason[tb.id] = '';
-      render(); toast(tb.name + ' set to ' + t.value);
-      var back = $('lv-' + tb.id); if (back) { back.focus(); }
-      return;
-    }
+    // Picking a status only stages it. Nothing is logged until Update status is pressed.
+    if (t.dataset.lv) { state.levelPick[t.dataset.lv] = t.value; state.levelErr[t.dataset.lv] = ''; return; }
     if (t.id === 'c-type') { ex.cfg.type = t.value; return; }
     if (t.id === 'c-sev') { ex.cfg.sev = t.value; return; }
     if (t.id === 'c-dur') { ex.cfg.dur = t.value; return; }
@@ -1086,6 +1187,20 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
       var a = exx && exx.actions.find(function (x) { return x.id === p[1]; });
       if (a) { a.status = t.value; render(); var bk = $(t.id); if (bk) { bk.focus(); } }
       return;
+    }
+  });
+
+  ws.addEventListener('keydown', function (e)
+  {
+    var t = e.target;
+    // Enter in a reason box applies the status change.
+    if (e.key === 'Enter' && t.dataset && t.dataset.rs) { e.preventDefault(); setLevel(t.dataset.rs); return; }
+    // Left and right arrows move between the workspace tabs.
+    if ((e.key === 'ArrowRight' || e.key === 'ArrowLeft') && t.getAttribute && t.getAttribute('role') === 'tab')
+    {
+      var ids = ['dash', 'ex', 'ev'], k = ids.indexOf(state.tab) + (e.key === 'ArrowRight' ? 1 : -1);
+      state.tab = ids[(k + ids.length) % ids.length]; state.error = '';
+      render(); $('tab-' + state.tab).focus(); e.preventDefault();
     }
   });
 
@@ -1152,7 +1267,7 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
 #lpx-prod button:focus-visible{outline:2px solid #1F6FBF;outline-offset:2px}
 @media (pointer:coarse){#lpx-prod .lpx-seg button,#lpx-prod .lpx-x{min-height:44px;min-width:44px}}
 </style>
-<script type="application/json" id="lpx-prod-plan">{"recommend": "azure", "why": "The activation dashboard and evidence register need shared, auditable records across every branch, so an Azure app with a database fits better than a chat tool, with Claude called behind it to write the exercises.", "knowledge": ["Each branch's approved Business Continuity Plan (critical functions, maximum acceptable outage, recovery times, dependencies and workarounds).", "The council's business continuity framework and testing requirements (how often each plan must be tested and what counts as evidence).", "The council's BCP exercise template, facilitator guide and evidence report template.", "Activation levels and escalation rules (Normal, Standby, Activated, Stand-down) and who can change them.", "Lessons learned from past exercises and real events, including open improvement actions.", "The local disaster management arrangements that branch plans link to."], "azure": {"technical": ["Move the prototype into an Azure DevOps repo and rebuild the front end in Vue and Bootstrap, hosted on Azure App Service with council (Entra ID) sign-in.", "Move all AI calls into an Azure Function App, with Claude through Microsoft Foundry or the council's Anthropic agreement (an ICT-DA exception, as it's outside the listed stack). Keys live in Key Vault, never in the page.", "Swap people's names, emails and phone numbers for their role before anything goes to the model, as the prototype does.", "Store branch plans, exercises, results, improvement actions and the activation log in Azure SQL, with an audit trail of who changed what and when.", "Load the approved Business Continuity Plans and the continuity framework into Blob Storage with an Azure AI Search index, so scenarios use each branch's real critical functions and workarounds.", "Read branch plans from the council's document management system through Boomi or Logic Apps, so the tool always uses the approved version.", "Save finished evidence reports to the records system against the branch plan.", "Send activation status changes to the Crisis Management Team through a Teams channel or email using Logic Apps.", "Role-based access: branch coordinators edit their own branch, Crisis and Disaster Management see and change everything.", "Security review against the OWASP Top 10 and the OWASP Top 10 for LLM apps, including prompt injection through typed observations.", "Dev, Test and Prod resource groups, Application Insights logging and cost alerts, and Azure DevOps CI/CD pipelines for each environment."], "business": ["Confirm the business owner (Crisis and Disaster Management Program), the scope and success measures, such as every plan tested within 12 months and improvement actions closed on time, and raise an Azure DevOps card (why and how).", "Agree the activation levels, who can change them and how changes are communicated.", "Name knowledge owners: each branch's BCP coordinator keeps their plan current; Crisis and Disaster Management owns the framework and templates.", "Build a test plan and an AI evaluation set (scenarios checked by experienced facilitators for realism and accuracy against each plan), then run UAT with two or three branches.", "Train BCP coordinators to build, run and record exercises, and set up support: who to ask and how to report a poor scenario.", "Get ICT-DA, CAB, PGG and Business System Owner approval, with a Go Live plan, service transition document and support playbook."]}, "claude": {"technical": ["Set up a Claude Project for Crisis and Disaster Management in the council's enterprise Claude, with the prototype's scenario rules as the project instructions.", "Add the approved Business Continuity Plans, framework and exercise templates as project files, or connect the SharePoint library they live in.", "Build Claude skills for writing a desktop exercise and drafting an evidence report in the council's template.", "Keep the activation log and evidence register in SharePoint lists, and use the Microsoft 365 connector so Claude can read them for summaries and add entries when asked.", "Admin settings checked: data retention, sharing, which connectors are on, and that only role names (not people's details) are pasted in."], "business": ["Confirm the business owner and what it must never do (it writes practice exercises and drafts reports; people decide on real activations).", "Agree the exercise and evidence templates and the standard fields for the SharePoint lists.", "Test it with 10 to 15 scenarios across different branches and have facilitators rate each for realism and accuracy.", "Pilot with the Crisis and Disaster Management team and two branches for one exercise cycle, with a 30-minute walkthrough.", "Enterprise Claude seats for the Crisis and Disaster Management team and BCP coordinators in the pilot.", "A project owner who keeps the instructions, skills and plan files up to date.", "Get the use case approved (ICT-DA and PGG) and confirm privacy settings before rolling it out wider."]}, "stakeholders": [{"role": "Raised the request", "who": "Person 047", "detail": "Ticket 333714: BCP scenario generator and activation dashboard. team not stated, Crisis and Disaster Management Program, Transport Services. Asked for: \"New Idea: BCP Scenario Generator and Activation Dashboard\". Triage: AI-assisted capability."}, {"role": "Business owner (to confirm)", "who": "Crisis and Disaster Management Program manager", "detail": "Owns the process, agrees what good looks like and signs off going live."}, {"role": "Knowledge owners (to confirm)", "who": "Owners of the source documents", "detail": "Keep the documents the tool relies on current and approved."}, {"role": "Delivery", "who": "AI team, Information Technology Services", "detail": "Builds the solution, runs testing and hands over to support."}, {"role": "Approvals", "who": "ICT-DA, CAB, PGG and the Business System Owner", "detail": "Approve the design, the change and going live."}]}</script>
+<script type="application/json" id="lpx-prod-plan">{"recommend": "azure", "why": "The activation dashboard and evidence register need shared, auditable records across every branch, so an Azure app with a database fits better than a chat tool, with Claude called behind it to write the exercises.", "knowledge": ["Each branch's approved Business Continuity Plan (critical functions, maximum acceptable outage, recovery times, dependencies and workarounds).", "The council's business continuity framework and testing requirements (how often each plan must be tested and what counts as evidence).", "The council's BCP exercise template, facilitator guide and evidence report template.", "Activation levels and escalation rules (Normal, Standby, Activated, Stand-down) and who can change them.", "Lessons learned from past exercises and real events, including open improvement actions.", "The local disaster management arrangements that branch plans link to."], "azure": {"technical": ["Move the prototype into an Azure DevOps repo and rebuild the front end in Vue and Bootstrap, hosted on Azure App Service with council (Entra ID) sign-in.", "Move all AI calls into an Azure Function App, with Claude through Microsoft Foundry or the council's Anthropic agreement (an ICT-DA exception, as it's outside the listed stack). Keys live in Key Vault, never in the page.", "Swap people's names, emails and phone numbers for their role before anything goes to the model, as the prototype does.", "Store branch plans, exercises, results, improvement actions and the activation log in Azure SQL, with an audit trail of who changed what and when.", "Load the approved Business Continuity Plans and the continuity framework into Blob Storage with an Azure AI Search index, so scenarios use each branch's real critical functions and workarounds.", "Read branch plans from the council's document management system through Boomi or Logic Apps, so the tool always uses the approved version.", "Save finished evidence reports to the records system against the branch plan.", "Send activation status changes to the Crisis Management Team through a Teams channel or email using Logic Apps, with an alert when an activated branch is close to a critical function's maximum acceptable outage. Record when the disruption actually started, not just when the status changed, so the outage clock is right.", "Role-based access: branch coordinators edit their own branch, Crisis and Disaster Management see and change everything.", "Security review against the OWASP Top 10 and the OWASP Top 10 for LLM apps, including prompt injection through typed observations.", "Dev, Test and Prod resource groups, Application Insights logging and cost alerts, and Azure DevOps CI/CD pipelines for each environment."], "business": ["Confirm the business owner (Crisis and Disaster Management Program), the scope and success measures, such as every plan tested within 12 months and improvement actions closed on time, and raise an Azure DevOps card (why and how).", "Agree the activation levels, who can change them, that every change needs a reason, and how changes are communicated.", "Name knowledge owners: each branch's BCP coordinator keeps their plan current; Crisis and Disaster Management owns the framework and templates.", "Build a test plan and an AI evaluation set (scenarios checked by experienced facilitators for realism and accuracy against each plan), then run UAT with two or three branches.", "Train BCP coordinators to build, run and record exercises, and set up support: who to ask and how to report a poor scenario.", "Get ICT-DA, CAB, PGG and Business System Owner approval, with a Go Live plan, service transition document and support playbook."]}, "claude": {"technical": ["Set up a Claude Project for Crisis and Disaster Management in the council's enterprise Claude, with the prototype's scenario rules as the project instructions.", "Add the approved Business Continuity Plans, framework and exercise templates as project files, or connect the SharePoint library they live in.", "Build Claude skills for writing a desktop exercise and drafting an evidence report in the council's template.", "Keep the activation log and evidence register in SharePoint lists, and use the Microsoft 365 connector so Claude can read them for summaries and add entries when asked.", "Admin settings checked: data retention, sharing, which connectors are on, and that only role names (not people's details) are pasted in."], "business": ["Confirm the business owner and what it must never do (it writes practice exercises and drafts reports; people decide on real activations).", "Agree the exercise and evidence templates and the standard fields for the SharePoint lists.", "Test it with 10 to 15 scenarios across different branches and have facilitators rate each for realism and accuracy.", "Pilot with the Crisis and Disaster Management team and two branches for one exercise cycle, with a 30-minute walkthrough.", "Enterprise Claude seats for the Crisis and Disaster Management team and BCP coordinators in the pilot.", "A project owner who keeps the instructions, skills and plan files up to date.", "Get the use case approved (ICT-DA and PGG) and confirm privacy settings before rolling it out wider."]}, "stakeholders": [{"role": "Raised the request", "who": "Person 047", "detail": "Ticket 333714: BCP scenario generator and activation dashboard. team not stated, Crisis and Disaster Management Program, Transport Services. Asked for: \"New Idea: BCP Scenario Generator and Activation Dashboard\". Triage: AI-assisted capability."}, {"role": "Business owner (to confirm)", "who": "Crisis and Disaster Management Program manager", "detail": "Owns the process, agrees what good looks like and signs off going live."}, {"role": "Knowledge owners (to confirm)", "who": "Owners of the source documents", "detail": "Keep the documents the tool relies on current and approved."}, {"role": "Delivery", "who": "AI team, Information Technology Services", "detail": "Builds the solution, runs testing and hands over to support."}, {"role": "Approvals", "who": "ICT-DA, CAB, PGG and the Business System Owner", "detail": "Approve the design, the change and going live."}]}</script>
 <script>
 (function(){
   if (window.__lpxProd) return; window.__lpxProd = true;

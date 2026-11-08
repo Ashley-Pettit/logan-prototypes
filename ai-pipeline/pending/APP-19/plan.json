@@ -15,7 +15,8 @@
    "Move all AI calls into an Azure Function App, with Claude through Microsoft Foundry or the council's Anthropic agreement (an ICT-DA exception, as it's outside the listed stack). Keys live in Key Vault, never in the page.",
    "Swap names, email addresses and phone numbers for placeholders before a position description goes to the model.",
    "Pull approved position descriptions from the council's HR system or its document library through Boomi or Logic Apps (read only), and store the text in Blob Storage.",
-   "Keep the CoR duty register, role to party type mapping, review results and officer overrides in Azure SQL, with an audit trail of who changed what.",
+   "Keep the CoR duty register, role to party type mapping, the risk rating rules, review results and officer overrides in Azure SQL, with an audit trail of who changed what.",
+   "Run whole-branch checks as a queued background job in the Function App, one position description at a time, so a slow or failed read does not stop the rest.",
    "Index the Heavy Vehicle National Law extracts, regulator guidance and the council's CoR procedure in Azure AI Search, so each finding can cite its source.",
    "Check every AI quote against the position description text (as the prototype does) and log the pass rate in Application Insights.",
    "Power BI report over the SQL results for the coverage matrix by branch, for the CoR steering group.",
@@ -24,7 +25,7 @@
   ],
   "business": [
    "Confirm the business owner (City Fleet manager or the CoR steering group), the scope (which branches and roles) and success measures, such as percent of high-risk duties covered and time to review a branch.",
-   "Agree the CoR duty register and party type for each role with the CoR lead and Legal Services.",
+   "Agree the CoR duty register, the party type for each role and the risk rating rules with the CoR lead and Legal Services.",
    "Name People and Culture as the process owner for any position description changes, and agree the wording guide.",
    "Build a test plan and an AI evaluation set (30 or so real-style position descriptions, anonymised, with expert-marked coverage), then run UAT with the CoR lead and HR business partners.",
    "Train the CoR lead and HR business partners, and set up support: who to ask and how to report a wrong result.",
@@ -36,12 +37,12 @@
    "Set up a Claude Project for the CoR review in the council's enterprise Claude, with the prototype's rules (quote the exact line, never invent evidence, suggest wording only for gaps) as the project instructions.",
    "Add the CoR duty register, the council's CoR procedure, the regulator's guidance and the position description template as project files.",
    "Connect the SharePoint library that holds approved position descriptions with the Microsoft 365 connector, read only.",
-   "Build a Claude skill that checks one position description or a whole branch and returns the coverage matrix, gap summary and suggested wording in the council's format.",
+   "Build a Claude skill that checks one position description or a whole branch and returns the coverage matrix, a High, Medium or Low risk rating per role, the gap summary and suggested wording in the council's format.",
    "Admin settings checked: data retention, sharing, connector permissions, and that only role documents (not staff files) are in scope."
   ],
   "business": [
    "Confirm the business owner, who will use it (CoR lead, HR business partners, branch managers) and what it must never do (it suggests, People and Culture decides).",
-   "Agree the duty register and each role's party type with the CoR lead and Legal Services before the first review.",
+   "Agree the duty register, each role's party type and the risk rating rules (what makes a role High, Medium or Low) with the CoR lead and Legal Services before the first review.",
    "Test it on 20 to 30 position descriptions already reviewed by hand and record how often it agrees.",
    "Pilot with City Fleet for one review cycle, then extend to Road Maintenance, Depot Operations, Procurement and Waste Services.",
    "Enterprise Claude seats for the CoR lead and HR business partners.",
