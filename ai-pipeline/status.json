@@ -1,0 +1,24 @@
+{
+ "about": "Background tracker for the AI prototype list. See tools/proto_status.py.",
+ "apps": {
+  "APP-08": {
+   "area": "Transport",
+   "desc": "Drafts meeting minutes, stakeholder emails and monthly status reports from rough notes, and keeps each project's decision, risk and action log up to date.",
+   "lastUpdated": "2026-11-08",
+   "name": "Engineering Project Writer",
+   "notes": "New build with four sample engineering projects: AI turns rough meeting notes, a received email or the project log into minutes, an email or a monthly status report, lists the decisions, risks and actions it found to add to a decision, risk and action log with a sample 5 by 5 rating and health checks, and falls back to template drafts when AI is off; names and contact details are swapped for placeholders before AI. Steps to productionise and Draft in Outlook added.",
+   "places": {
+    "github": true,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "runs": 1,
+   "shot": "ai-pipeline/shots/APP-08.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/Ns9D2SRfRpVFBWBGLSA2Z2",
+   "version": "1"
+  }
+ }
+}
