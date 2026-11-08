@@ -1,0 +1,12 @@
+{
+ "id": "APP-34",
+ "name": "Financial Spreadsheet Reviewer",
+ "url": "https://claude.ai/artifact/SbiFKT5AksVQHpW5E3SX7M",
+ "slug": "cf4d2c88-d0ed-46a4-83b4-46e424e58150",
+ "version": "3",
+ "notes": "Checks four sample venue month-end spreadsheets or your own Excel or CSV file for budget variances, unusual or missing months, steady month-on-month trends, possible double postings, big changes on last year and sheets that do not add up, then AI explains each finding with likely causes, a question for the budget owner and a manager summary (rule explanations when AI is off); only account names and numbers go to AI and the thresholds are samples. Reviewed for the brief and manager ready.",
+ "changed": true,
+ "desc": "Reads a venue month-end spreadsheet and flags budget variances, unusual months, trends and sheets that do not add up. AI explains each finding in plain English and drafts a summary for the manager and questions for budget owners.",
+ "area": "Finance",
+ "tested": "Playwright at 1280x800 light and 390x844 dark: all four sample sheets, Findings, Trends filter, status and note marking, Spreadsheet tab with trend sparklines, Summary and Questions with Copy buttons (clipboard checked) and Draft in Outlook links beside them, Mark review complete, own sheet from template, Excel upload with a title row (SheetJS routed locally) and the blocked-reader fallback message, Steps to productionise panel opens, All AI prototypes button shows, no page or console errors, no horizontal scroll, no em or en dashes in visible text or the panel. AI path with a stand-in: prompt has no names, emails, phones or preparer (placeholders kept), bad ids and non-string fields dropped, missing findings fall back to the rule explanation, dashes stripped from AI text."
+}

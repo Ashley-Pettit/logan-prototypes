@@ -13,7 +13,7 @@
   "technical": [
    "Move the prototype into an Azure DevOps repo and rebuild the front end in Vue and Bootstrap, hosted on Azure App Service with council (Entra ID) sign-in.",
    "Keep the approved Word templates in a controlled SharePoint library or Blob Storage, with content controls for each field, and only offer the current approved version.",
-   "An Azure Function App fills the Word template (Open XML) from the data and returns a .docx in the council's styles, so formatting stays exactly as approved.",
+   "An Azure Function App fills the approved Word template itself (Open XML content controls) from the data, so the .docx keeps the council's exact formatting. The prototype's in-browser Word download uses a plain layout and is a stand-in for this.",
    "Read project, budget and contract values from the council's project register, finance system and contract register through the Data Warehouse, Boomi or Logic Apps (read only).",
    "Until the register link is approved, let staff upload a project register export (the prototype's Add project data step), checked against each template's field list, with unmatched columns shown to the officer.",
    "Model calls go through the same Function App, with Claude through Microsoft Foundry or the council's Anthropic agreement (an ICT-DA exception, as it's outside the listed stack). Keys live in Key Vault, never in the page.",

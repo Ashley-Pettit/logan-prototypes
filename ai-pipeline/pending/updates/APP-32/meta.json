@@ -1,0 +1,12 @@
+{
+ "id": "APP-32",
+ "name": "Document Readiness Reviewer",
+ "url": "https://claude.ai/artifact/2NNBgbeCdonBHuAVEkgFen",
+ "slug": "0b14d023-e421-45a8-b9be-6738285538ef",
+ "version": "4",
+ "notes": "Checks a sample council report, grant application, approval conditions statement or policy against its checklist, marking each item met, partly met or missing with a verified quote, a readiness verdict, a fix list with accepted risks and a review to copy, email or download; it opens on a worked AI example, swaps names, emails and phone numbers for placeholders before AI and runs a keyword check when AI is off. Reviewed for the brief and manager ready.",
+ "changed": true,
+ "desc": "Checks a document against the checklist it must meet before submission and lists the blockers and gaps, with a quote as evidence and a suggested fix for each. Opens on a worked example of a council report that is not ready yet.",
+ "area": "Corporate",
+ "tested": "Playwright at 1280x800 light and 390x844 dark: opens on the worked example, fix list with mark fixed and accept risk with reason, quick check on the grant sample, checklist change clears the old review, Paste your own with the too-short error, Copy review with Draft in Outlook beside it, Steps to productionise panel, All AI prototypes button, no page or console errors and no horizontal scroll. AI path with a stand-in: prompt keeps the ABN but has no name, email or phone, bad statuses and non-text fields fall back safely, dashes are removed, Download works and Stop shows the stopped message."
+}

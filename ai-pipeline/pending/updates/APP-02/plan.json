@@ -1,0 +1,87 @@
+{
+ "recommend": "azure",
+ "why": "The model has to run over thousands of segments using condition survey history, traffic counts and asset data, which needs Azure for the data pipelines, calibration jobs and links to the council's pavement and asset systems.",
+ "knowledge": [
+  "Road condition survey history (PCI, roughness, rutting and cracking) from the council's pavement management system.",
+  "Defect inspection results and pothole reports (cracking, rutting, potholes) from routine inspections and customer requests, with personal details removed.",
+  "The road asset register: segments, chainages, road class, pavement and surface type, last treatment dates and areas, from the council's asset management system.",
+  "Traffic count data (AADT and heavy vehicle percentages) from the council's traffic counting program.",
+  "Subgrade, drainage and flood mapping layers from the council's GIS (ArcGIS).",
+  "The council's adopted deterioration models, treatment triggers and unit rates from the Road Asset Management Plan.",
+  "Austroads Guide to Pavement Technology and Guide to Asset Management, plus the council's pavement design manual."
+ ],
+ "azure": {
+  "technical": [
+   "Move the prototype into an Azure DevOps repo and rebuild the front end in Vue and Bootstrap on Azure App Service, with council (Entra ID) sign-in and an ArcGIS map of segments.",
+   "Build the data pipeline: nightly Data Factory or Boomi loads of survey history, asset register and traffic counts into Azure SQL, sourced from the Data Warehouse where possible.",
+   "Replace the sample power curve with the council's adopted deterioration model, run calibration and forward works jobs in a Python Azure Function App, and store results and model versions in Azure SQL.",
+   "Move AI calls into the Function App, with Claude through Microsoft Foundry or the council's Anthropic agreement. Keys live in Key Vault. The model only explains results and answers questions; it never changes the numbers.",
+   "Strip personal details from any customer requests or defect reports before they reach the model (road data itself has none).",
+   "Have senior pavement engineers validate the model against at least five years of past surveys and record prediction error by road class.",
+   "Have pavement engineers replace the sample defect check rules with the council's own defect intervention levels, and check the design traffic and granular thickness calculations against Austroads and the council's pavement design manual.",
+   "Security review against the OWASP Top 10 and the OWASP Top 10 for LLM apps, including prompt injection through imported text fields.",
+   "Dev, Test and Prod resource groups in the council's Azure subscription.",
+   "Azure App Service (front end) and a Python Azure Function App (calibration, forward works and AI calls).",
+   "Azure SQL for segments, survey history, model parameters, results and audit of model versions.",
+   "Data Factory or Boomi pipelines from the Data Warehouse, the council's pavement management system and asset management system.",
+   "ArcGIS Enterprise feature service for segment maps, subgrade, drainage and flood layers.",
+   "Key Vault, Application Insights logging and cost alerts on model usage.",
+   "Model access: a Claude deployment in Microsoft Foundry or an enterprise Anthropic API key (needs an ICT-DA exception as it's outside the listed stack).",
+   "Entra ID app registration and a security group for Transport Planning and Assets.",
+   "Azure DevOps repo and CI/CD pipelines for Dev, Test and Prod."
+  ],
+  "business": [
+   "Confirm the business owner (Transport Planning and Assets), the engineers who will use it, success measures, and that the model supports but never replaces engineering sign-off. Raise an Azure DevOps card (why and how).",
+   "Build a test plan, an AI evaluation set of 30 or more real-style questions with expected answers and cited data, then run UAT with real but non-personal network data.",
+   "Name a data and knowledge owner who keeps the source data, rules and documents current and approved.",
+   "Train the people who will use it, and set up support: who to ask and how to report a wrong answer.",
+   "Get ICT-DA, CAB, PGG and Business System Owner approval, with a Go Live plan, service transition document and support playbook."
+  ]
+ },
+ "claude": {
+  "technical": [
+   "Set it up as a Claude Project for Transport Planning and Assets in the council's enterprise Claude, with the prototype's explanation instructions as the project instructions.",
+   "Add the Road Asset Management Plan, treatment rules, unit rates and pavement design manual as project files.",
+   "Create a Claude skill that takes an exported segment report (survey history, defects, traffic, model results) and returns the plain English explanation, likely cause, treatment timing and cost of waiting in a fixed format.",
+   "Engineers export model results from the council's pavement management system each quarter and upload them to the project.",
+   "Admin settings checked: data retention, sharing and connector permissions."
+  ],
+  "business": [
+   "Confirm the business owner and that Claude is used to explain and question model outputs, not to run the engineering model itself.",
+   "Test it with 20 to 30 real segments and record how often the explanation matches the engineers' own reading.",
+   "Pilot with a small group of asset engineers for two to four weeks and collect feedback.",
+   "Enterprise Claude seats for the asset and pavement engineers who will use it.",
+   "A project owner who keeps the instructions, treatment rules and unit rates current.",
+   "A controlled SharePoint library of approved model exports, plus the Microsoft 365 connector if reading them live.",
+   "Limits: no live calibration, network map or forward works budget; those still come from the pavement management system.",
+   "Get the use case approved (ICT-DA and PGG) and confirm privacy settings before rolling it out wider."
+  ]
+ },
+ "stakeholders": [
+  {
+   "role": "Raised the request",
+   "who": "Person 051",
+   "detail": "Ticket 339047: Pavement engineering modelling and decision support. team not stated, Transport Planning and Assets, Transport Services. Asked for: \"Engineering modelling and decision support\". Triage: New AI solution / agent."
+  },
+  {
+   "role": "Business owner (to confirm)",
+   "who": "Transport Planning and Assets manager",
+   "detail": "Owns the process, agrees what good looks like and signs off going live."
+  },
+  {
+   "role": "Knowledge owners (to confirm)",
+   "who": "Owners of the source documents",
+   "detail": "Keep the documents the tool relies on current and approved."
+  },
+  {
+   "role": "Delivery",
+   "who": "AI team, Information Technology Services",
+   "detail": "Builds the solution, runs testing and hands over to support."
+  },
+  {
+   "role": "Approvals",
+   "who": "ICT-DA, CAB, PGG and the Business System Owner",
+   "detail": "Approve the design, the change and going live."
+  }
+ ]
+}

@@ -2,9 +2,13 @@
  "id": "APP-17",
  "name": "Template Document Generator",
  "area": "Corporate",
- "desc": "Fills approved council templates from project data, or data you paste from an export, and has AI draft only the free-text sections, showing what came from data, what AI wrote and what is still missing.",
- "notes": "Fills four sample approved templates (closure report, change request, request to approach market, works notification letter) from three sample projects or project data pasted from an export, shows each value's source, has AI draft only the open sections from the project diary (keeping sections already ticked as checked) and blocks the ready status until missing data and unchecked sections are fixed, with starter wording when AI is off; templates, fields and thresholds are samples, names, phone numbers and emails are swapped for placeholders before AI, and Steps to productionise and Draft in Outlook were added.",
+ "desc": "Fills approved council templates from project data, or data you paste from an export, has AI draft only the free-text sections, and lets you copy the result or download it as a Word file.",
+ "notes": "Fills four sample approved templates (closure report, change request, request to approach market, works notification letter) from three sample projects or project data pasted from an export, shows each value's source, has AI draft only the open sections from the project diary (keeping sections already ticked as checked), blocks the ready status until missing data and unchecked sections are fixed, and downloads the result as a plain-layout Word file; starter wording is used when AI is off, templates, fields and thresholds are samples, names, phone numbers and emails are swapped for placeholders before AI, and Steps to productionise and Draft in Outlook were added.",
  "recommend": "azure",
  "dice": false,
- "tested": "Template mode and a stand-in AI end to end at 1280 light and 390 dark: opens on a filled sample document, copy, edit and tick open sections, redraft keeps ticked sections, AI busy and Stop messages, switching template and project, typing missing fields, adding a pasted project, Steps to productionise panel opens, Draft in Outlook link present, no page errors, no horizontal overflow."
+ "tested": "Template mode and a stand-in AI end to end at 1280 light and 390 dark: opens on a filled sample document, copy, edit and tick open sections, redraft keeps ticked sections, AI busy and Stop messages, switching template and project, typing missing fields, adding a pasted project, Steps to productionise panel opens, Draft in Outlook link present, Word download saved through a stand-in downloads capability and opened with python-docx (headings, table, dot points), declined save message, button hidden without the capability, no page errors, no horizontal overflow.",
+ "capabilities": {
+  "sample": {},
+  "downloads": true
+ }
 }

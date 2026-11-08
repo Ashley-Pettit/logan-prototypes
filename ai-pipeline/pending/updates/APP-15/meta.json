@@ -1,0 +1,12 @@
+{
+ "id": "APP-15",
+ "name": "Disaster and Continuity Guide",
+ "url": "https://claude.ai/artifact/Pef4TWor6u3ghBqonEAQY7",
+ "slug": "b76b066b-5429-4244-9209-2dfdefdb5520",
+ "version": "5",
+ "notes": "Answers LDCC and crisis staff's 'what do I do now' questions from sample BCP and disaster plan excerpts for their role and activation level, with cited sources, a tickable checklist and a plan browser, and falls back to quoting the plans word for word when AI is off; the plan excerpts are made up. Reviewed for the brief and manager ready.",
+ "changed": true,
+ "desc": "Ask what to do now during a disaster or business disruption and get short numbered steps for your role and activation level, each linked to the plan section it came from. Also gives a tickable checklist for the current level and a searchable library of sample plan excerpts.",
+ "area": "Safety",
+ "tested": "Playwright at 1280x800 light and 390x844 dark: opens on a worked example answer; asked a suggested question as Depot supervisor, opened a citation (panel on desktop, drawer on phone), Copy answer, changed level and used Update answer, a not-covered question, the empty-question hint, checklist tick, clear and undo, Copy checklist, Browse search, no-match and Clear filters, Steps to productionise panel and All AI prototypes button. No page or console errors, scrollWidth equals viewport width, no em or en dashes on the page or in the panel, every visible Copy button has Draft in Outlook beside it, keyboard focus visible. AI path with a stand-in: names, phone, email and street address replaced by placeholders in the prompt (including names not in the sample list), placeholders restored in the answer, made-up source IDs dropped, uncited steps flagged; null reply, thrown error and wrong-shaped reply all fall back to the quoted answer with a plain message."
+}

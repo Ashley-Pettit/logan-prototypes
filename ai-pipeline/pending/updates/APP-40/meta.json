@@ -1,0 +1,12 @@
+{
+ "id": "APP-40",
+ "name": "Procedure to Training Builder",
+ "url": "https://claude.ai/artifact/KuStTsVTdKAw8Da3QVmYt9",
+ "slug": "99172022-ffbb-4ea2-9c43-2c2703fba9f2",
+ "version": "4",
+ "notes": "Turns five made-up Venues and Events procedures, or your own pasted procedure or rough notes, into an editable quick guide, checklist and quiz tagged to source steps, with coverage, number and reading-level checks before the pack goes to the owner for approval; opens on a sample draft, names, emails and phone numbers are swapped for placeholders before AI and put back after, and template drafts are used when AI is off. Reviewed for the brief and manager ready.",
+ "changed": true,
+ "desc": "Turns approved procedures into a quick guide, checklist and quiz, each point tagged to the procedure step it came from. Checks every step is covered and no new numbers crept in before the owner approves.",
+ "area": "Community",
+ "tested": "Playwright at 1280x800 light and 390x844 dark: sample draft review, checklist ticks, quiz marking, step peek, check and share, Copy plus Draft in Outlook, send for approval, second procedure in template mode, paste own with Turn notes into steps, Steps to productionise panel and All AI prototypes button; no page or console errors and no horizontal scroll. AI stand-in: notes to steps and pack drafting, prompts had no names, emails or phone numbers, placeholders restored, bad quiz items dropped; rate-limited AI fell back to template with a plain message."
+}

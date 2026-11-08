@@ -1,0 +1,91 @@
+{
+ "recommend": "azure",
+ "why": "Ranking, sequencing and checking contractor survey returns need live jobs, assets, crews, locations and contractor data from the council's works and GIS systems, plus photo storage, which only an Azure build can join up.",
+ "knowledge": [
+  "The council's road maintenance works backlog export: job type, location, defect, cost estimate, crew type, date raised.",
+  "Road hierarchy (arterial, collector, local) and asset data from the council's asset management system.",
+  "The council's Road Maintenance Intervention Levels and response times, and the risk matrix used to rate defects (likelihood and consequence).",
+  "Customer request counts linked to each job from the council's customer request system.",
+  "The road maintenance contract's data requirements for defect survey returns (required fields, photo and GPS rules, response times for queries) and a set of past contractor returns for testing.",
+  "Crew rosters, depot locations and standard hours per crew type.",
+  "Stormwater asset register for pits and grates, plus a set of grate photos rated by drainage officers for testing."
+ ],
+ "azure": {
+  "technical": [
+   "Agree the scoring rules and weights with Road Maintenance and the intervention levels, and record them as configuration, not code.",
+   "Move the prototype into an Azure DevOps repo and rebuild the front end in Vue and Bootstrap on Azure App Service, with council (Entra ID) sign-in.",
+   "Pull the works backlog, asset hierarchy and customer request counts nightly through Boomi or Logic Apps into Azure SQL, sourcing from the Data Warehouse where possible.",
+   "Run scoring and sequencing in an Azure Function App, using ArcGIS for real locations and drive times instead of the schematic map.",
+   "Take contractor defect survey returns through a council upload or API, check them against the contract data rules in a Function App, and match them against open jobs to catch repeats.",
+   "Move AI calls (programme review and grate photo rating) into a Function App, with Claude through Microsoft Foundry or the council's Anthropic agreement. Keys live in Key Vault, never in the page.",
+   "Store grate photos in Blob Storage, blur or crop people and number plates before any photo goes to the model, and swap names, phone numbers, emails and house numbers in contractor returns for placeholders before any AI call.",
+   "Security review against the OWASP Top 10 and the OWASP Top 10 for LLM apps, including prompt injection in job text and photos.",
+   "Dev, Test and Prod resource groups in the council's Azure subscription.",
+   "Azure App Service (front end) and Azure Function Apps (scoring, sequencing, AI calls, nightly loads).",
+   "Key Vault, Application Insights logging and cost alerts on model usage.",
+   "Model access: a Claude deployment in Microsoft Foundry or an enterprise Anthropic API key (needs an ICT-DA exception as it's outside the listed stack).",
+   "ArcGIS services for road network, locations and drive times.",
+   "Entra ID app registration and security groups for supervisors, officers and viewers.",
+   "Azure DevOps repo and CI/CD pipelines for Dev, Test and Prod."
+  ],
+  "business": [
+   "Confirm the business owner (Road Maintenance), the supervisors who will use it, the success measures (risk covered, budget used, driving time saved) and that a supervisor always approves the programme. Raise an Azure DevOps card (why and how).",
+   "Write the approved weekly programme back to the council's works management system so crews get it on their devices.",
+   "Agree the contract data requirements and the query process with the contract manager and the contractors, so returns that fail the rules go back with a clear list of what is missing.",
+   "Build a test plan: replay past weeks to compare the suggested programme with what was done, and an evaluation set of 100 or more officer-rated grate photos, recording agreement rates.",
+   "Azure SQL for jobs, scores, programmes and approvals, and Blob Storage for grate photos.",
+   "Boomi or Logic Apps integrations to the works management, asset management and customer request systems (read, plus write-back of the approved programme).",
+   "Name a data and knowledge owner who keeps the source data, rules and documents current and approved.",
+   "Train the people who will use it, and set up support: who to ask and how to report a wrong answer.",
+   "Get ICT-DA, CAB, PGG and Business System Owner approval, with a Go Live plan, service transition document and support playbook."
+  ]
+ },
+ "claude": {
+  "technical": [
+   "Set up a Claude Project for Road Maintenance supervisors in the council's enterprise Claude, with the scoring rules and intervention levels as project instructions and files.",
+   "Each week, a supervisor exports the backlog from the works system to Excel and uploads it; a Claude skill ranks it, groups jobs by zone and explains the order in a set table format.",
+   "Supervisors paste each contractor return into the project with names and phone numbers removed; Claude lists the records, the missing details and a draft query back to the contractor.",
+   "Officers upload grate photos to the same project for a blockage rating, after cropping out people and number plates.",
+   "Admin settings checked: data retention, sharing and file upload limits."
+  ],
+  "business": [
+   "Confirm the business owner and what it must never do (it suggests and explains, a supervisor decides and books crews).",
+   "Agree the contract data requirements with the contract manager and add them to the project instructions.",
+   "Test it on 10 past weeks and 50 rated grate photos and record how often it agrees with supervisors.",
+   "Pilot with one depot for four weeks and collect feedback.",
+   "Enterprise Claude seats for road maintenance supervisors and drainage officers.",
+   "A project owner who keeps the scoring rules and intervention levels up to date.",
+   "A weekly backlog export from the works system (no customer names or contact details).",
+   "Clear rules on photos: no people, faces or number plates.",
+   "No live link to crews, maps or the works system: programmes are copied back by hand and travel grouping is approximate.",
+   "Get the use case approved (ICT-DA and PGG) and confirm privacy settings before rolling it out wider."
+  ]
+ },
+ "stakeholders": [
+  {
+   "role": "Raised the request",
+   "who": "Person 026",
+   "detail": "Ticket 339034: Road maintenance scheduling and data collection. team not stated, Transport Planning and Assets, Transport Services. Asked for: \"Maintenance scheduling and contract-based data collection\". Triage: Workflow / automation."
+  },
+  {
+   "role": "Business owner (to confirm)",
+   "who": "Transport Planning and Assets manager",
+   "detail": "Owns the process, agrees what good looks like and signs off going live."
+  },
+  {
+   "role": "Knowledge owners (to confirm)",
+   "who": "Owners of the source documents",
+   "detail": "Keep the documents the tool relies on current and approved."
+  },
+  {
+   "role": "Delivery",
+   "who": "AI team, Information Technology Services",
+   "detail": "Builds the solution, runs testing and hands over to support."
+  },
+  {
+   "role": "Approvals",
+   "who": "ICT-DA, CAB, PGG and the Business System Owner",
+   "detail": "Approve the design, the change and going live."
+  }
+ ]
+}

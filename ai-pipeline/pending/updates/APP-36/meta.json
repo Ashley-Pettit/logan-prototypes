@@ -1,0 +1,12 @@
+{
+ "id": "APP-36",
+ "name": "Privacy Impact Assessor",
+ "url": "https://claude.ai/artifact/CPvvigNZmPKmr35aoCMmcw",
+ "slug": "5c481f13-77bd-4cd0-9b7a-0a5ec2307c24",
+ "version": "3",
+ "notes": "Works an IIP assessment backlog (six made-up requests, sorted by due date, one in review and one finished) by drafting a finding for each of 11 sample privacy principle summaries plus a sample council policy check, with AI quoting the proposal and rules used when AI is off, then the privacy officer confirms every finding before copying the advice memo and owner questions; principle and policy wording are samples to be checked against the Information Privacy Act 2009 (Qld). Reviewed for the brief and manager ready.",
+ "changed": true,
+ "desc": "Works through the privacy impact (IIP) assessment backlog: AI drafts a finding for each Queensland privacy principle and a council policy check, quoting the proposal, and works out a risk rating. A privacy officer confirms every finding, then copies the advice memo and questions for the project owner.",
+ "area": "Corporate",
+ "tested": "Playwright at 1280x800 light and 390x844 dark: opens on a seeded in-review assessment, confirm findings, advice step, Copy advice memo and Copy questions each with a Draft in Outlook link, Mark advice ready then Open next request, rules draft with AI off, new request validation, mobile backlog tab, Steps to productionise panel opens, All AI prototypes button shows, no page or console errors, scrollWidth equals viewport, no em or en dashes in visible text. AI path with a stand-in: prompt has no owner names or emails, AI dashes stripped, bad refs and non-string questions dropped, quote check flags unmatched quotes, Stop shows the cancelled message."
+}

@@ -1,0 +1,12 @@
+{
+ "id": "APP-02",
+ "name": "Pavement Modelling Assistant",
+ "url": "https://claude.ai/artifact/HJT5SnbtP2RUVTXyh5rzXM",
+ "slug": "8401eed5-74cb-4c23-9d8c-a52e390991cc",
+ "version": "3",
+ "notes": "Models deterioration on eight sample road segments with calibration to each segment's surveys, what if settings, treatment timing and costs, a defect check that reads cracking, rutting and potholes with drainage, flooding and heavy vehicles to suggest the likely cause, network patterns (now including flooding) and forward works, design traffic and granular pavement thickness calculations, and AI explanations and Q&A with personal details swapped for placeholders; model, rules and rates are illustrative, not the council's adopted ones. Reviewed for the brief and manager ready.",
+ "changed": true,
+ "desc": "Calibrates pavement deterioration curves to each road segment's condition surveys, reads defect and environmental data to suggest the likely cause, and times treatments with costs. Includes design traffic and pavement thickness calculations, network patterns and plain English AI explanations.",
+ "area": "Transport",
+ "tested": "Playwright at 1280x800 light and 390x844 dark: segment model, what if, add survey (with validation), defect check, treatment warning, pavement design calcs (with invalid input), Ask, network patterns, forward works, Copy explanation and Copy forward works summary each with Draft in Outlook beside, CSV export, productionise panel opens, All AI prototypes button shows, keyboard focus visible; no page or console errors, no horizontal page scroll, no em or en dashes on screen or in the panel; AI path with a stand-in (explain and ask) checked invalid refs dropped, dashes stripped and names, address, phone and email kept out of the prompt."
+}

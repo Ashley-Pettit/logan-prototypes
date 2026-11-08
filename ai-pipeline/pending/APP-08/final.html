@@ -157,6 +157,11 @@ textarea.notes{font-family:var(--f-mono);font-size:13px;min-height:200px}
 .sg .t{display:flex;gap:8px;flex-wrap:wrap;align-items:baseline}
 .sg .meta{font-size:13px;color:var(--muted);grid-column:1}
 .sg .done{font-size:13px;font-weight:700;color:var(--low)}
+.sg .dupe{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;justify-content:flex-end}
+/* Draft in Outlook sits beside a filled Copy button, so it is outlined */
+#ws a.lpx-ol{background:var(--surface);color:var(--accent);border:1.5px solid var(--accent);filter:none}
+#ws a.lpx-ol:hover{background:var(--accent-soft);color:var(--accent);filter:none}
+#ws a.lpx-ol:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
 .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
 /* notes on the left, draft on the right on wide screens */
 .io{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:18px;align-items:start}
@@ -227,6 +232,7 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
   .addf .row,.addf .row3,.editf .row3{grid-template-columns:minmax(0,1fr)}
   td.ed{text-align:left}
   .sg{grid-template-columns:minmax(0,1fr)}
+  .sg .dupe{justify-content:flex-start}
   .paper textarea{min-height:300px}
   .tbl-wrap{overflow:visible;border:0;display:grid}
   .tbl-wrap table{min-width:0;display:block}
@@ -470,12 +476,29 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
   }
 
   // Words in common, used to spot suggestions already in the log.
-  // Unique word stems (first five letters) longer than three letters.
+  // Unique word stems (first five letters) longer than three letters, leaving out filler words.
+  var STOP = ['with', 'from', 'could', 'still', 'after', 'befor', 'that', 'this', 'will', 'have', 'been', 'need', 'needs', 'works', 'about', 'into', 'over', 'next', 'until', 'there', 'their', 'than', 'they', 'when', 'what', 'some', 'more', 'done'];
   function words(s)
   {
     var seen = {};
-    String(s).toLowerCase().replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).forEach(function (w) { if (w.length > 3) { seen[w.slice(0, 5)] = 1; } });
+    String(s).toLowerCase().replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).forEach(function (w)
+    {
+      var st = w.slice(0, 5);
+      if (w.length > 3 && STOP.indexOf(st) < 0) { seen[st] = 1; }
+    });
     return Object.keys(seen);
+  }
+
+  // Key engineering topics. Two entries on the same topic that share stems are treated as the same thing.
+  var TOPICS = [
+    /\b(wet|rain\w*|weather|flood\w*|storms?)\b/, /\b(power )?poles?\b/, /\bwater main|\bmains?\b/, /\bconcrete\b/,
+    /\b(services|utilit\w*)\b/, /\b(trees?|roots?|arborist)\b/, /\bparking\b/, /\bsteel\b/, /\b(land|acquisition|boundary|property)\b/,
+    /\b(driveways?|crossovers?)\b/, /\b(rock|latent)\b/, /\bbus\b/, /\bnight works?\b/, /\bhandrails?\b/, /\bschool\b/, /\basphalt\b/
+  ];
+  function topics(s)
+  {
+    var t = String(s).toLowerCase();
+    return TOPICS.map(function (re, i) { return re.test(t) ? i : -1; }).filter(function (i) { return i > -1; });
   }
   function similar(a, b)
   {
@@ -484,10 +507,50 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
     var hit = A.filter(function (w) { return B.indexOf(w) > -1; }).length;
     return hit < 3 ? 0 : hit / Math.min(A.length, B.length);
   }
-  function inLog(p, type, text)
+  // The log entry a suggestion most likely repeats, or null.
+  function logMatch(p, type, text)
   {
     var list = type === 'decision' ? p.decisions : type === 'risk' ? p.risks : p.actions;
-    return list.some(function (x) { return similar(x.text, text) >= 0.5; });
+    var T = topics(text), W = words(text), best = null, bestScore = 0;
+    list.forEach(function (x)
+    {
+      var sim = similar(x.text, text);
+      var shared = topics(x.text).some(function (t) { return T.indexOf(t) > -1; });
+      var hits = words(x.text).filter(function (w) { return W.indexOf(w) > -1; }).length;
+      var score = sim >= 0.5 ? 1 + sim : shared && hits >= 2 ? 0.5 + hits / 20 : 0;
+      if (score > bestScore) { bestScore = score; best = x; }
+    });
+    return best;
+  }
+  function inLog(p, type, text) { return !!logMatch(p, type, text); }
+
+  // Updates an existing log entry with what a matching suggestion adds, and says what changed.
+  function updateFromSugg(type, item, e)
+  {
+    var did = [];
+    if (type === 'risk')
+    {
+      var before = rating(e);
+      e.l = Math.max(+e.l || 1, +item.l || 1); e.c = Math.max(+e.c || 1, +item.c || 1);
+      if (rating(e) !== before) { did.push('rating raised to ' + rating(e)); }
+      if (!e.owner && item.owner) { e.owner = item.owner; did.push('owner added'); }
+      if (!e.mit && item.mit) { e.mit = item.mit; did.push('mitigation added'); }
+      if (e.status === 'Closed') { e.status = 'Open'; did.push('reopened'); }
+      e.reviewed = iso(today()); did.unshift('marked reviewed today');
+    }
+    else if (type === 'decision')
+    {
+      if (!e.by && item.by) { e.by = item.by; did.push('decision maker added'); }
+      if (!e.why && item.why) { e.why = item.why; did.push('reason added'); }
+      if (!did.length) { did.push('confirmed, nothing new to add'); }
+    }
+    else
+    {
+      if (!e.owner && item.owner) { e.owner = item.owner; did.push('owner added'); }
+      if (e.status === 'Done') { e.status = 'Open'; e.due = item.due || e.due; did.push('reopened'); }
+      if (!did.length) { did.push('confirmed, nothing new to add'); }
+    }
+    return e.id + ' updated: ' + did.join(', ') + '.';
   }
 
   /* ---------- Log health (rules, no AI) ---------- */
@@ -659,6 +722,8 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
   function ruleExtract(p, text)
   {
     var sugg = { decisions: [], risks: [], actions: [] };
+    // In an email, "could" and "may" are usually questions or options, not risks.
+    var isEmail = /^\s*(hi|hello|dear)\b/i.test(String(text));
     String(text).split('\n').map(cleanLine).filter(Boolean).forEach(function (l)
     {
       if (/^action\b/i.test(l))
@@ -675,7 +740,7 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
       {
         sugg.decisions.push({ text: cap(l.replace(/^(agreed|decided|decision)\s*:?\s*/i, '')), by: '', why: '' });
       }
-      else if (/\b(risk|concern|could|may)\b/i.test(l))
+      else if (isEmail ? /\b(risk|concern)\b/i.test(l) : /\b(risk|concern|could|may)\b/i.test(l))
       {
         sugg.risks.push({ text: cap(l.replace(/^(risk|concern)\s*:?\s*/i, '').replace(/^[A-Z][a-z]+ concern:\s*/, '')), l: 3, c: 3, mit: '', owner: '' });
       }
@@ -1098,13 +1163,16 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
     {
       s[t[0] + 's'].forEach(function (x, i)
       {
-        var dup = !x.added && inLog(p, t[0], x.text);
+        var dup = !x.added && !x.updated ? logMatch(p, t[0], x.text) : null;
         var meta = t[0] === 'risk' ? 'Rated <span class="lvl ' + rating(x) + '">' + rating(x) + '</span> (likelihood ' + x.l + ', consequence ' + x.c + ')' + (x.owner ? ' · Owner: ' + esc(x.owner) : '') + (x.mit ? ' · Mitigation: ' + esc(x.mit) : '')
           : t[0] === 'action' ? 'Owner: ' + esc(x.owner || 'not stated') + ' · Due ' + esc(fmt(x.due))
           : (x.by ? 'By ' + esc(x.by) : 'Decision maker not stated') + (x.why ? ' · Why: ' + esc(x.why) : '');
         h += '<div class="sg"><div class="t"><span class="st">' + t[1] + '</span><span>' + esc(x.text) + '</span></div>' +
-          (x.added ? '<span class="done">Added to log</span>' : dup ? '<span class="hint">Already in the log</span>' : '<button class="ghost" type="button" data-add="' + t[0] + ':' + i + '">Add to log</button>') +
-          '<div class="meta">' + meta + '</div></div>';
+          (x.added ? '<span class="done">Added to log</span>' : x.updated ? '<span class="done">Updated ' + esc(x.updated) + '</span>'
+            : dup ? '<div class="dupe"><span class="hint">Already in the log (' + esc(dup.id) + ')</span><button class="ghost" type="button" data-upd="' + t[0] + ':' + i + '" aria-label="Update ' + esc(dup.id) + ' from this ' + t[0] + '">Update ' + esc(dup.id) + '</button><button class="link" type="button" data-add="' + t[0] + ':' + i + '" aria-label="Add this ' + t[0] + ' as a new entry anyway">Add anyway</button></div>'
+            : '<button class="ghost" type="button" data-add="' + t[0] + ':' + i + '">Add to log</button>') +
+          '<div class="meta">' + meta + '</div>' +
+          (dup ? '<div class="meta">In the log as ' + esc(dup.id) + ': ' + esc(dup.text) + '</div>' : '') + '</div>';
       });
     });
     return h + '</div></div>';
@@ -1168,7 +1236,7 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
       h += '<div class="callout warn"><b>' + issues.length + ' thing' + (issues.length === 1 ? '' : 's') + ' to check in this log</b><ul class="checks">' + checksHtml(issues.map(function (x) { return { k: x.k === 'bad' ? 'no' : 'nt', t: x.t, fix: x.fix, chase: x.chase }; })) + '</ul></div>';
     }
     else { h += '<div class="callout info"><b>Log looks healthy</b><span>Every open risk has an owner and mitigation, and no actions are overdue.</span></div>'; }
-    h += '<div class="actions"><button class="btn sec sm" type="button" id="copylog">Copy log summary</button><button class="ghost" type="button" id="toreport">Write status report from this log</button></div>';
+    h += '<div class="actions"><button class="btn sm" type="button" id="copylog">Copy log summary</button><button class="ghost" type="button" id="toreport">Write status report from this log</button></div>';
     h += '</div>';
 
     // Risks
@@ -1297,6 +1365,17 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
       item.added = true;
       render(); toast(parts[0].charAt(0).toUpperCase() + parts[0].slice(1) + ' added to the log');
       var nx = ws.querySelector('[data-add]') || $('out-h'); if (nx) { nx.focus(); }
+      return;
+    }
+    if (t.dataset.upd)
+    {
+      var up = t.dataset.upd.split(':'), uo = state.out[key()];
+      var uitem = uo.sugg[up[0] + 's'][+up[1]], entry = logMatch(p, up[0], uitem.text);
+      if (!entry) { render(); return; }
+      var msg = updateFromSugg(up[0], uitem, entry);
+      uitem.updated = entry.id;
+      render(); toast(msg);
+      var nu = ws.querySelector('[data-upd],[data-add]') || $('out-h'); if (nu) { nu.focus(); }
       return;
     }
     if (t.id === 'addall')

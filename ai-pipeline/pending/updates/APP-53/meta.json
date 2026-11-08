@@ -1,0 +1,15 @@
+{
+ "id": "APP-53",
+ "name": "End-of-Month Commentary Drafter",
+ "url": "https://claude.ai/artifact/DCoxXqGQUcVoikYvXPeBTh",
+ "slug": "62d3c8b0-5efb-404c-ad19-8ff53869271c",
+ "version": "5",
+ "notes": "Opens on a worked Parks October draft built from sample year-to-date variances, lets the analyst set materiality thresholds and add known reasons, then drafts executive summary, material variance and full-year outlook commentary with AI (checked JSON reply) or templates, checks every figure against the table and copies, prints or drafts it in Outlook; it assumes commentary is year to date against the phased budget. Reviewed for the brief and manager ready.",
+ "changed": true,
+ "desc": "Turns the month's budget variances into draft commentary for a financial analyst to finish. Set materiality thresholds, add known reasons, draft with AI or templates, then check every figure against the table before copying.",
+ "area": "Finance",
+ "tested": "Playwright at 1280x800 light and 390x844 dark: opens on a template draft with figures checked; changed branch (stale draft note shows), typed a reason, switched to Detailed and redrafted, added a wrong figure and Check figures flagged it and jumped to it, Copy commentary copied with Draft in Outlook beside it, empty CSV message, example CSV loaded and drafted, invalid threshold message, visible keyboard focus, Steps to productionise opens, All AI prototypes shows, no page or console errors, scrollWidth equals viewport, no em or en dashes in visible text or the panel. AI stand-in: sample.json called with modelTier default and cache false; sample names, a typed name, email, phone and street address all replaced by placeholders in the prompt and restored in the draft; markdown and em dashes cleaned; a missing line and a cause invented for a line with no reason replaced with template wording; wrong figures from the reply flagged by Check figures; wrong-shaped reply, thrown error and null capability fall back to the template with a plain message; Stop keeps the previous draft.",
+ "capabilities": {
+  "sample": {}
+ }
+}

@@ -1,0 +1,12 @@
+{
+ "id": "APP-12",
+ "name": "Mechanic Knowledge Assistant",
+ "url": "https://claude.ai/artifact/QzNgaHfmJywhNiQFHYUqdB",
+ "slug": "c244f23e-94cb-4823-8015-41119c7d941a",
+ "version": "6",
+ "notes": "Job queue with a worked example answer, grounded Q&A with clickable sources and spec checks, fault code finder (now covering EV codes in the library), searchable sample library and a gap list that copies to the knowledge owner; names and contact details are swapped for placeholders before AI, and without AI it gives fault meanings, first checks, safety lines and key values from the library. Reviewed for the brief and manager ready.",
+ "changed": true,
+ "desc": "Mechanics pick a job or ask a question and get a short answer built only from workshop manuals and procedures, with numbered sources, checked specs and fault code first checks. Gaps in the library go on a list to send to the knowledge owner.",
+ "area": "Transport",
+ "tested": "Playwright at 1280x800 light and 390x844 dark: opens with a worked example, fault code ask (EV-012), job switch, library search and empty state, empty question error, gap flag and Copy gap report (clipboard text checked), Copy answer, Add to job, source links; no page or console errors, scrollWidth equals viewport, no em or en dashes in visible text, Steps to productionise opens, All AI prototypes shows, every Copy button has Draft in Outlook beside it. AI path with a stand-in: prompt had names, phone and email replaced with placeholders, dashes stripped, unverifiable spec flagged Check manual."
+}

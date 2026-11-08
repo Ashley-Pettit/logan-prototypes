@@ -1,0 +1,84 @@
+{
+ "recommend": "azure",
+ "why": "The real time saving comes from reading month-end figures straight from the council's finance system each month instead of hand-made spreadsheets, and that needs an Azure integration with agreed, testable rules.",
+ "knowledge": [
+  "Month-end budget and actuals for each venue cost centre, from the council's finance system or the Data Warehouse.",
+  "The chart of accounts and cost centre structure for Venues and Events.",
+  "The council's variance reporting thresholds and month-end reporting procedure.",
+  "Venue budgets for the year, including any phasing by month.",
+  "Past month-end commentary and known seasonal patterns for each venue (school holidays, events, pay runs)."
+ ],
+ "azure": {
+  "technical": [
+   "Move the prototype into an Azure DevOps repo and rebuild the front end in Vue and Bootstrap, hosted on Azure App Service with council (Entra ID) sign-in.",
+   "Run the checks (variance, unusual months, steady trends, last year, totals) in an Azure Function App so they are tested and the same for everyone.",
+   "Move all AI calls into the Function App, with Claude through Microsoft Foundry or the council's Anthropic agreement. Keys live in Key Vault, never in the page.",
+   "Send only account names, numbers and findings to the model. Strip any personal information, such as names in descriptions, before anything goes to the model.",
+   "Pull monthly budget and actuals by cost centre from the council's finance system or the Data Warehouse through Data Factory, Boomi or Logic Apps, instead of uploaded spreadsheets.",
+   "Store reviews, finding status and notes in Azure SQL so month-end history and follow-ups are kept.",
+   "Security review against the OWASP Top 10 and the OWASP Top 10 for LLM apps, including prompt injection through account names or uploaded files.",
+   "Dev, Test and Prod resource groups in the council's Azure subscription.",
+   "Azure App Service (front end) and Azure Function App (checks and AI calls).",
+   "Key Vault, Application Insights logging and cost alerts.",
+   "Azure SQL for review history and settings.",
+   "Model access: a Claude deployment in Microsoft Foundry or an enterprise Anthropic API key (needs an ICT-DA exception as it is outside the listed stack).",
+   "Entra ID app registration and a security group for Corporate Support and venue managers.",
+   "Azure DevOps repo and CI/CD pipelines for Dev, Test and Prod.",
+   "Read access to the finance system or Data Warehouse for venue cost centres."
+  ],
+  "business": [
+   "Confirm the business owner in Venues and Events Corporate Support, the scope and success measures (for example, hours saved at month end and errors caught before reports go out), and raise an Azure DevOps card (why and how).",
+   "Agree the variance thresholds, severity rules and seasonal patterns with Finance.",
+   "Name a knowledge owner for the rules and the chart of accounts mapping.",
+   "Build a test plan and an AI evaluation set from 6 to 12 past month-end packs with the issues a finance officer found, then run UAT with test figures.",
+   "Train Corporate Support officers and venue managers, and set up support: who to ask and how to report a wrong finding or explanation.",
+   "Get ICT-DA, CAB, PGG and Business System Owner approval, with a Go Live plan, service transition document and support playbook."
+  ]
+ },
+ "claude": {
+  "technical": [
+   "Set it up as a Claude Project for Venues and Events Corporate Support in the council's enterprise Claude, with the review rules and thresholds as the project instructions.",
+   "Turn the review into a Claude skill that reads an uploaded month-end spreadsheet (Excel or CSV), runs the same checks with code, including steady trends, and returns findings, explanations, a manager summary and questions.",
+   "Add the chart of accounts, thresholds and known seasonal patterns as project files.",
+   "Admin settings checked: data retention, file uploads, code execution and sharing."
+  ],
+  "business": [
+   "Confirm the business owner, who will use it and what it must never do (it flags and explains, a finance officer decides).",
+   "Agree the thresholds and severity rules with Finance before the pilot.",
+   "Test it with 6 to 12 past month-end spreadsheets and record how many known issues it finds and how many false alarms it raises.",
+   "Pilot with Corporate Support for two month-ends, with a 30 minute walkthrough and a feedback form.",
+   "Enterprise Claude seats for Corporate Support officers.",
+   "A project owner who keeps the instructions, thresholds and seasonal notes up to date.",
+   "Clear rules on what can be uploaded: finance figures are fine, but no payroll detail or personal information.",
+   "Officers still export spreadsheets by hand each month, so there is no time saved on getting the data.",
+   "Get the use case approved (ICT-DA and PGG) and confirm privacy settings before rolling it out wider."
+  ]
+ },
+ "stakeholders": [
+  {
+   "role": "Raised the request",
+   "who": "Person 043",
+   "detail": "Ticket 335145: Financial spreadsheet review assistant. Corporate Support, Venues and Events, Community and Lifestyle. Asked for: \"Financial Review Assistant\". Triage: New AI solution / agent."
+  },
+  {
+   "role": "Business owner (to confirm)",
+   "who": "Venues and Events manager",
+   "detail": "Owns the process, agrees what good looks like and signs off going live."
+  },
+  {
+   "role": "Knowledge owners (to confirm)",
+   "who": "Owners of the source documents",
+   "detail": "Keep the documents the tool relies on current and approved."
+  },
+  {
+   "role": "Delivery",
+   "who": "AI team, Information Technology Services",
+   "detail": "Builds the solution, runs testing and hands over to support."
+  },
+  {
+   "role": "Approvals",
+   "who": "ICT-DA, CAB, PGG and the Business System Owner",
+   "detail": "Approve the design, the change and going live."
+  }
+ ]
+}

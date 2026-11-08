@@ -1,0 +1,12 @@
+{
+ "id": "APP-05",
+ "name": "Fleet EV and Route Optimiser",
+ "url": "https://claude.ai/artifact/NKZ3Tkw6ymxdqeaovMbQTs",
+ "slug": "aca70bec-369c-4d61-b803-a5134a4ab402",
+ "version": "3",
+ "notes": "Rules flag under-used vehicles to pool, electric swaps, charger installs and shared runs for 16 sample vehicles across three sample depots, a new Routes view costs every recurring run with a suggested change, and a copyable brief for managers works with or without AI, which rewrites it and answers questions naming the vehicles used; EV models, prices and emission factors are rounded sample figures. Reviewed for the brief and manager ready.",
+ "changed": true,
+ "desc": "Finds under-used council fleet vehicles, checks which could switch to electric with the depot chargers available, and costs each recurring route with a suggestion to share it or run it electric. A plain-English brief for managers can be copied or drafted in Outlook.",
+ "area": "Transport",
+ "tested": "Playwright at 1280x800 light and 390x844 dark with AI off and with a stand-in AI: no page or console errors, scrollWidth equals viewport, all five tabs, assumption edit, vehicle peek, Ask with typed question and example chip, Copy brief for managers puts the brief on the clipboard with Draft in Outlook beside it (CSV copy opted out), Steps to productionise opens, All AI prototypes shows, keyboard focus ring visible; AI path confirmed name, email and phone in a question are swapped for placeholders before the prompt and invented vehicle ids in AI output are dropped."
+}

@@ -1,0 +1,12 @@
+{
+ "id": "APP-38",
+ "name": "Community Venues Knowledge Assistant",
+ "url": "https://claude.ai/artifact/1VrEX4FPY2ph4tGY2kNNz3",
+ "slug": "04072aa0-fcdb-4adb-ba5d-a2a2901af5b8",
+ "version": "4",
+ "notes": "Drafts replies to venue hire enquiries and answers staff questions from sample venue documents with numbered sources, with a fee estimator, a pre-made sample draft so it opens in a working state, per-question source matching, and a pasted new enquiry now has its venue, times and extras read by rules for staff to check; names, emails and phone numbers are swapped for placeholders before AI (including on the Ask tab), it falls back to template replies or document search without AI, and all venues, fees and rules are made-up samples. Reviewed for the brief and manager ready.",
+ "changed": true,
+ "desc": "Drafts replies to community venue hire enquiries with an indicative fee, sourced answers to each question and automatic checks. Staff can also ask quick questions about venue procedures, fees and rules and see the source sections.",
+ "area": "Community",
+ "tested": "Playwright at 1280x800 light and 390x844 dark: no page or console errors, no horizontal scroll, sample draft on load, template redraft, Copy reply with Draft in Outlook beside it, Mark as replied, fee adjust flags a stale draft, Ask suggestions (gap case shows Not covered), document search and empty state, new enquiry validation, sample fill and booking details read from text, Steps to productionise panel opens, All AI prototypes button shows. AI stand-in: reply and Ask prompts contain no names, emails or phone numbers; em dashes and invalid source tags are stripped; placeholders restored."
+}

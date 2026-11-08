@@ -1,0 +1,12 @@
+{
+ "id": "APP-01",
+ "name": "Road Safety Assessor",
+ "url": "https://claude.ai/artifact/4gpWDVtLvpyBCuJeBg3VfK",
+ "slug": "1ddab2be-31c3-4385-a10b-1f0bcf78265e",
+ "version": "3",
+ "notes": "Scores and ranks 12 made-up road segments on crash history, speed, pedestrian exposure and layout with adjustable weights, now also ranks road safety issues across the network (such as pedestrians struck, intersection and night crashes) by severity, and AI explains each segment, suggests treatments and writes briefings with data-built wording when AI is off; assumes the sample severity points stand in for the council's adopted method. Reviewed for the brief and manager ready.",
+ "changed": true,
+ "desc": "Ranks road segments and road safety issues across a sample network from crash, speed, pedestrian and layout data. AI explains each segment's risk, suggests treatments and drafts briefings.",
+ "area": "Transport",
+ "tested": "Playwright at 1280x800 light and 390x844 dark: weights, ranked list copy, new issue ranking and its segment links, template explanation, tick suggested treatments, network and segment briefings, mobile Ranking and Details tabs, Steps to productionise panel, All AI prototypes button, Draft in Outlook beside both Copy buttons; no page or console errors, no horizontal scroll, no em or en dashes visible; AI stand-in path with explanation validation (unknown treatment dropped, dash cleaned) and no resident names or phone numbers in prompts."
+}

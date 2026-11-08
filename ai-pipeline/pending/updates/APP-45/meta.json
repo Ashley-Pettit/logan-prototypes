@@ -1,0 +1,12 @@
+{
+ "id": "APP-45",
+ "name": "Event Plan and Risk Drafter",
+ "url": "https://claude.ai/artifact/9xoseNHnuGb57om9nh4doS",
+ "slug": "4893e73b-7de8-4b25-aff3-e53cec3523ad",
+ "version": "3",
+ "notes": "Drafts an event management plan, run sheet and risk register (5 by 5 matrix) from a booking brief using a sample hazard library and lessons from similar past events, works out permits, runs checks and drafts the organiser email, with template drafts when AI is off and organiser contact details swapped for placeholders before AI; assumes the risk matrix, hazard library and permit rules are samples to be replaced by the council's approved versions. Reviewed for the brief and manager ready.",
+ "changed": true,
+ "desc": "Turns an event booking brief into a draft event plan, run sheet and risk register, using a hazard library and lessons from similar past events. It also lists the permits still to come and drafts the email to the organiser.",
+ "area": "Community",
+ "tested": "Playwright at 1280x800 light and 390x844 dark: brief, template draft, risk register edits and heat maps, permits, checks, copy buttons with Draft in Outlook links, mark ready, seeded events, new brief validation, Steps to productionise panel and All AI prototypes button; no page or console errors, no horizontal scroll, no em or en dashes in page text. AI path tested with a stand-in: no organiser name, group, phone or email in the prompt, placeholders restored, bad scores and dashes cleaned, invalid risks dropped."
+}

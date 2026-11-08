@@ -1,0 +1,16 @@
+{
+ "id": "APP-14",
+ "name": "Road Standards Search",
+ "url": "https://claude.ai/artifact/1EsibMe2dK5F8CSmf9hT72",
+ "slug": "01efecae-9933-4692-9e20-e91075a73e05",
+ "version": "5",
+ "notes": "Searches a made-up library of road policies, standards and specifications with plain-English AI answers that cite clauses, compares versions word by word with an AI explanation, and now looks up roads in a sample asset register and checks them against the current clauses (assumes the real asset register can be read in production). Reviewed for the brief and manager ready.",
+ "changed": true,
+ "desc": "Ask a road standards question in plain English and get an answer drawn only from the matching clauses. Look up a road to see how it measures up to the current standards, and compare versions to see what changed.",
+ "area": "Transport",
+ "capabilities": {
+  "sample": {},
+  "downloads": {}
+ },
+ "tested": "Playwright at 1280x800 light and 390x844 dark: example search on load, suggestion search, no-match and empty-question states, road lookup from a question, road check tab with copy, read clause in context, compare versions with copy, keyboard tab arrows, mobile library switch, productionise panel opens, All AI prototypes button shows, Draft in Outlook beside every Copy button, no page or console errors, no horizontal scroll, no em or en dashes in visible text. AI stand-in: answer with clause and road citations (invalid citation dropped), name, house number, phone and email replaced with placeholders in the prompt, compare explanation drops invented clauses, null AI reply falls back to clauses with a plain message."
+}

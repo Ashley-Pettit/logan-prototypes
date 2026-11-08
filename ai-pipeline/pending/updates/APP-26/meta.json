@@ -1,0 +1,16 @@
+{
+ "id": "APP-26",
+ "name": "Road Maintenance Scheduler",
+ "url": "https://claude.ai/artifact/VpwqKrtmJFdVAHhCmfFFJi",
+ "slug": "e971a1bf-4e42-41aa-b503-d00cf3d784cb",
+ "version": "3",
+ "notes": "Ranks a made-up backlog of 20 road jobs within a weekly budget (very high risk jobs always kept), sequences crews by zone on a schematic map with a copyable daily run sheet, checks a sample contractor defect survey return against assumed contract data rules (flags missing fields and repeats, drafts a query to the contractor, adds clean records to the backlog), and rates drain grate photos with AI or by hand. Reviewed for the brief and manager ready.",
+ "changed": true,
+ "desc": "Builds next week's road maintenance programme from a job backlog, budget and crews, and checks contractor survey data and drain grate photos before they reach the backlog. AI explains the order, reads messy contractor returns and rates grate photos; rules do the job when AI is off.",
+ "area": "Transport",
+ "capabilities": {
+  "sample": {},
+  "downloads": {}
+ },
+ "tested": "Playwright at 1280x800 light and 390x844 dark, with AI off and with a stand-in AI: settings, backlog pin, defer and filters, day tabs and Copy run sheet, AI programme review with Apply, contractor data rules check, AI check, add one and add all, Copy query to contractor, no-header error, grate photo AI and manual rating with Add to backlog, productionise panel, All AI prototypes button and Draft in Outlook links beside each Copy button; no page or console errors, no horizontal scroll, no names, phone numbers, emails or house numbers in any AI prompt, no em or en dashes in visible text."
+}

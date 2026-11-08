@@ -1,0 +1,86 @@
+{
+ "recommend": "azure",
+ "why": "Mechanics need quick answers on workshop tablets without everyone having a Claude seat, and answers should link to the fleet system.",
+ "knowledge": [
+  "Manufacturer workshop manuals and service schedules (check the licence allows this use).",
+  "Council fleet maintenance procedures and safe work procedures (Word / PDF).",
+  "Fault history and past work orders from the fleet management system.",
+  "Recall notices and technical service bulletins."
+ ],
+ "azure": {
+  "technical": [
+   "Move the prototype into an Azure DevOps repo and rebuild the front end in Vue and Bootstrap, hosted on Azure App Service with council (Entra ID) sign-in.",
+   "Move all AI calls into an Azure Function App, with Claude through Microsoft Foundry or the council's Anthropic agreement. Keys live in Key Vault, never in the page.",
+   "Strip or pseudonymise personal information before anything goes to the model.",
+   "Load the knowledge into an Azure AI Search index over the source documents in Blob Storage, so answers can quote their source.",
+   "Show it on workshop tablets in a simple, glove-friendly layout.",
+   "Send flagged gaps to the knowledge owner automatically (for example a SharePoint list or Planner task) instead of the copied gap report.",
+   "Link answers to the vehicle's history and open work orders in the fleet management system.",
+   "Security review against the OWASP Top 10 and the OWASP Top 10 for LLM apps (including prompt injection).",
+   "Dev, Test and Prod resource groups in the council's Azure subscription.",
+   "Azure App Service (front end) and Azure Function App (AI and data calls).",
+   "Key Vault, Application Insights logging and cost alerts.",
+   "Blob Storage and Azure AI Search for the knowledge, or SQL / Cosmos DB for working data.",
+   "Model access: a Claude deployment in Microsoft Foundry or an enterprise Anthropic API key (needs an ICT-DA exception as it's outside the listed stack).",
+   "Entra ID app registration and a security group for who can use it.",
+   "Azure DevOps repo and CI/CD pipelines for Dev, Test and Prod.",
+   "Read access to the fleet management system (through Boomi or Logic Apps).",
+   "Workshop tablets on the council network."
+  ],
+  "business": [
+   "Confirm the business owner, scope and success measures, and raise an Azure DevOps card (why and how).",
+   "Build a test plan and an AI evaluation set (real-style questions with expected answers), then run UAT with synthetic or anonymised data.",
+   "Name a knowledge owner who keeps the source documents current and approved.",
+   "Agree how fast the knowledge owner answers flagged gaps, and check the fault code guides for every fleet model are loaded.",
+   "Train the people who will use it, and set up support: who to ask and how to report a wrong answer.",
+   "Get ICT-DA, CAB, PGG and Business System Owner approval, with a Go Live plan, service transition document and support playbook."
+  ]
+ },
+ "claude": {
+  "technical": [
+   "Set it up as a Claude Project for workshop leads in the council's enterprise Claude, with the prototype's instructions as the project instructions.",
+   "Add the knowledge as project files, or connect the SharePoint library it lives in so it stays current.",
+   "Admin settings checked: data retention, sharing and connector permissions."
+  ],
+  "business": [
+   "Confirm the business owner, who will use it and what it must never do (it drafts, a person decides).",
+   "Organise manuals by make and model so answers stay on the right vehicle.",
+   "Agree how mechanics report gaps and how fast the knowledge owner adds the missing procedure or spec.",
+   "Test it with 20 to 30 real-style cases and record how often it gets them right.",
+   "Pilot with a small group, give them a 30-minute walkthrough, and collect feedback for two to four weeks.",
+   "Enterprise Claude seats for everyone who will use it.",
+   "A project owner who keeps the instructions and knowledge up to date.",
+   "The knowledge in a controlled SharePoint library (approved versions only), plus the Microsoft 365 connector if it's connecting live.",
+   "Clear rules on what information can be entered (no unnecessary personal information).",
+   "Claude seats or shared access for workshop leads (fewer seats, so not every mechanic).",
+   "Get the use case approved (ICT-DA and PGG) and confirm privacy settings before rolling it out wider."
+  ]
+ },
+ "stakeholders": [
+  {
+   "role": "Raised the request",
+   "who": "Person 031",
+   "detail": "Ticket 328505: Mechanic knowledge-base agent. Plant Fleet, City Fleet, Transport Services. Asked for: \"Mechanic tool - knowledge base agent for maintenance\". Triage: Unable to determine."
+  },
+  {
+   "role": "Business owner (to confirm)",
+   "who": "City Fleet manager",
+   "detail": "Owns the process, agrees what good looks like and signs off going live."
+  },
+  {
+   "role": "Knowledge owners (to confirm)",
+   "who": "Owners of the source documents",
+   "detail": "Keep the documents the tool relies on current and approved."
+  },
+  {
+   "role": "Delivery",
+   "who": "AI team, Information Technology Services",
+   "detail": "Builds the solution, runs testing and hands over to support."
+  },
+  {
+   "role": "Approvals",
+   "who": "ICT-DA, CAB, PGG and the Business System Owner",
+   "detail": "Approve the design, the change and going live."
+  }
+ ]
+}

@@ -1,0 +1,12 @@
+{
+ "id": "APP-43",
+ "name": "Property Acquisition Assistant",
+ "url": "https://claude.ai/artifact/EwraKzQuTsm9nwcFbiWi7s",
+ "slug": "70ef8481-600f-4548-b38f-3722e8ccf8aa",
+ "version": "3",
+ "notes": "Tracks three sample acquisition projects and twelve parcels, now lets officers record progress on a parcel (stage, offer, agreed amount, next action, due date, file note) that flows straight into the Red, Amber or Green status and the project manager, executive or councillor report, answers questions from a sample library of past files with checked citations or search when AI is off, and shows who can approve each amount under the sample delegations; assumes progress updates live in the page only until a parcel register exists. Reviewed for the brief and manager ready.",
+ "changed": true,
+ "desc": "Track land acquisition parcels by stage, record progress and see who can approve each amount. Ask past acquisition files for precedents and draft status reports for a project manager, executive or councillor.",
+ "area": "Corporate",
+ "tested": "Playwright at 1280x800 light and 390x844 dark: no page or console errors, no horizontal scroll at each step, parcel detail and Record progress form (blank next action shows an inline error, valid save updates the table, approver and file notes), Ask past files in search mode, all three report audiences, stale report notice after a parcel update, Copy status report and Copy answer each with Draft in Outlook beside them, Steps to productionise panel opens, All AI prototypes button shows, project switching. AI path with a stand-in: owner name, address, lot, phone and email swapped for placeholders in all prompts, invalid citations stripped, dashes removed, placeholders restored in staff reports and replaced with neutral words in councillor briefings."
+}

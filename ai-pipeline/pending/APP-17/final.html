@@ -3,6 +3,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
 /* Layout: City Planner AI family shell. Navy masthead, prototype notice, template library beside a three-step fill workspace (data, open sections, document). */
 :root{
@@ -256,14 +257,14 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
 </main>
 
 <footer class="foot gut"><div class="foot-in">
-  <div><b>How it works.</b> Pick an approved template and a project, or add your own project data by pasting fields from an export. The page fills every field it can from the project data and shows where each value came from. AI writes only the free-text sections the template leaves open, using the project's notes. You check each drafted section, fix any missing data, then copy the finished document. Nothing is sent or saved from here.</div>
+  <div><b>How it works.</b> Pick an approved template and a project, or add your own project data by pasting fields from an export. The page fills every field it can from the project data and shows where each value came from. AI writes only the free-text sections the template leaves open, using the project's notes. You check each drafted section, fix any missing data, then copy the finished document or download it as a Word file. Nothing is sent or saved without you.</div>
   <details><summary>Prototype handover notes</summary>
     <ul>
       <li>In the LCC stack for production: HTML, CSS and JavaScript front end (move to Vue and Bootstrap) on Azure App Service, an Azure Function App for model calls and for filling Word templates, Blob Storage or SharePoint for the approved templates, SQL or the Data Warehouse for project data, Entra ID sign-in.</li>
       <li>Needs an ICT-DA exception: Claude (Anthropic) as the AI provider, through the council's enterprise agreement or Microsoft Foundry.</li>
       <li>Privacy: people's names and phone numbers are swapped for placeholders like [P1] before anything goes to AI. Field values are filled in by the page, not by AI.</li>
       <li>The templates, field names, procurement thresholds and wording here are samples. Each template owner must supply and approve the real Word template and its fields.</li>
-      <li>Still needed for production: the approved Word templates, a link to the project register and finance system, output to Word with the council's styles, a test plan with an AI evaluation set, Dev, Test and Prod environments, and ICT-DA, CAB and business owner approvals.</li>
+      <li>Still needed for production: the approved Word templates, a link to the project register and finance system, filling the real Word templates in the council's styles (the prototype's Word download uses a plain layout), a test plan with an AI evaluation set, Dev, Test and Prod environments, and ICT-DA, CAB and business owner approvals.</li>
     </ul>
   </details>
   <div>Based on idea 340957, Template Document Generator. Rapid AI prototype for discussion, not a council system.</div>
@@ -421,6 +422,8 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
     error: ''
   };
   var sample = null, ctl = null;
+  var downloads = null; // the page's downloads capability; null hides the Word download button
+  var saving = false;
 
   /* ---------- Helpers ---------- */
   function $(id) { return document.getElementById(id); }
@@ -849,6 +852,120 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
     return L.join('\n').replace(/\n{3,}/g, '\n\n');
   }
 
+  /* ---------- Word download ---------- */
+  function initDownloads()
+  {
+    if (typeof window.claude === 'undefined' || !window.claude || typeof window.claude.use !== 'function') { return; }
+    window.claude.use('downloads').then(function (d) { downloads = d || null; if (downloads) { render(); } }, function () { downloads = null; });
+  }
+
+  function xml(s)
+  {
+    return String(s == null ? '' : s).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '').replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; });
+  }
+  function wRun(text, bold) { return '<w:r>' + (bold ? '<w:rPr><w:b/></w:rPr>' : '') + '<w:t xml:space="preserve">' + xml(text) + '</w:t></w:r>'; }
+  function wPara(text, style, bold) { return '<w:p>' + (style ? '<w:pPr><w:pStyle w:val="' + style + '"/></w:pPr>' : '') + wRun(text, bold) + '</w:p>'; }
+  function wBullet(text) { return '<w:p><w:pPr><w:pStyle w:val="ListBullet"/><w:numPr><w:ilvl w:val="0"/><w:numId w:val="1"/></w:numPr></w:pPr>' + wRun(text) + '</w:p>'; }
+  function wTable(rows)
+  {
+    var b = '<w:tblBorders>' + ['top', 'left', 'bottom', 'right', 'insideH', 'insideV'].map(function (e) { return '<w:' + e + ' w:val="single" w:sz="4" w:space="0" w:color="B9C4CF"/>'; }).join('') + '</w:tblBorders>';
+    var cell = function (txt, w, bold) { return '<w:tc><w:tcPr><w:tcW w:w="' + w + '" w:type="dxa"/></w:tcPr>' + wPara(txt, null, bold) + '</w:tc>'; };
+    return '<w:tbl><w:tblPr><w:tblW w:w="9000" w:type="dxa"/>' + b + '<w:tblCellMar><w:left w:w="100" w:type="dxa"/><w:right w:w="100" w:type="dxa"/></w:tblCellMar></w:tblPr>' +
+      '<w:tblGrid><w:gridCol w:w="3000"/><w:gridCol w:w="6000"/></w:tblGrid>' +
+      rows.map(function (r) { return '<w:tr>' + cell(r[0], 3000, true) + cell(r[1], 6000, false) + '</w:tr>'; }).join('') + '</w:tbl><w:p/>';
+  }
+  // A drafted section: dot points become a bulleted list, other lines become paragraphs.
+  function wGap(text, list)
+  {
+    var lines = String(text || '').split('\n').map(function (l) { return l.trim(); }).filter(Boolean);
+    var bullets = list || (lines.length && lines.every(function (l) { return /^[-*]\s/.test(l); }));
+    return lines.map(function (l) { return bullets ? wBullet(l.replace(/^[-*]\s*/, '')) : wPara(l); }).join('');
+  }
+
+  // Builds minimal WordprocessingML: heading, document details table, headings, paragraphs and dot points.
+  function docxBody(t, p, o)
+  {
+    var h = wPara(t.name, 'Heading1') + wPara('Template version ' + t.version + '. Owner: ' + t.owner + '. DRAFT for checking.', 'Subtle');
+    t.blocks.forEach(function (b)
+    {
+      if (b.t === 'h') { h += wPara(b.x, 'Heading2'); }
+      else if (b.t === 'p') { h += wPara(fillText(p, b.x, false)); }
+      else if (b.t === 'dl') { h += wTable(b.rows.map(function (f) { return [FIELDS[f].label, fillText(p, '{{' + f + '}}', false)]; })); }
+      else if (b.t === 'gap') { h += wGap(o.gaps[b.id], b.list); }
+    });
+    h += wPara('Sample data. Rapid AI prototype.', 'Subtle');
+    var ns = 'xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"';
+    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document ' + ns + '><w:body>' + h +
+      '<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1300" w:right="1300" w:bottom="1300" w:left="1300" w:header="700" w:footer="700" w:gutter="0"/></w:sectPr></w:body></w:document>';
+  }
+  var DOCX_STYLES = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">' +
+    '<w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/><w:sz w:val="22"/><w:lang w:val="en-AU"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="120" w:line="276" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults>' +
+    '<w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w:style>' +
+    '<w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:qFormat/><w:pPr><w:keepNext/><w:spacing w:before="0" w:after="120"/><w:outlineLvl w:val="0"/></w:pPr><w:rPr><w:b/><w:color w:val="003F75"/><w:sz w:val="36"/></w:rPr></w:style>' +
+    '<w:style w:type="paragraph" w:styleId="Heading2"><w:name w:val="heading 2"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:qFormat/><w:pPr><w:keepNext/><w:spacing w:before="240" w:after="80"/><w:outlineLvl w:val="1"/></w:pPr><w:rPr><w:b/><w:color w:val="003F75"/><w:sz w:val="26"/></w:rPr></w:style>' +
+    '<w:style w:type="paragraph" w:styleId="Subtle"><w:name w:val="Subtle"/><w:basedOn w:val="Normal"/><w:rPr><w:color w:val="5B6670"/><w:sz w:val="18"/></w:rPr></w:style>' +
+    '<w:style w:type="paragraph" w:styleId="ListBullet"><w:name w:val="List Bullet"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:after="60"/></w:pPr></w:style>' +
+    '</w:styles>';
+  var DOCX_NUMBERING = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:numbering xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">' +
+    '<w:abstractNum w:abstractNumId="0"><w:multiLevelType w:val="singleLevel"/><w:lvl w:ilvl="0"><w:start w:val="1"/><w:numFmt w:val="bullet"/><w:lvlText w:val="•"/><w:lvlJc w:val="left"/><w:pPr><w:ind w:left="720" w:hanging="360"/></w:pPr></w:lvl></w:abstractNum>' +
+    '<w:num w:numId="1"><w:abstractNumId w:val="0"/></w:num></w:numbering>';
+
+  function buildDocx(t, p, o)
+  {
+    var zip = new window.JSZip();
+    zip.file('[Content_Types].xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' +
+      '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/>' +
+      '<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>' +
+      '<Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>' +
+      '<Override PartName="/word/numbering.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/></Types>');
+    zip.file('_rels/.rels', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+      '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>');
+    zip.file('word/_rels/document.xml.rels', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+      '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>' +
+      '<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering" Target="numbering.xml"/></Relationships>');
+    zip.file('word/document.xml', docxBody(t, p, o));
+    zip.file('word/styles.xml', DOCX_STYLES);
+    zip.file('word/numbering.xml', DOCX_NUMBERING);
+    return zip.generateAsync({ type: 'blob', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+  }
+
+  function saveError(code)
+  {
+    switch (code)
+    {
+      case 'declined': return 'Download cancelled. Nothing was saved.';
+      case 'rate_limited': return 'A download is already waiting for your answer. Finish that one, then try again.';
+      case 'too_large': return 'The Word file is too large to save here. Use Copy document instead.';
+      case 'extension_not_enabled': return 'Word files cannot be saved in this view. Use Copy document instead.';
+      default: return 'Downloads are not available here. Use Copy document instead.';
+    }
+  }
+
+  function saveDocx()
+  {
+    var t = tpl(), p = proj(), o = state.out[okey()];
+    if (!o || !downloads || saving) { return; }
+    saving = true; render();
+    var name = (t.name + ' ' + p.id).replace(/[^\w ()-]+/g, '').trim() + '.docx';
+    buildDocx(t, p, o).then(function (blob)
+    {
+      return downloads.save({ filename: name, data: blob });
+    }).then(function ()
+    {
+      toast('Word file saved: ' + name);
+    }).catch(function (e)
+    {
+      var code = e && e.code;
+      toast(e && e.code ? saveError(code) : 'Could not build the Word file. Use Copy document instead.');
+      // Saves cannot work in this view, so hide the button rather than leave it dead.
+      if (code && ['declined', 'rate_limited', 'too_large', 'bad_request', 'transform_error'].indexOf(code) < 0) { downloads = null; }
+    }).then(function ()
+    {
+      saving = false; render();
+      var d = $('dl') || $('copy'); if (d) { d.focus(); }
+    });
+  }
+
   /* ---------- Rendering ---------- */
   function renderSide()
   {
@@ -988,7 +1105,9 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
     h += '<div class="legend"><span><i class="ld"></i>Filled from data</span><span><i class="la"></i>Drafted text (AI or starter)</span><span><i class="lm"></i>Missing or to fill in</span>' +
       '<label class="switch"><input type="checkbox" id="hl"' + (state.hl ? ' checked' : '') + '> Show highlights</label></div>';
     h += '<div class="two"><div style="display:grid;gap:10px;min-width:0"><article class="paper' + (state.hl ? ' hl' : '') + '" aria-label="Document preview">' + docHtml(t, p, o) + '</article>' +
-      '<div class="actions"><button class="btn" type="button" id="copy">Copy document</button><span class="hint">' + (ready ? 'Ready to paste into the Word template.' : 'You can copy now, but fix the checks first.') + '</span></div></div>';
+      '<div class="actions"><button class="btn" type="button" id="copy">Copy document</button>' +
+      (downloads && window.JSZip ? '<button class="btn sec" type="button" id="dl"' + (saving ? ' disabled' : '') + '>' + (saving ? 'Preparing Word file…' : 'Download Word file') + '</button>' : '') +
+      '<span class="hint">' + (ready ? 'Ready to use. Copy it or download it as a Word file.' : 'You can copy or download now, but fix the checks first.') + '</span></div></div>';
     h += '<div style="display:grid;gap:14px;min-width:0"><div class="callout ' + (ready ? 'good' : 'warn') + '"><b>' + (ready ? 'Ready to use' : 'Not ready yet') + '</b><ul class="checks" id="checks">' + checksHtml(c) + '</ul></div>';
     var starters = gapsOf(t).filter(function (g) { return o.src[g.id] !== 'ai'; }).length;
     if (starters)
@@ -1061,7 +1180,9 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
         navigator.clipboard.writeText(text).then(function () { toast('Document copied. Paste it into the Word template.'); }, function () { toast('Could not copy. Select the document text and copy it by hand.'); });
       }
       else { toast('Could not copy. Select the document text and copy it by hand.'); }
+      return;
     }
+    if (b.id === 'dl') { saveDocx(); }
   });
 
   ws.addEventListener('input', function (e)
@@ -1106,6 +1227,7 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
   state.out[okey()] = templateOut(tpl(), proj());
   render();
   initAi();
+  initDownloads();
 })();
 </script>
 
@@ -1167,7 +1289,7 @@ footer.foot{border-top:1px solid var(--line);background:var(--surface)}
 #lpx-prod button:focus-visible{outline:2px solid #1F6FBF;outline-offset:2px}
 @media (pointer:coarse){#lpx-prod .lpx-seg button,#lpx-prod .lpx-x{min-height:44px;min-width:44px}}
 </style>
-<script type="application/json" id="lpx-prod-plan">{"recommend": "azure", "why": "The time saving comes from pulling the values straight from the project register and finance system into the council's real Word templates, which needs an Azure integration rather than staff copying data in by hand.", "knowledge": ["The council's approved Word templates for each document type (closure reports, change requests, requests to approach market, works notification letters), with their current version numbers and owners.", "A field list for each template: which placeholder maps to which column in the project register, finance system or contract register.", "The council's procurement policy and purchasing thresholds.", "The council's project management framework (what each document must contain at each stage).", "The council's writing style guide and plain-English rules for letters to residents.", "Project diaries, meeting notes and status reports, as the source for the free-text sections."], "azure": {"technical": ["Move the prototype into an Azure DevOps repo and rebuild the front end in Vue and Bootstrap, hosted on Azure App Service with council (Entra ID) sign-in.", "Keep the approved Word templates in a controlled SharePoint library or Blob Storage, with content controls for each field, and only offer the current approved version.", "An Azure Function App fills the Word template (Open XML) from the data and returns a .docx in the council's styles, so formatting stays exactly as approved.", "Read project, budget and contract values from the council's project register, finance system and contract register through the Data Warehouse, Boomi or Logic Apps (read only).", "Until the register link is approved, let staff upload a project register export (the prototype's Add project data step), checked against each template's field list, with unmatched columns shown to the officer.", "Model calls go through the same Function App, with Claude through Microsoft Foundry or the council's Anthropic agreement (an ICT-DA exception, as it's outside the listed stack). Keys live in Key Vault, never in the page.", "Only the free-text sections go to the model. Names, phone numbers and emails are swapped for placeholders first and put back after, as the prototype does.", "Store each generated document and who checked each drafted section in SQL or Cosmos DB, and save the final document to the records system against the project.", "Security review against the OWASP Top 10 and the OWASP Top 10 for LLM apps, including prompt injection from project notes.", "Dev, Test and Prod resource groups, Application Insights logging and cost alerts, and Azure DevOps CI/CD pipelines for each environment."], "business": ["Confirm the business owner (likely the Enterprise Portfolio Management Office), the first three templates in scope and the success measures (for example time to produce each document and fewer returned for missing information), and raise an Azure DevOps card (why and how).", "Each template owner signs off the template, its field list and the guidance for each free-text section.", "Name the data owners for the project register, finance system and contract register, and agree which fields can be read.", "Build a test plan and an AI evaluation set (20 to 30 real-style projects, anonymised, with expected outputs for each section), then run UAT with project managers.", "Train project managers and admin officers with a short walkthrough, and set up support: who to ask and how to report a wrong value or draft.", "Get ICT-DA, CAB, PGG and Business System Owner approval, with a Go Live plan, service transition document and support playbook."]}, "claude": {"technical": ["Set up a Claude Project for project documents in the council's enterprise Claude, with the drafting rules (fill fields only from data, draft only the open sections, never invent figures) as the project instructions.", "Add the approved templates and field lists as project files, or connect the SharePoint library they live in so only current versions are used.", "Build a Claude skill for each template that produces a Word document in the council's styles and marks every value that is missing.", "Use the Microsoft 365 connector to read a project's register export or status report from SharePoint, so staff don't retype the data.", "Admin settings checked: data retention, sharing, which connectors are on, and that only project data (not personal information) is added."], "business": ["Confirm the business owner, who will use it and what it must never do (it drafts, a person checks and signs off).", "Each template owner signs off the template, field list and section guidance.", "Test it with 20 to 30 real-style projects and record how often the fields are right and the drafted sections need only light edits.", "Pilot with one branch's project managers for four weeks, give them a 30-minute walkthrough, and track time saved.", "Enterprise Claude seats for the pilot group.", "A project owner who keeps the instructions, skills and templates current when a template version changes.", "Staff still export or attach the project data themselves unless a connector to the project register is approved.", "Get the use case approved (ICT-DA and PGG) and confirm privacy settings before rolling it out wider."]}, "stakeholders": [{"role": "Raised the request", "who": "Person 031", "detail": "Ticket 340957: Template document generator. team not stated. Asked for: \"Template Document Generator\". Triage: Access / training: M365 Copilot already does this."}, {"role": "Business owner (to confirm)", "who": "To confirm", "detail": "Owns the process, agrees what good looks like and signs off going live."}, {"role": "Knowledge owners (to confirm)", "who": "Owners of the source documents", "detail": "Keep the documents the tool relies on current and approved."}, {"role": "Delivery", "who": "AI team, Information Technology Services", "detail": "Builds the solution, runs testing and hands over to support."}, {"role": "Approvals", "who": "ICT-DA, CAB, PGG and the Business System Owner", "detail": "Approve the design, the change and going live."}]}</script>
+<script type="application/json" id="lpx-prod-plan">{"recommend": "azure", "why": "The time saving comes from pulling the values straight from the project register and finance system into the council's real Word templates, which needs an Azure integration rather than staff copying data in by hand.", "knowledge": ["The council's approved Word templates for each document type (closure reports, change requests, requests to approach market, works notification letters), with their current version numbers and owners.", "A field list for each template: which placeholder maps to which column in the project register, finance system or contract register.", "The council's procurement policy and purchasing thresholds.", "The council's project management framework (what each document must contain at each stage).", "The council's writing style guide and plain-English rules for letters to residents.", "Project diaries, meeting notes and status reports, as the source for the free-text sections."], "azure": {"technical": ["Move the prototype into an Azure DevOps repo and rebuild the front end in Vue and Bootstrap, hosted on Azure App Service with council (Entra ID) sign-in.", "Keep the approved Word templates in a controlled SharePoint library or Blob Storage, with content controls for each field, and only offer the current approved version.", "An Azure Function App fills the approved Word template itself (Open XML content controls) from the data, so the .docx keeps the council's exact formatting. The prototype's in-browser Word download uses a plain layout and is a stand-in for this.", "Read project, budget and contract values from the council's project register, finance system and contract register through the Data Warehouse, Boomi or Logic Apps (read only).", "Until the register link is approved, let staff upload a project register export (the prototype's Add project data step), checked against each template's field list, with unmatched columns shown to the officer.", "Model calls go through the same Function App, with Claude through Microsoft Foundry or the council's Anthropic agreement (an ICT-DA exception, as it's outside the listed stack). Keys live in Key Vault, never in the page.", "Only the free-text sections go to the model. Names, phone numbers and emails are swapped for placeholders first and put back after, as the prototype does.", "Store each generated document and who checked each drafted section in SQL or Cosmos DB, and save the final document to the records system against the project.", "Security review against the OWASP Top 10 and the OWASP Top 10 for LLM apps, including prompt injection from project notes.", "Dev, Test and Prod resource groups, Application Insights logging and cost alerts, and Azure DevOps CI/CD pipelines for each environment."], "business": ["Confirm the business owner (likely the Enterprise Portfolio Management Office), the first three templates in scope and the success measures (for example time to produce each document and fewer returned for missing information), and raise an Azure DevOps card (why and how).", "Each template owner signs off the template, its field list and the guidance for each free-text section.", "Name the data owners for the project register, finance system and contract register, and agree which fields can be read.", "Build a test plan and an AI evaluation set (20 to 30 real-style projects, anonymised, with expected outputs for each section), then run UAT with project managers.", "Train project managers and admin officers with a short walkthrough, and set up support: who to ask and how to report a wrong value or draft.", "Get ICT-DA, CAB, PGG and Business System Owner approval, with a Go Live plan, service transition document and support playbook."]}, "claude": {"technical": ["Set up a Claude Project for project documents in the council's enterprise Claude, with the drafting rules (fill fields only from data, draft only the open sections, never invent figures) as the project instructions.", "Add the approved templates and field lists as project files, or connect the SharePoint library they live in so only current versions are used.", "Build a Claude skill for each template that produces a Word document in the council's styles and marks every value that is missing.", "Use the Microsoft 365 connector to read a project's register export or status report from SharePoint, so staff don't retype the data.", "Admin settings checked: data retention, sharing, which connectors are on, and that only project data (not personal information) is added."], "business": ["Confirm the business owner, who will use it and what it must never do (it drafts, a person checks and signs off).", "Each template owner signs off the template, field list and section guidance.", "Test it with 20 to 30 real-style projects and record how often the fields are right and the drafted sections need only light edits.", "Pilot with one branch's project managers for four weeks, give them a 30-minute walkthrough, and track time saved.", "Enterprise Claude seats for the pilot group.", "A project owner who keeps the instructions, skills and templates current when a template version changes.", "Staff still export or attach the project data themselves unless a connector to the project register is approved.", "Get the use case approved (ICT-DA and PGG) and confirm privacy settings before rolling it out wider."]}, "stakeholders": [{"role": "Raised the request", "who": "Person 031", "detail": "Ticket 340957: Template document generator. team not stated. Asked for: \"Template Document Generator\". Triage: Access / training: M365 Copilot already does this."}, {"role": "Business owner (to confirm)", "who": "To confirm", "detail": "Owns the process, agrees what good looks like and signs off going live."}, {"role": "Knowledge owners (to confirm)", "who": "Owners of the source documents", "detail": "Keep the documents the tool relies on current and approved."}, {"role": "Delivery", "who": "AI team, Information Technology Services", "detail": "Builds the solution, runs testing and hands over to support."}, {"role": "Approvals", "who": "ICT-DA, CAB, PGG and the Business System Owner", "detail": "Approve the design, the change and going live."}]}</script>
 <script>
 (function(){
   if (window.__lpxProd) return; window.__lpxProd = true;
