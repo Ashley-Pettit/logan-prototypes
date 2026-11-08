@@ -8,5 +8,6 @@
  "changed": true,
  "desc": "Mechanics pick a job or ask a question and get a short answer built only from workshop manuals and procedures, with numbered sources, checked specs and fault code first checks. Gaps in the library go on a list to send to the knowledge owner.",
  "area": "Transport",
- "tested": "Playwright at 1280x800 light and 390x844 dark: opens with a worked example, fault code ask (EV-012), job switch, library search and empty state, empty question error, gap flag and Copy gap report (clipboard text checked), Copy answer, Add to job, source links; no page or console errors, scrollWidth equals viewport, no em or en dashes in visible text, Steps to productionise opens, All AI prototypes shows, every Copy button has Draft in Outlook beside it. AI path with a stand-in: prompt had names, phone and email replaced with placeholders, dashes stripped, unverifiable spec flagged Check manual."
+ "tested": "Playwright at 1280x800 light and 390x844 dark: opens with a worked example, fault code ask (EV-012), job switch, library search and empty state, empty question error, gap flag and Copy gap report (clipboard text checked), Copy answer, Add to job, source links; no page or console errors, scrollWidth equals viewport, no em or en dashes in visible text, Steps to productionise opens, All AI prototypes shows, every Copy button has Draft in Outlook beside it. AI path with a stand-in: prompt had names, phone and email replaced with placeholders, dashes stripped, unverifiable spec flagged Check manual.",
+ "base_version": "1794118237-3652"
 }

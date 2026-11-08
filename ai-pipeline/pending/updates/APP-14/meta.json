@@ -12,5 +12,6 @@
   "sample": {},
   "downloads": {}
  },
- "tested": "Playwright at 1280x800 light and 390x844 dark: example search on load, suggestion search, no-match and empty-question states, road lookup from a question, road check tab with copy, read clause in context, compare versions with copy, keyboard tab arrows, mobile library switch, productionise panel opens, All AI prototypes button shows, Draft in Outlook beside every Copy button, no page or console errors, no horizontal scroll, no em or en dashes in visible text. AI stand-in: answer with clause and road citations (invalid citation dropped), name, house number, phone and email replaced with placeholders in the prompt, compare explanation drops invented clauses, null AI reply falls back to clauses with a plain message."
+ "tested": "Playwright at 1280x800 light and 390x844 dark: example search on load, suggestion search, no-match and empty-question states, road lookup from a question, road check tab with copy, read clause in context, compare versions with copy, keyboard tab arrows, mobile library switch, productionise panel opens, All AI prototypes button shows, Draft in Outlook beside every Copy button, no page or console errors, no horizontal scroll, no em or en dashes in visible text. AI stand-in: answer with clause and road citations (invalid citation dropped), name, house number, phone and email replaced with placeholders in the prompt, compare explanation drops invented clauses, null AI reply falls back to clauses with a plain message.",
+ "base_version": "1794118238-1de8"
 }

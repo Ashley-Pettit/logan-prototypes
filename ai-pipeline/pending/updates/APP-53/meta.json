@@ -11,5 +11,6 @@
  "tested": "Playwright at 1280x800 light and 390x844 dark: opens on a template draft with figures checked; changed branch (stale draft note shows), typed a reason, switched to Detailed and redrafted, added a wrong figure and Check figures flagged it and jumped to it, Copy commentary copied with Draft in Outlook beside it, empty CSV message, example CSV loaded and drafted, invalid threshold message, visible keyboard focus, Steps to productionise opens, All AI prototypes shows, no page or console errors, scrollWidth equals viewport, no em or en dashes in visible text or the panel. AI stand-in: sample.json called with modelTier default and cache false; sample names, a typed name, email, phone and street address all replaced by placeholders in the prompt and restored in the draft; markdown and em dashes cleaned; a missing line and a cause invented for a line with no reason replaced with template wording; wrong figures from the reply flagged by Check figures; wrong-shaped reply, thrown error and null capability fall back to the template with a plain message; Stop keeps the previous draft.",
  "capabilities": {
   "sample": {}
- }
+ },
+ "base_version": "1794118221-e97e"
 }

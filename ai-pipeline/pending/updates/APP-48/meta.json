@@ -8,5 +8,6 @@
  "changed": true,
  "desc": "Matches surplus council and business materials with community groups, schools, makers and businesses that can reuse them. AI writes the listing and ranks likely takers, a waste officer confirms safety, and the page tracks offers, collections and tonnes kept from landfill.",
  "area": "Waste",
- "tested": "Playwright at 1280x800 light and 390x844 dark with no page or console errors and no horizontal scroll: offer, Copy text with Draft in Outlook beside it, send offer, collection weight validation and stats, reuse register view, add-group validation and success, reverse match chip opening a listing, template listing and publish with the safety tick, empty filter state, productionise panel, All AI prototypes button and visible keyboard focus; AI path with a stand-in for listing writing and matching (bad ids dropped, names, phone and email masked out of all prompts)."
+ "tested": "Playwright at 1280x800 light and 390x844 dark with no page or console errors and no horizontal scroll: offer, Copy text with Draft in Outlook beside it, send offer, collection weight validation and stats, reuse register view, add-group validation and success, reverse match chip opening a listing, template listing and publish with the safety tick, empty filter state, productionise panel, All AI prototypes button and visible keyboard focus; AI path with a stand-in for listing writing and matching (bad ids dropped, names, phone and email masked out of all prompts).",
+ "base_version": "1794118220-2596"
 }
