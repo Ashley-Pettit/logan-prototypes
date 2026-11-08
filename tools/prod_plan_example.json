@@ -8,20 +8,14 @@
   "Inspection checklist and common non-compliance wording."
  ],
  "azure": {
-  "steps": [
-   "Confirm the business owner, scope and success measures, and raise an Azure DevOps card (why and how).",
+  "technical": [
    "Move the prototype into an Azure DevOps repo and rebuild the front end in Vue and Bootstrap, hosted on Azure App Service with council (Entra ID) sign-in.",
    "Move all AI calls into an Azure Function App, with Claude through Microsoft Foundry or the council's Anthropic agreement. Keys live in Key Vault, never in the page.",
    "Strip or pseudonymise personal information before anything goes to the model.",
    "Load the knowledge into an Azure AI Search index over the legislation, template and policy in Blob Storage, so answers can quote their source.",
    "Pull business and licensee details from Pathway and findings from the Eat Safe inspection platform.",
-   "Have Legal Services sign off the notice template and the wording rules.",
    "Save the final notice to the records system against the business.",
-   "Build a test plan and an AI evaluation set (real-style questions with expected answers), then run UAT with synthetic or anonymised data.",
    "Security review against the OWASP Top 10 and the OWASP Top 10 for LLM apps (including prompt injection).",
-   "Get ICT-DA, CAB, PGG and Business System Owner approval, with a Go Live plan, service transition document and support playbook."
-  ],
-  "setup": [
    "Dev, Test and Prod resource groups in the council's Azure subscription.",
    "Azure App Service (front end) and Azure Function App (AI and data calls).",
    "Key Vault, Application Insights logging and cost alerts.",
@@ -31,27 +25,62 @@
    "Azure DevOps repo and CI/CD pipelines for Dev, Test and Prod.",
    "Read access to Pathway and the Eat Safe platform (through Boomi or Logic Apps).",
    "Write access to the records system for final notices."
+  ],
+  "business": [
+   "Confirm the business owner, scope and success measures, and raise an Azure DevOps card (why and how).",
+   "Have Legal Services sign off the notice template and the wording rules.",
+   "Build a test plan and an AI evaluation set (real-style questions with expected answers), then run UAT with synthetic or anonymised data.",
+   "Name a knowledge owner who keeps the source documents current and approved.",
+   "Train the people who will use it, and set up support: who to ask and how to report a wrong answer.",
+   "Get ICT-DA, CAB, PGG and Business System Owner approval, with a Go Live plan, service transition document and support playbook."
   ]
  },
  "claude": {
-  "steps": [
-   "Confirm the business owner, who will use it and what it must never do (it drafts, a person decides).",
+  "technical": [
    "Set it up as a Claude Project for Environmental Health in the council's enterprise Claude, with the prototype's instructions as the project instructions.",
    "Add the knowledge as project files, or connect the SharePoint library it lives in so it stays current.",
    "Turn the notice drafting into a Claude skill that always uses the approved template.",
+   "Admin settings checked: data retention, sharing and connector permissions."
+  ],
+  "business": [
+   "Confirm the business owner, who will use it and what it must never do (it drafts, a person decides).",
    "Have Legal Services sign off the template and wording rules.",
    "Test it with 20 to 30 real-style cases and record how often it gets them right.",
    "Pilot with a small group, give them a 30-minute walkthrough, and collect feedback for two to four weeks.",
-   "Get the use case approved (ICT-DA and PGG) and confirm privacy settings before rolling it out wider."
-  ],
-  "setup": [
    "Enterprise Claude seats for everyone who will use it.",
    "A project owner who keeps the instructions and knowledge up to date.",
    "The knowledge in a controlled SharePoint library (approved versions only), plus the Microsoft 365 connector if it's connecting live.",
    "Clear rules on what information can be entered (no unnecessary personal information).",
-   "Admin settings checked: data retention, sharing and connector permissions.",
    "Claude seats for Environmental Health officers.",
-   "Officers copy findings in by hand, so there's no time saved on data entry."
+   "Officers copy findings in by hand, so there's no time saved on data entry.",
+   "Get the use case approved (ICT-DA and PGG) and confirm privacy settings before rolling it out wider."
   ]
- }
+ },
+ "stakeholders": [
+  {
+   "role": "Raised the request",
+   "who": "Person 018",
+   "detail": "Ticket 340356: Food Act improvement notice drafting. Environmental Health, Health, Environment and Sustainability, Growth, Economy and Sustainability. Asked for: \"Writing improvement notices under the Food Act\". Triage: Access / training: M365 Copilot already does this."
+  },
+  {
+   "role": "Business owner (to confirm)",
+   "who": "Health, Environment and Sustainability manager",
+   "detail": "Owns the process, agrees what good looks like and signs off going live."
+  },
+  {
+   "role": "Knowledge owners (to confirm)",
+   "who": "Owners of the source documents",
+   "detail": "Keep the documents the tool relies on current and approved."
+  },
+  {
+   "role": "Delivery",
+   "who": "AI team, Information Technology Services",
+   "detail": "Builds the solution, runs testing and hands over to support."
+  },
+  {
+   "role": "Approvals",
+   "who": "ICT-DA, CAB, PGG and the Business System Owner",
+   "detail": "Approve the design, the change and going live."
+  }
+ ]
 }

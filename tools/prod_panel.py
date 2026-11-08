@@ -9,9 +9,14 @@ plan.json:
   "recommend": "azure" | "claude",
   "why": "One plain sentence on why that route suits this app.",
   "knowledge": ["What the tool needs to know, e.g. council Word docs ..."],
-  "azure":  {"steps": ["..."], "setup": ["..."]},
-  "claude": {"steps": ["..."], "setup": ["..."]}
+  "azure":  {"technical": ["Technical setup steps ..."], "business": ["Business readiness steps ..."]},
+  "claude": {"technical": ["..."], "business": ["..."]},
+  "stakeholders": [{"role": "Raised the request", "who": "Person 043", "detail": "Ticket ..."}]   (optional)
 }
+If stakeholders is missing, pass the app's list record as a 4th argument and they are built from
+its ideas (ticket, title, raisedBy, team, branch, directorate, request, fit):
+  python3 prod_panel.py <page.html> <plan.json> <out.html> [record.json]
+Old plans with steps/setup still render.
 
 The button sits in a slim bar at the top of the page, on the right. The panel has Azure, Claude and "Show me both" views.
 Everything is scoped under #lpx-prod so it can't clash with the app's own styles.
@@ -55,6 +60,13 @@ CSS = r"""
 #lpx-prod .lpx-tag.az{background:var(--az)}
 #lpx-prod .lpx-tag.cl{background:var(--cl)}
 #lpx-prod .lpx-tag.kn{background:#5B4237}
+#lpx-prod .lpx-tag.sh{background:#6B4FA0}
+#lpx-prod .lpx-sh{list-style:none;padding:0;margin:0}
+#lpx-prod .lpx-sh li{padding:8px 0;border-top:1px solid var(--rule);margin:0}
+#lpx-prod .lpx-sh li:first-child{border-top:0;padding-top:0}
+#lpx-prod .lpx-sh b{display:block}
+#lpx-prod .lpx-sh .lpx-role{font-size:12px;color:var(--muted)}
+#lpx-prod .lpx-sh .lpx-det{display:block;color:var(--muted);font-size:13px;margin-top:2px}
 #lpx-prod ol,#lpx-prod ul{margin:0;padding-left:20px}
 #lpx-prod li{margin:4px 0}
 #lpx-prod .lpx-foot{color:var(--muted);font-size:12px;margin-top:4px}
@@ -86,17 +98,24 @@ JS = r"""
     var view = P.recommend === 'claude' ? 'claude' : 'azure';
     function sec(cls, label, title, inner){return '<section><h3><span class="lpx-tag '+cls+'">'+label+'</span>'+e(title)+'</h3>'+inner+'</section>';}
     function col(k){
-      var az = k === 'azure', R = P[k] || {};
+      var az = k === 'azure', R = P[k] || {}, nm = az ? 'Azure' : 'Claude', c = az ? 'az' : 'cl';
+      var tech = R.technical || R.setup || [], bus = R.business || R.steps || [];
       return '<div>'+
-        sec(az?'az':'cl', az?'Azure':'Claude', 'Steps to productionise ('+(az?'Azure':'Claude')+')', list(R.steps,'ol'))+
-        sec(az?'az':'cl', az?'Azure':'Claude', 'What is needed to set it up in '+(az?'Azure':'Claude'), list(R.setup,'ul'))+
+        sec(c, nm, 'Technical setup ('+nm+')', list(tech,'ol'))+
+        sec(c, nm, 'Business readiness ('+nm+')', list(bus,'ol'))+
         '</div>';
+    }
+    function people(){
+      var S = P.stakeholders || []; if (!S.length) return '';
+      return sec('sh','People','Stakeholders', '<ul class="lpx-sh">'+S.map(function(x){
+        return '<li><span class="lpx-role">'+e(x.role)+'</span><b>'+e(x.who)+'</b>'+(x.detail?'<span class="lpx-det">'+e(x.detail)+'</span>':'')+'</li>';
+      }).join('')+'</ul>');
     }
     function render(){
       wrap.querySelectorAll('.lpx-seg button').forEach(function(b){b.setAttribute('aria-pressed', String(b.dataset.v===view));});
       panel.classList.toggle('lpx-wide', view==='both');
       var kn = sec('kn','Knowledge','What knowledge does it need', list(P.knowledge,'ul'));
-      body.innerHTML = (view==='both' ? '<div class="lpx-cols">'+col('azure')+col('claude')+'</div>' : col(view)) + kn +
+      body.innerHTML = (view==='both' ? '<div class="lpx-cols">'+col('azure')+col('claude')+'</div>' : col(view)) + people() + kn +
         '<p class="lpx-foot">Draft for discussion. Systems, costs and approvals to be confirmed with ICT. Going live needs ICT-DA, CAB, PGG and Business System Owner approval.</p>';
     }
     var last = null;
@@ -122,11 +141,36 @@ JS = r"""
 START, END = "<!-- lpx-prod:start -->", "<!-- lpx-prod:end -->"
 
 
+def stakeholders_from(record):
+    out, seen = [], set()
+    for i in record.get("ideas", []):
+        team = i.get("team") or "team not stated"
+        where = ", ".join(x for x in (team, i.get("branch"), i.get("directorate")) if x and x != "Not stated")
+        det = f"Ticket {i.get('ticket')}: {i.get('title')}. {where}."
+        if i.get("request"):
+            det += f" Asked for: \"{i['request']}\"."
+        if i.get("fit"):
+            det += f" Triage: {i['fit']}."
+        out.append({"role": "Raised the request", "who": i.get("raisedBy", "Not recorded"), "detail": det})
+        if i.get("branch") and i["branch"] not in ("Not stated",):
+            seen.add(i["branch"])
+    owner = " and ".join(sorted(seen)) + (" manager" if len(seen) == 1 else " managers") if seen else "To confirm"
+    out += [
+        {"role": "Business owner (to confirm)", "who": owner, "detail": "Owns the process, agrees what good looks like and signs off going live."},
+        {"role": "Knowledge owners (to confirm)", "who": "Owners of the source documents", "detail": "Keep the documents the tool relies on current and approved."},
+        {"role": "Delivery", "who": "AI team, Information Technology Services", "detail": "Builds the solution, runs testing and hands over to support."},
+        {"role": "Approvals", "who": "ICT-DA, CAB, PGG and the Business System Owner", "detail": "Approve the design, the change and going live."},
+    ]
+    return out
+
+
 def build(plan):
     for k in ("recommend", "why", "knowledge", "azure", "claude"):
         assert k in plan, f"plan.{k} is missing"
     for k in ("azure", "claude"):
-        assert plan[k].get("steps") and plan[k].get("setup"), f"plan.{k} needs steps and setup"
+        R = plan[k]
+        assert (R.get("technical") and R.get("business")) or (R.get("steps") and R.get("setup")), \
+            f"plan.{k} needs technical and business lists"
     data = json.dumps(plan, ensure_ascii=False).replace("</", "<\\/")
     return (f'{START}\n<style id="lpx-prod-css">{CSS}</style>\n'
             f'<script type="application/json" id="lpx-prod-plan">{data}</script>\n'
@@ -143,9 +187,11 @@ def inject(page, plan):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
+    if len(sys.argv) not in (4, 5):
         sys.exit(__doc__)
     page = open(sys.argv[1], encoding="utf-8").read()
     plan = json.load(open(sys.argv[2], encoding="utf-8"))
+    if len(sys.argv) == 5 and not plan.get("stakeholders"):
+        plan["stakeholders"] = stakeholders_from(json.load(open(sys.argv[4], encoding="utf-8")))
     open(sys.argv[3], "w", encoding="utf-8").write(inject(page, plan))
     print("ok", sys.argv[3])
