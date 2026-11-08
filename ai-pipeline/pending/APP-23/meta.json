@@ -6,5 +6,8 @@
  "notes": "New build with a sample fleet library of 8 procedures and 34 clauses: AI answers questions for the asker's role from the whole library citing only real clauses (ranked library search when AI is off), links each answer to its learning module and flags gaps for the knowledge owner, a Learn tab shows sample crew progress by role pathway with key points, sample or AI quizzes and a copyable completion summary, and a Toolbox talk tab drafts a five minute talk; all procedures, limits and people are made-up samples, names, phone numbers and registrations are swapped for placeholders before AI, and Steps to productionise and Draft in Outlook were added.",
  "recommend": "claude",
  "dice": false,
- "tested": "Playwright smoke test at 1280 light and 390 dark in AI-off mode, plus 1280 with a mocked AI: ask flow with sources and citation jump, role change re-ranking, placeholders sent to AI, bad citations and dashes stripped, uncovered question and gap flag, answer to module link, crew progress and quiz score, AI quiz, toolbox talk draft, no page errors, no horizontal overflow, Steps to productionise panel opens, Draft in Outlook links on Copy answer, Copy gap list, Copy completion summary and Copy toolbox talk."
+ "tested": "Playwright smoke test at 1280 light and 390 dark in AI-off mode, plus 1280 with a mocked AI: ask flow with sources and citation jump, role change re-ranking, placeholders sent to AI, bad citations and dashes stripped, uncovered question and gap flag, answer to module link, crew progress and quiz score, AI quiz, toolbox talk draft, no page errors, no horizontal overflow, Steps to productionise panel opens, Draft in Outlook links on Copy answer, Copy gap list, Copy completion summary and Copy toolbox talk.",
+ "alts": [
+  "https://claude.ai/artifact/DY8rH8CavvpVDmxVC8Kw4F"
+ ]
 }

@@ -6,5 +6,8 @@
  "notes": "New build with six sample branch plans: an activation dashboard where status changes need a reason and are logged, an activated plan shows time left before its most urgent function passes its outage limit with the plan's workaround, AI writes desktop exercises with timed injects tied to each branch's critical functions, and results are recorded into an AI evidence report that saves to an evidence register and updates the last tested date, with template scenarios and reports when AI is off; the 12 month testing cycle, outage times and plans are samples, names are swapped for roles before AI, and Steps to productionise and Draft in Outlook were added.",
  "recommend": "azure",
  "dice": false,
- "tested": "Template, mocked AI and failing AI at 1280 light and 390 dark: status change blocked without a reason then logged, exercise built, report blocked until an outcome is recorded, sample results, evidence report, save to register with saved report viewable and copyable, a second exercise can be saved, no page errors, no horizontal overflow, productionise panel opens, Draft in Outlook links present on copy buttons."
+ "tested": "Template, mocked AI and failing AI at 1280 light and 390 dark: status change blocked without a reason then logged, exercise built, report blocked until an outcome is recorded, sample results, evidence report, save to register with saved report viewable and copyable, a second exercise can be saved, no page errors, no horizontal overflow, productionise panel opens, Draft in Outlook links present on copy buttons.",
+ "alts": [
+  "https://claude.ai/artifact/98ThRTNq57fbpgY7U9KYE4"
+ ]
 }

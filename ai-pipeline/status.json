@@ -2,6 +2,9 @@
  "about": "Background tracker for the AI prototype list. See tools/proto_status.py.",
  "apps": {
   "APP-08": {
+   "alts": [
+    "https://claude.ai/artifact/ToUaxmdQU6zQD8pNoBgYzW"
+   ],
    "area": "Transport",
    "desc": "Drafts meeting minutes, stakeholder emails and monthly status reports from rough notes, and keeps each project's decision, risk and action log up to date, flagging gaps and overdue actions to fix or chase.",
    "lastUpdated": "2026-11-08",
@@ -54,6 +57,9 @@
    "status": "In progress"
   },
   "APP-23": {
+   "alts": [
+    "https://claude.ai/artifact/DY8rH8CavvpVDmxVC8Kw4F"
+   ],
    "lastUpdated": "2026-11-08",
    "places": {
     "github": true,
@@ -65,6 +71,9 @@
    "status": "In progress"
   },
   "APP-27": {
+   "alts": [
+    "https://claude.ai/artifact/98ThRTNq57fbpgY7U9KYE4"
+   ],
    "lastUpdated": "2026-11-08",
    "places": {
     "github": true,

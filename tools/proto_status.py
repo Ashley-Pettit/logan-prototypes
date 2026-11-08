@@ -9,7 +9,8 @@ Usage (run from the repo root):
   python3 tools/proto_status.py mark APP-08 --status Built --url <app url> --version 1 \
       --lastUpdated 2026-11-08 --notes "..." --runs 1 --name "Engineering Project Writer" \
       --area Transport --desc "Card text" --shot shot.png
-      Records (or updates) an app's result. Every list copy starts as pending. --shot keeps a small
+      Records (or updates) an app's result. Every list copy starts as pending. --alt URL (repeatable)
+      records other versions of the same app; its card then shows Mockup 1 (--url) and Mockup 2. --shot keeps a small
       448x280 copy of the screenshot at ai-pipeline/shots/<APP id>.jpg so a later run can add the card.
   python3 tools/proto_status.py done APP-08 list polish mock github preview
       Marks list copies as updated for that app.
@@ -70,6 +71,8 @@ def cmd_mark(a):
             rec[k] = int(v) if k == "runs" else v
     if a.shot:
         rec["shot"] = save_shot(a.app, a.shot)
+    if a.alt:
+        rec["alts"] = [u for u in a.alt if u and u != rec.get("url")]
     rec["places"] = {p: False for p in PLACES}
     st["apps"][a.app] = rec
     save(st)
@@ -119,6 +122,7 @@ def main():
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
     m = sub.add_parser("mark"); m.add_argument("app"); m.add_argument("--shot")
+    m.add_argument("--alt", action="append", help="another version of this app, shown as Mockup 2, 3... on its card")
     for k in FIELDS + ["name", "area", "desc"]:
         m.add_argument("--" + k)
     d = sub.add_parser("done"); d.add_argument("app"); d.add_argument("places", nargs="+")

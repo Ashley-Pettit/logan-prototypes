@@ -13,6 +13,8 @@ Usage:
   python3 proto_list.py card <page.html> <out.html> --url URL --name NAME --area AREA --desc TEXT --shot shot.png [--password PW]
     Adds a card (448x280 screenshot thumbnail, "New" badge) to the page's "Prototypes already built"
     grid, or replaces the card with the same URL. Pages without that grid are skipped.
+    If the app has more than one version, add --alt URL (repeatable) or record "alts" in the tracker
+    (tools/proto_status.py mark --alt): the card then shows "Mockup 1" (the --url one) and "Mockup 2".
 
 Locked pages need --password. The password is never stored in this file.
 """
@@ -104,24 +106,60 @@ def esc(s):
             .replace('"', "&quot;").replace("'", "&#x27;"))
 
 
-def add_card(page, url, name, area, desc, shot):
-    """Add (or replace, matched by url) a card in the 'Prototypes already built' grid."""
+MULTI_CSS = ('<style id="lpx-bmulti-css">#proto span.bcard.bmulti{cursor:default}'
+             '#proto .bmocks{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:2px}'
+             '#proto .bmocks a.bgo{text-decoration:none}#proto .bmocks a.bgo:hover{text-decoration:underline}'
+             '#proto .bmulti .bshot{cursor:pointer}</style>')
+
+
+def tracked_alts(url):
+    """Other mockups of the same app, from the tracker (ai-pipeline/status.json), if it lists any."""
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "ai-pipeline", "status.json")
+    try:
+        apps = json.load(open(path, encoding="utf-8")).get("apps", {})
+    except (OSError, ValueError):
+        return []
+    for rec in apps.values():
+        if rec.get("url") == url:
+            return [u for u in rec.get("alts", []) if u and u != url]
+    return []
+
+
+def add_card(page, url, name, area, desc, shot, alts=None):
+    """Add (or replace, matched by url) a card in the 'Prototypes already built' grid.
+    When the app has more than one version (alts, or alts recorded in the tracker), the card shows
+    'Mockup 1' (url, the preferred one) and 'Mockup 2', 'Mockup 3' links instead of one Open link."""
     g = page.find('<div class="bgrid">')
     if g < 0:
         return page, False
     end = page.find("</div>", g)
-    img = (f'<span class="bshot"><img src="{shot_data_uri(shot)}" alt="" width="448" height="280"></span>' if shot
-           else '<span class="bshot none" aria-hidden="true">No preview</span>')
-    card = (f'<a class="bcard" href="{esc(url)}" target="_blank" rel="noopener">{img}'
-            f'<span class="btop"><span class="barea">{esc(area)}</span><span class="bnew">New</span></span>'
-            f'<b class="bname">{esc(name)}</b><span class="bdesc">{esc(desc)}</span>'
-            f'<span class="bgo">Open{GO_SVG}<span class="vh"> {esc(name)} (opens in a new tab)</span></span></a>')
+    alts = [u for u in (alts if alts is not None else tracked_alts(url)) if u != url]
+    img = (f'<img src="{shot_data_uri(shot)}" alt="" width="448" height="280">' if shot else '')
+    top = (f'<span class="btop"><span class="barea">{esc(area)}</span><span class="bnew">New</span></span>'
+           f'<b class="bname">{esc(name)}</b><span class="bdesc">{esc(desc)}</span>')
+    if not alts:
+        shot_html = f'<span class="bshot">{img}</span>' if shot else '<span class="bshot none" aria-hidden="true">No preview</span>'
+        card = (f'<a class="bcard" href="{esc(url)}" target="_blank" rel="noopener">{shot_html}{top}'
+                f'<span class="bgo">Open{GO_SVG}<span class="vh"> {esc(name)} (opens in a new tab)</span></span></a>')
+    else:
+        shot_html = (f'<a class="bshot" href="{esc(url)}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">{img}</a>'
+                     if shot else '<span class="bshot none" aria-hidden="true">No preview</span>')
+        links = "".join(
+            f'<a class="bgo" href="{esc(u)}" target="_blank" rel="noopener">Mockup {i}{GO_SVG}'
+            f'<span class="vh"> of {esc(name)} (opens in a new tab)</span></a>'
+            for i, u in enumerate([url] + alts, 1))
+        card = (f'<span class="bcard bmulti" data-url="{esc(url)}">{shot_html}{top}'
+                f'<span class="bmocks">{links}</span></span>')
     grid = page[g:end]
-    old = re.search(r'<a class="bcard" href="' + re.escape(esc(url)) + r'".*?</a>', grid, re.S)
+    old = (re.search(r'<a class="bcard" href="' + re.escape(esc(url)) + r'".*?</a>', grid, re.S)
+           or re.search(r'<span class="bcard bmulti" data-url="' + re.escape(esc(url)) + r'">.*?</a></span></span>', grid, re.S))
     grid = grid[:old.start()] + card + grid[old.end():] if old else grid + card
     page = page[:g] + grid + page[end:]
-    n = len(re.findall(r'<a class="bcard"', page[g:page.find("</div>", g)]))
+    n = len(re.findall(r'class="bcard[ "]', page[g:page.find("</div>", g)]))
     page = re.sub(r'(<span class="bcount">)\d+(</span>)', lambda m: f"{m.group(1)}{n}{m.group(2)}", page, count=1)
+    if alts and 'id="lpx-bmulti-css"' not in page:
+        i = page.find("</style>")
+        page = page[:i + 8] + MULTI_CSS + page[i + 8:] if i > -1 else MULTI_CSS + page
     return page, True
 
 
@@ -134,6 +172,7 @@ def main():
     ap.add_argument("--password")
     ap.add_argument("--url"); ap.add_argument("--name"); ap.add_argument("--area")
     ap.add_argument("--desc"); ap.add_argument("--shot")
+    ap.add_argument("--alt", action="append", help="another version of the same app (shown as Mockup 2, 3...)")
     a = ap.parse_args()
     if a.cmd == "card":
         # usage: card <page> <out> --url --name --area --desc --shot shot.png [--password]
@@ -151,7 +190,7 @@ def main():
     if a.cmd == "card":
         if not (a.out and a.url and a.name and a.area and a.desc):
             sys.exit("card needs <out.html> --url --name --area --desc [--shot shot.png]")
-        new, ok = add_card(page, a.url, a.name, a.area, a.desc, a.shot)
+        new, ok = add_card(page, a.url, a.name, a.area, a.desc, a.shot, a.alt)
         if not ok:
             print("skip: no 'Prototypes already built' grid in this page")
             return
