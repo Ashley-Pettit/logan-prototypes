@@ -1,0 +1,10 @@
+{
+ "id": "APP-19",
+ "name": "Chain of Responsibility Risk Check",
+ "area": "Safety",
+ "desc": "Checks position descriptions against Chain of Responsibility duty areas and shows who carries each duty in a coverage matrix. AI quotes the evidence, flags gaps and suggests wording to add.",
+ "notes": "New build with seven sample City Fleet and related position descriptions checked against ten sample Chain of Responsibility duty areas by party type: rules give a coverage matrix straight away, AI reads each description, quotes the line that covers each duty (checked against the text) and suggests wording for gaps, results can be changed by hand, and the gap summary and role wording can be copied; the duty list is a sample summary that must be checked against the Heavy Vehicle National Law, contact names and details are swapped for placeholders before AI, and Steps to productionise and Draft in Outlook were added.",
+ "recommend": "claude",
+ "dice": false,
+ "tested": "Template (rules) mode at 1280 light and 390 dark: matrix renders with 35 clickable cells, cell opens the role with highlighted evidence, rules check, result override, duty list tab, add-a-PD form validation and adding a role, Steps to productionise panel opens, Draft in Outlook links present on gap summary and role wording, no page errors, no horizontal overflow after fixing hidden captions in the matrix."
+}

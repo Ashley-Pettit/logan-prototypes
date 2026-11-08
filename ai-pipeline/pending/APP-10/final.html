@@ -1,0 +1,1155 @@
+<title>Fleet Maintenance Predictor</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: City Planner AI family shell. Navy masthead, prototype notice, fleet list beside a Health / Diagnose / Workshop plan workspace. */
+:root{
+  --navy:#003f75; --navy-ink:#002a4f; --on-navy:#ffffff;
+  --bg:#f3f6f9; --surface:#ffffff; --raised:#f6f9fc; --ink:#1f1f1f; --muted:#5b6670; --line:#dbe2e9; --field:#b9c4cf;
+  --accent:#003f75; --accent-soft:#e3edf6; --on-accent:#ffffff; --link:#003f75; --focus:#f2b705;
+  --hi:#b42318; --hi-bg:#fdecea; --med:#9a5b00; --med-bg:#fff3dc; --low:#1d6b35; --low-bg:#e6f4ea; --info:#5b6670; --info-bg:#f1f4f7;
+  --ext:#ffffff; --ext-bg:#8e1b12;
+  --proto:#8a4b00; --proto-bg:#fff6e5; --proto-line:#f2c879;
+  --paper:#ffffff; --paper-ink:#1f1f1f;
+  --f-head:"Figtree","Proxima Nova",Arial,Helvetica,sans-serif;
+  --f-body:"Figtree","Proxima Nova",Arial,Helvetica,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --radius:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --navy:#0b2c4d; --navy-ink:#071f37; --on-navy:#ffffff;
+  --bg:#0e141b; --surface:#151d26; --raised:#1a2430; --ink:#e7edf3; --muted:#9aa8b6; --line:#28323e; --field:#3a4655;
+  --accent:#7fb4e6; --accent-soft:#16304a; --on-accent:#0b1724; --link:#8fc0ee; --focus:#f2b705;
+  --hi:#f2a39b; --hi-bg:#3a1a17; --med:#f0c26b; --med-bg:#33280f; --low:#86d19c; --low-bg:#14301d; --info:#9aa8b6; --info-bg:#1d2733;
+  --ext:#1f0604; --ext-bg:#f2a39b;
+  --proto:#f3c77a; --proto-bg:#2c2312; --proto-line:#6b5420;
+  --paper:#1a2430; --paper-ink:#e7edf3; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --navy:#0b2c4d; --navy-ink:#071f37; --on-navy:#ffffff;
+  --bg:#0e141b; --surface:#151d26; --raised:#1a2430; --ink:#e7edf3; --muted:#9aa8b6; --line:#28323e; --field:#3a4655;
+  --accent:#7fb4e6; --accent-soft:#16304a; --on-accent:#0b1724; --link:#8fc0ee; --focus:#f2b705;
+  --hi:#f2a39b; --hi-bg:#3a1a17; --med:#f0c26b; --med-bg:#33280f; --low:#86d19c; --low-bg:#14301d; --info:#9aa8b6; --info-bg:#1d2733;
+  --ext:#1f0604; --ext-bg:#f2a39b;
+  --proto:#f3c77a; --proto-bg:#2c2312; --proto-line:#6b5420;
+  --paper:#1a2430; --paper-ink:#e7edf3; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+a{color:var(--link)}
+button{font:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+h1,h2,h3,h4{text-wrap:balance}
+.gut{padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+
+/* masthead */
+.mast{background:var(--navy);color:var(--on-navy)}
+.mast-in{max-width:1360px;margin:0 auto;padding-block:14px;display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.brand .org{font-family:var(--f-head);font-weight:800;font-size:13px;letter-spacing:.14em;text-transform:uppercase;line-height:1.1;padding-right:14px;border-right:1px solid rgba(255,255,255,.35)}
+.brand .org small{display:block;font-weight:600;font-size:10px;letter-spacing:.2em;opacity:.8}
+.brand .app{font-family:var(--f-head);font-weight:700;font-size:19px;line-height:1.15;margin:0}
+.brand .app small{display:block;font-weight:500;font-size:13px;opacity:.82}
+.mast-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.badge{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:#f2b705;color:#1f1f1f}
+.aistat{font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.35);display:inline-flex;align-items:center;gap:6px}
+.aistat i{width:8px;height:8px;border-radius:50%;background:#c9d3dd;display:inline-block}
+.aistat.ok i{background:#7ee2a0}.aistat.off i{background:#f2b705}
+
+/* prototype notice */
+.proto{background:var(--proto-bg);border-bottom:1px solid var(--proto-line);color:var(--ink)}
+.proto-in{max-width:1360px;margin:0 auto;padding-block:10px;font-size:14px;display:flex;gap:10px;align-items:flex-start}
+.proto-in b{color:var(--proto);white-space:nowrap}
+
+.wrap{max-width:1360px;margin:0 auto;padding-block:22px 40px;display:grid;grid-template-columns:320px minmax(0,1fr);gap:18px;align-items:start}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);min-width:0}
+.panel-h{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.panel-h h2{font-family:var(--f-head);font-size:17px;font-weight:700;margin:0;color:var(--navy)}
+:root[data-theme="dark"] .panel-h h2{color:var(--ink)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .panel-h h2{color:var(--ink)}}
+.panel-b{padding:16px}
+.label{font-family:var(--f-head);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.hint{font-size:13px;color:var(--muted);margin:0}
+.side{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}
+
+/* project list */
+.plist{list-style:none;margin:0;padding:8px;display:grid;gap:4px}
+.plist button{width:100%;text-align:left;background:transparent;border:1px solid transparent;border-radius:8px;padding:10px 12px;color:var(--ink);display:grid;gap:4px}
+.plist button:hover{background:var(--accent-soft)}
+.plist button[aria-current="true"]{background:var(--accent-soft);border-color:var(--accent)}
+.plist .nm{font-weight:700;font-family:var(--f-head);line-height:1.25}
+.plist .ad{font-size:13px;color:var(--muted)}
+.plist .rw{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px}
+.mono{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+
+/* pills */
+.lvl{font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap;display:inline-block}
+.lvl.Extreme{background:var(--ext-bg);color:var(--ext)}
+.lvl.High{background:var(--hi-bg);color:var(--hi)}.lvl.Medium{background:var(--med-bg);color:var(--med)}.lvl.Low{background:var(--low-bg);color:var(--low)}
+.st{font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap;background:var(--info-bg);color:var(--info);display:inline-block}
+.st.bad{background:var(--hi-bg);color:var(--hi)}.st.ok{background:var(--low-bg);color:var(--low)}.st.ai{background:var(--accent-soft);color:var(--link)}
+
+/* buttons */
+.btn{background:var(--accent);color:var(--on-accent);border:0;border-radius:999px;padding:10px 18px;font-weight:700;min-height:42px;display:inline-flex;align-items:center;gap:8px;justify-content:center;text-decoration:none}
+.btn:hover{filter:brightness(1.1)}
+.btn:disabled{opacity:.5;cursor:default;filter:none}
+.btn.sec{background:var(--surface);color:var(--accent);border:1.5px solid var(--accent)}
+.btn.sm{min-height:34px;padding:6px 14px;font-size:14px}
+.ghost{background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:8px 14px;min-height:38px}
+.ghost:hover{color:var(--ink);border-color:var(--field)}
+.link{background:transparent;border:0;color:var(--link);padding:0;text-decoration:underline;font-size:14px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+
+/* workspace */
+.ws-top{padding:16px;border-bottom:1px solid var(--line);display:grid;gap:12px}
+.ws-top h2.ttl{color:var(--ink);font-family:var(--f-head);font-size:22px;font-weight:800;margin:0;line-height:1.15}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.facts > div{background:var(--raised);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0}
+.facts > div > span{display:block;font-size:12px;color:var(--muted)}
+.facts b{font-size:14px;overflow-wrap:anywhere}
+.meter{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:6px}
+.meter i{display:block;height:100%;background:var(--accent)}
+.tabs{display:flex;gap:4px;padding:4px;background:var(--raised);border:1px solid var(--line);border-radius:999px;width:fit-content;max-width:100%;overflow-x:auto}
+.tabs button{border:0;border-radius:999px;background:transparent;color:var(--muted);padding:8px 16px;font-weight:700;font-size:14px;white-space:nowrap;display:inline-flex;gap:6px;align-items:center}
+.tabs button[aria-selected="true"]{background:var(--accent);color:var(--on-accent)}
+.tabs .ct{font-size:11px;min-width:20px;height:20px;border-radius:999px;display:inline-grid;place-items:center;padding:0 6px;background:var(--hi-bg);color:var(--hi)}
+.tabs button[aria-selected="true"] .ct{background:rgba(255,255,255,.25);color:inherit}
+
+/* write */
+.kinds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.kind{border:1.5px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);padding:12px;text-align:left;display:grid;gap:2px}
+.kind b{font-family:var(--f-head);font-size:15px}
+.kind span{font-size:13px;color:var(--muted)}
+.kind:hover{border-color:var(--field)}
+.kind[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.fld{display:grid;gap:4px;min-width:0}
+.fld label,.fld .lb{font-size:13px;font-weight:600;color:var(--muted)}
+input,textarea,select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--field);border-radius:8px;padding:9px 11px;min-width:0;width:100%}
+textarea{resize:vertical;line-height:1.45}
+select{padding-block:7px}
+textarea.notes{font-family:var(--f-mono);font-size:13px;min-height:200px}
+.err{color:var(--hi);font-size:13px;font-weight:600;margin:0}
+.callout{border-radius:8px;padding:12px 14px;font-size:14px;display:grid;gap:4px}
+.callout.info{background:var(--accent-soft)}
+.callout.warn{background:var(--med-bg);color:var(--ink)}
+.callout.bad{background:var(--hi-bg);color:var(--ink)}
+.callout b{font-family:var(--f-head)}
+.sect{display:grid;gap:14px}
+.sect + .sect{border-top:1px solid var(--line);padding-top:16px;margin-top:16px}
+.out-h{display:flex;flex-wrap:wrap;gap:8px 12px;justify-content:space-between;align-items:center}
+.out-h h3{margin:0;font-family:var(--f-head);font-size:18px}
+.paper{background:var(--paper);color:var(--paper-ink);border:1px solid var(--line);border-radius:6px;padding:4px;box-shadow:0 10px 30px -18px rgba(0,30,60,.35)}
+.paper textarea{border:0;background:transparent;color:var(--paper-ink);min-height:360px;padding:18px clamp(12px,3vw,28px);font-size:14.5px;line-height:1.6}
+.paper textarea:focus-visible{outline-offset:-3px}
+.thinking{display:grid;gap:10px;padding:8px 0}
+.skel{height:14px;border-radius:6px;background:linear-gradient(90deg,var(--raised),var(--accent-soft),var(--raised));background-size:200% 100%;animation:sh 1.4s infinite}
+@keyframes sh{0%{background-position:100% 0}100%{background-position:-100% 0}}
+.checks{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.checks li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px;font-size:14px;align-items:start}
+.checks .ic{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;margin-top:1px}
+.checks .ok .ic{background:var(--low-bg);color:var(--low)}
+.checks .no .ic{background:var(--hi-bg);color:var(--hi)}
+.checks .nt .ic{background:var(--med-bg);color:var(--med)}
+.sugg{display:grid;gap:8px}
+.sg{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;align-items:center;background:var(--surface)}
+.sg .t{display:flex;gap:8px;flex-wrap:wrap;align-items:baseline}
+.sg .meta{font-size:13px;color:var(--muted);grid-column:1}
+.sg .done{font-size:13px;font-weight:700;color:var(--low)}
+.two{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(260px,1fr);gap:16px;align-items:start}
+
+/* log */
+.lstats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.lstats div{background:var(--raised);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.lstats b{display:block;font-size:20px;font-family:var(--f-head);font-variant-numeric:tabular-nums;line-height:1.1}
+.lstats span{font-size:12px;color:var(--muted)}
+.tbl-wrap{border:1px solid var(--line);border-radius:8px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:640px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;color:var(--muted);font-weight:700;background:var(--raised);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td select{width:auto;min-width:64px;padding:4px 6px;font-size:13px}
+td.mono{white-space:nowrap}
+td .small{font-size:12px;color:var(--muted);display:block;margin-top:2px}
+tr.closed td{opacity:.6}
+.addf{border:1px dashed var(--field);border-radius:8px;padding:12px;display:grid;gap:10px}
+.addf .row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:10px}
+.addf .row3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.empty{padding:28px 16px;text-align:center;color:var(--muted);display:grid;gap:8px;justify-items:center;border:1px dashed var(--line);border-radius:8px}
+.empty b{color:var(--ink);font-family:var(--f-head);font-size:16px}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--navy-ink);color:#fff;padding:10px 16px;border-radius:999px;font-weight:600;font-size:14px;z-index:20;box-shadow:0 10px 30px -10px rgba(0,0,0,.5);max-width:calc(100vw - 32px)}
+
+.mtabs{display:none}
+footer.foot{border-top:1px solid var(--line);background:var(--surface)}
+.foot-in{max-width:1360px;margin:0 auto;padding-block:18px 28px;font-size:13px;color:var(--muted);display:grid;gap:8px}
+.foot-in b{color:var(--ink)}
+.foot-in details summary{cursor:pointer;color:var(--link);font-weight:600}
+.foot-in ul{margin:6px 0 0;padding-left:18px;display:grid;gap:3px}
+
+@media (max-width:1100px){.two{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:900px){
+  .gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .brand .org{display:none}
+  .brand .app{font-size:17px}
+  .proto-in{flex-direction:column;gap:2px}
+  .wrap{grid-template-columns:minmax(0,1fr);padding-block:14px 32px;gap:12px}
+  .side{position:static}
+  .mtabs{display:flex;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;gap:4px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:999px;box-shadow:0 6px 16px -10px rgba(0,30,60,.35)}
+  .mtabs button{flex:1;border:0;border-radius:999px;background:transparent;color:var(--muted);padding:9px 6px;font-weight:700;font-size:14px}
+  .mtabs button[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
+  .wrap[data-m="list"] #ws{display:none}
+  .wrap[data-m="ws"] #side{display:none}
+  input,textarea,select{font-size:16px}
+  .tabs{width:100%}
+  .tabs button{flex:1;justify-content:center}
+}
+@media (max-width:640px){
+  .kinds{grid-template-columns:minmax(0,1fr)}
+  .kind{grid-template-columns:auto minmax(0,1fr);column-gap:10px}
+  .grid2{grid-template-columns:minmax(0,1fr)}
+  .lstats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .addf .row,.addf .row3{grid-template-columns:minmax(0,1fr)}
+  .sg{grid-template-columns:minmax(0,1fr)}
+  .paper textarea{min-height:300px}
+  .tbl-wrap{overflow:visible;border:0;display:grid}
+  .tbl-wrap table{min-width:0;display:block}
+  .tbl-wrap thead{display:none}
+  .tbl-wrap tbody{display:grid;gap:8px}
+  .tbl-wrap tr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 10px;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+  .tbl-wrap td{border:0;padding:0;min-width:0}
+  .tbl-wrap td.wide{grid-column:1/-1}
+  .tbl-wrap td[data-label]::before{content:attr(data-label);display:block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+  .tbl-wrap td select{width:100%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<style>
+/* App-specific additions on top of the family shell */
+.use{display:grid;gap:4px;min-width:110px}
+.use .track{height:8px;border-radius:6px;background:var(--line);overflow:hidden}
+.use .track i{display:block;height:100%;border-radius:6px}
+.use .track i.Low{background:var(--low)}.use .track i.Medium{background:var(--med)}.use .track i.High{background:var(--hi)}
+.use span{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.sig{display:flex;flex-wrap:wrap;gap:4px}
+.sig span{font-size:12px;padding:2px 8px;border-radius:999px;background:var(--info-bg);color:var(--info)}
+.cause{border:1px solid var(--line);border-radius:8px;padding:12px;display:grid;gap:6px;background:var(--surface)}
+.cause .top{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;justify-content:space-between}
+.cause .top b{font-family:var(--f-head);font-size:15px}
+.cause ul{margin:0;padding-left:18px;display:grid;gap:2px;font-size:14px}
+.cause .why{font-size:14px;margin:0}
+.codes{display:flex;flex-wrap:wrap;gap:6px}
+.codes label{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:13px;background:var(--raised);cursor:pointer}
+.codes input{width:16px;height:16px;margin:0;accent-color:var(--accent)}
+.week{display:grid;gap:6px}
+.week h4{margin:6px 0 0;font-family:var(--f-head);font-size:14px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.kpis div{background:var(--raised);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.kpis b{display:block;font-size:20px;font-family:var(--f-head);font-variant-numeric:tabular-nums;line-height:1.1}
+.kpis span{font-size:12px;color:var(--muted)}
+.cap{display:flex;gap:2px;align-items:center}
+.cap i{display:block;width:10px;height:10px;border-radius:2px;background:var(--line)}
+.cap i.on{background:var(--accent)}
+/* short tab labels on phones */
+.tabs .ts{display:none}
+@media (max-width:520px){.tabs .tl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.tabs .ts{display:inline}}
+.defect{font-size:14px;border-left:3px solid var(--med);background:var(--med-bg);padding:8px 10px;border-radius:0 6px 6px 0}
+@media (max-width:640px){
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tbl-wrap{overflow:visible;border:0;display:grid}
+  .tbl-wrap table{min-width:0;display:block}
+  .tbl-wrap thead{display:none}
+  .tbl-wrap tbody{display:grid;gap:8px}
+  .tbl-wrap tr{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 10px;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+  .tbl-wrap td{border:0;padding:0;min-width:0}
+  .tbl-wrap td.wide{grid-column:1/-1}
+  .tbl-wrap td[data-label]::before{content:attr(data-label);display:block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+}
+</style>
+
+<header class="mast gut"><div class="mast-in">
+  <div class="brand"><div class="org">Logan<small>AI</small></div><h1 class="app">Fleet Maintenance Predictor<small>Service before it breaks, and find the fault faster</small></h1></div>
+  <div class="mast-right"><span class="aistat" id="aistat" role="status"><i></i><span>Checking AI</span></span><span class="badge">Prototype</span></div>
+</div></header>
+<aside class="proto gut" aria-label="Prototype notice"><div class="proto-in"><b>Rapid AI prototype</b><span>Sample data only. All vehicles, plant, readings, fault reports and costs are made up. Predictions are a guide for the workshop, not a safety sign-off.</span></div></aside>
+
+<main class="wrap gut" id="wrap" data-m="ws">
+  <div class="mtabs" role="group" aria-label="Show" style="grid-column:1/-1">
+    <button type="button" id="mt-list" aria-pressed="false">Fleet</button>
+    <button type="button" id="mt-ws" aria-pressed="true">Workspace</button>
+  </div>
+
+  <aside class="panel side" id="side" aria-labelledby="side-h">
+    <div class="panel-h"><h2 id="side-h">Fleet health</h2><span class="hint">Sample data</span></div>
+    <div class="panel-b" style="padding:10px 12px 0"><label class="sr" for="filt">Show</label><select id="filt"><option value="all">All vehicles and plant</option><option value="High">High risk only</option><option value="faults">With open faults</option></select></div>
+    <ul class="plist" id="plist"></ul>
+  </aside>
+
+  <section class="panel" id="ws" aria-label="Workspace"></section>
+</main>
+
+<footer class="foot gut"><div class="foot-in">
+  <div><b>How it works.</b> The page scores each part of every vehicle and machine from hours or kilometres since its last service, telematics fault codes, oil sample results and prestart defect reports, and predicts roughly when it will need work. It then fills the workshop's next four weeks so the riskiest work happens first. When a fault comes in, AI ranks the likely causes from the fault codes, symptoms and the asset's history, lists the checks to do first and drafts a work order. A fleet officer checks everything before it goes to the workshop.</div>
+  <details><summary>Prototype handover notes</summary>
+    <ul>
+      <li>In the LCC stack for production: HTML, CSS and JavaScript front end (move to Vue and Bootstrap) on Azure App Service, an Azure Function App for scoring and model calls, SQL for service history and plans, Data Factory or Logic Apps to bring in telematics and oil sample results, Entra ID sign-in.</li>
+      <li>Needs an ICT-DA exception: Claude (Anthropic) as the AI provider, through the council's enterprise agreement or Microsoft Foundry.</li>
+      <li>Privacy: operator names in defect reports are swapped for placeholders before anything goes to AI. Only asset type, readings, codes and symptoms are sent.</li>
+      <li>The risk score, service intervals, fault code library, workshop capacity and costs are samples. They must be replaced with the manufacturers' schedules and City Fleet's own history and rates, then tested against past breakdowns.</li>
+      <li>Still needed for production: links to the council's fleet management system and the telematics platform, a test plan with an AI evaluation set of past faults, Dev, Test and Prod environments, and ICT-DA, CAB and business owner approvals.</li>
+    </ul>
+  </details>
+  <div>Based on ideas 335101 (predictive asset maintenance and scheduling) and 335114 (fleet maintenance diagnostics and failure prediction), City Fleet. Rapid AI prototype for discussion, not a council system.</div>
+</div></footer>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(function ()
+{
+  'use strict';
+
+  /* ---------- Dates (sample data sits relative to today so it never goes stale) ---------- */
+  function today() { var d = new Date(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+  function addDays(d, n) { var x = new Date(d); x.setDate(x.getDate() + n); return x; }
+  function iso(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function rel(n) { return iso(addDays(today(), n)); }
+  function parseDate(s) { var p = String(s || '').split('-'); return p.length === 3 ? new Date(+p[0], +p[1] - 1, +p[2]) : null; }
+  function fmt(s) { var d = typeof s === 'string' ? parseDate(s) : s; return d ? d.toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' }) : ''; }
+  function isWorkday(d) { var w = d.getDay(); return w !== 0 && w !== 6; }
+
+  /* ---------- Sample data (made up, labelled in the UI) ---------- */
+  // Fault code library: sample wording, not a manufacturer's manual.
+  var LIBRARY = {
+    P0217: { label: 'Engine over temperature', causes: [
+      { cause: 'Low coolant from a leaking hose or water pump seal', checks: ['Check coolant level cold', 'Pressure test the cooling system', 'Look for weeping at hose clamps and pump weep hole'], parts: ['Coolant hose kit', 'Coolant'] },
+      { cause: 'Thermostat sticking closed', checks: ['Compare upper and lower radiator hose temperatures at running temperature'], parts: ['Thermostat and gasket'] },
+      { cause: 'Radiator core blocked with dust or grass', checks: ['Inspect and blow out radiator and charge air cooler fins'], parts: [] },
+      { cause: 'Fan clutch slipping', checks: ['Check fan engagement at temperature'], parts: ['Fan clutch'] }
+    ], keys: ['overheat', 'temp', 'coolant', 'hot'] },
+    P0299: { label: 'Turbo underboost', causes: [
+      { cause: 'Boost leak at an intercooler hose or clamp', checks: ['Smoke test the intake side', 'Check clamps and hoses for oil film'], parts: ['Intercooler hose', 'T-bolt clamps'] },
+      { cause: 'Wastegate or actuator fault', checks: ['Check actuator movement and vacuum or electrical supply'], parts: ['Wastegate actuator'] },
+      { cause: 'Turbo bearing wear', checks: ['Check shaft play and look for oil in the intake'], parts: ['Turbocharger'] }
+    ], keys: ['power', 'boost', 'turbo', 'sluggish', 'hill'] },
+    P2463: { label: 'Diesel particulate filter soot build-up', causes: [
+      { cause: 'Regenerations not finishing because of short trips and idling', checks: ['Read regeneration history', 'Run a parked regeneration'], parts: [] },
+      { cause: 'Faulty DPF pressure sensor or cracked sensor hose', checks: ['Compare sensor reading with engine off', 'Inspect sensor hoses'], parts: ['DPF pressure sensor hose'] },
+      { cause: 'Injector over-fuelling', checks: ['Run injector balance test'], parts: ['Injector'] }
+    ], keys: ['dpf', 'regen', 'smoke', 'limp'] },
+    'HYD-01': { label: 'Hydraulic pressure low (sample code)', causes: [
+      { cause: 'Hose or fitting leak on the boom or bucket circuit', checks: ['Clean and inspect hoses under load', 'Check oil level'], parts: ['Hydraulic hose', 'O-ring kit', 'Hydraulic oil'] },
+      { cause: 'Pump wear', checks: ['Flow and pressure test the pump'], parts: ['Hydraulic pump'] },
+      { cause: 'Main relief valve sticking or set low', checks: ['Check relief setting against the manual'], parts: ['Relief valve cartridge'] }
+    ], keys: ['hydraulic', 'leak', 'boom', 'slow', 'drip'] },
+    'AIR-02': { label: 'Brake air pressure low (sample code)', causes: [
+      { cause: 'Air leak at a brake chamber, valve or fitting', checks: ['Soapy water test with system charged', 'Listen for leaks with engine off'], parts: ['Air fittings', 'Brake chamber diaphragm'] },
+      { cause: 'Air dryer cartridge saturated', checks: ['Check for water in tanks', 'Check dryer purge'], parts: ['Air dryer cartridge'] },
+      { cause: 'Compressor governor fault', checks: ['Check cut-in and cut-out pressures'], parts: ['Governor'] }
+    ], keys: ['air', 'brake', 'buzzer', 'warning'] },
+    C0035: { label: 'Front wheel speed sensor', causes: [
+      { cause: 'Damaged sensor wiring near the hub', checks: ['Inspect wiring and plug', 'Measure sensor resistance'], parts: ['Wheel speed sensor'] },
+      { cause: 'Dirty or damaged tone ring', checks: ['Inspect tone ring for damage or build-up'], parts: [] }
+    ], keys: ['abs', 'light', 'wheel'] }
+  };
+
+  // Each component: interval and hours or km since last service, plus warning signs.
+  // signs: { t: text, w: weight 1 to 3 }
+  var ASSETS = [
+    { id: 'PL-201', type: 'Backhoe loader', unit: 'h', reading: 6840, perWeek: 32, age: 7, depot: 'Sample depot North', use: 'Civil works crew',
+      codes: ['HYD-01'], defect: { date: rel(-1), by: 'Chris Sample', text: 'Small drips of hydraulic oil under the boom after each shift. Boom slow to lift when warm.' },
+      comps: [
+        { n: 'Engine oil and filters', interval: 500, since: 455, hrs: 2, signs: [] },
+        { n: 'Hydraulic hoses and oil', interval: 2000, since: 1890, hrs: 6, signs: [{ t: 'Oil sample: high water content', w: 2 }, { t: 'Leak reported at prestart', w: 2 }] },
+        { n: 'Front axle and bushes', interval: 1000, since: 610, hrs: 4, signs: [] },
+        { n: 'Tyres', interval: 3000, since: 2480, hrs: 2, signs: [] }
+      ] },
+    { id: 'TK-114', type: 'Tipper truck, 6 t', unit: 'km', reading: 184200, perWeek: 820, age: 9, depot: 'Sample depot South', use: 'Road maintenance',
+      codes: ['P0217'], defect: { date: rel(-2), by: 'Robin Example', text: 'Temp gauge climbed to the red on the hill out of the quarry. Pulled over and it came back down. Smell of coolant.' },
+      comps: [
+        { n: 'Engine oil and filters', interval: 15000, since: 13900, hrs: 2, signs: [] },
+        { n: 'Cooling system', interval: 60000, since: 58800, hrs: 4, signs: [{ t: 'Over temperature code twice this week', w: 3 }, { t: 'Coolant smell reported', w: 1 }] },
+        { n: 'Brakes', interval: 40000, since: 21000, hrs: 5, signs: [] },
+        { n: 'Tipper hoist', interval: 20000, since: 9800, hrs: 3, signs: [] }
+      ] },
+    { id: 'TK-120', type: 'Tipper truck, 10 t', unit: 'km', reading: 96400, perWeek: 950, age: 4, depot: 'Sample depot South', use: 'Road maintenance',
+      codes: ['AIR-02'], defect: { date: rel(-3), by: 'Sam Demo', text: 'Low air buzzer comes on for a few seconds after parking overnight. Builds up fine after start.' },
+      comps: [
+        { n: 'Engine oil and filters', interval: 20000, since: 12100, hrs: 2, signs: [] },
+        { n: 'Air brake system', interval: 40000, since: 37200, hrs: 4, signs: [{ t: 'Low air warning after overnight park', w: 2 }] },
+        { n: 'Brake linings', interval: 60000, since: 51800, hrs: 6, signs: [{ t: 'Lining wear 70% at last inspection', w: 1 }] },
+        { n: 'Tyres', interval: 80000, since: 44000, hrs: 2, signs: [] }
+      ] },
+    { id: 'SW-031', type: 'Street sweeper', unit: 'h', reading: 9120, perWeek: 40, age: 8, depot: 'Sample depot East', use: 'Street cleaning',
+      codes: ['P2463'], defect: { date: rel(-1), by: 'Jamie Placeholder', text: 'DPF light on most afternoons. Lots of idling on the CBD run. Feels down on power.' },
+      comps: [
+        { n: 'Engine oil and filters', interval: 400, since: 380, hrs: 2, signs: [] },
+        { n: 'Diesel particulate filter', interval: 1500, since: 1320, hrs: 4, signs: [{ t: 'Soot load code daily', w: 3 }, { t: 'Regens not finishing', w: 2 }] },
+        { n: 'Brooms and suction hose', interval: 300, since: 290, hrs: 3, signs: [{ t: 'Broom wear at limit', w: 1 }] },
+        { n: 'Hydraulic oil', interval: 2000, since: 900, hrs: 2, signs: [] }
+      ] },
+    { id: 'UT-418', type: 'Ute, 4x4', unit: 'km', reading: 118300, perWeek: 600, age: 5, depot: 'Sample depot North', use: 'Parks maintenance',
+      codes: [], defect: null,
+      comps: [
+        { n: 'Engine oil and filters', interval: 10000, since: 6200, hrs: 1.5, signs: [] },
+        { n: 'Brakes', interval: 40000, since: 30500, hrs: 3, signs: [] },
+        { n: 'Tyres', interval: 50000, since: 33000, hrs: 1, signs: [] }
+      ] },
+    { id: 'UT-422', type: 'Ute, 4x4', unit: 'km', reading: 152900, perWeek: 780, age: 6, depot: 'Sample depot East', use: 'Stormwater crew',
+      codes: ['P0299'], defect: { date: rel(-4), by: 'Morgan Trial', text: 'Down on power towing the trailer up hills. Whistle from the engine bay.' },
+      comps: [
+        { n: 'Engine oil and filters', interval: 10000, since: 9300, hrs: 1.5, signs: [] },
+        { n: 'Turbo and intake', interval: 100000, since: 92000, hrs: 3, signs: [{ t: 'Underboost code three times', w: 2 }, { t: 'Whistle reported', w: 1 }] },
+        { n: 'Clutch', interval: 150000, since: 141000, hrs: 6, signs: [{ t: 'Slipping noted at last service', w: 2 }] }
+      ] },
+    { id: 'MW-077', type: 'Ride-on mower, zero turn', unit: 'h', reading: 2210, perWeek: 28, age: 3, depot: 'Sample depot North', use: 'Parks mowing',
+      codes: [], defect: { date: rel(-6), by: 'Taylor Sample', text: 'Blades leaving a ragged cut on the left deck.' },
+      comps: [
+        { n: 'Engine oil and filters', interval: 250, since: 236, hrs: 1, signs: [] },
+        { n: 'Blades and deck belts', interval: 150, since: 148, hrs: 1.5, signs: [{ t: 'Ragged cut reported', w: 1 }] },
+        { n: 'Drive belts', interval: 500, since: 210, hrs: 1, signs: [] }
+      ] },
+    { id: 'WC-012', type: 'Water cart, 8 kL', unit: 'km', reading: 64800, perWeek: 300, age: 11, depot: 'Sample depot South', use: 'Dust control and planting',
+      codes: [], defect: null,
+      comps: [
+        { n: 'Engine oil and filters', interval: 15000, since: 8200, hrs: 2, signs: [] },
+        { n: 'Water pump and spray bar', interval: 10000, since: 9600, hrs: 3, signs: [{ t: 'Spray pressure dropping', w: 1 }] },
+        { n: 'Brakes', interval: 40000, since: 18000, hrs: 5, signs: [] }
+      ] },
+    { id: 'CR-009', type: 'Crane truck', unit: 'km', reading: 77100, perWeek: 420, age: 12, depot: 'Sample depot East', use: 'Signs and lighting',
+      codes: ['C0035'], defect: { date: rel(-2), by: 'Drew Example', text: 'ABS light on since Monday. Brakes feel normal.' },
+      comps: [
+        { n: 'Engine oil and filters', interval: 15000, since: 14400, hrs: 2, signs: [] },
+        { n: 'Crane annual inspection', interval: 52, since: 49, hrs: 6, unitOverride: 'weeks', signs: [] },
+        { n: 'ABS and wheel sensors', interval: 80000, since: 40000, hrs: 2, signs: [{ t: 'ABS code active', w: 2 }] }
+      ] },
+    { id: 'LV-233', type: 'Light van', unit: 'km', reading: 41700, perWeek: 450, age: 2, depot: 'Sample depot North', use: 'Facilities',
+      codes: [], defect: null,
+      comps: [
+        { n: 'Engine oil and filters', interval: 15000, since: 3200, hrs: 1.5, signs: [] },
+        { n: 'Brakes', interval: 40000, since: 12000, hrs: 3, signs: [] }
+      ] }
+  ];
+
+  // Sample workshop settings and cost rates.
+  var BAY_HOURS_PER_DAY = 24;     // three bays, eight hours each
+  var LABOUR_RATE = 125;          // dollars per hour, sample
+  var BREAKDOWN_COST = { High: 9500, Medium: 4200, Low: 1500 }; // tow, hire, lost crew time, sample
+
+  /* ---------- State ---------- */
+  var state = { aid: 'TK-114', tab: 'health', filter: 'all', busy: '', diag: {}, health: {}, planNote: null, symptoms: {}, picked: {}, error: '' };
+  var sample = null, ctl = null;
+
+  /* ---------- Helpers ---------- */
+  function $(id) { return document.getElementById(id); }
+  function esc(s)
+  {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; });
+  }
+  function noDash(s) { return String(s || '').replace(/\s*[—–]\s*/g, ', ').replace(/\s+,/g, ','); }
+  function num(n) { return Number(n).toLocaleString('en-AU'); }
+  function money(n) { return '$' + Math.round(n).toLocaleString('en-AU'); }
+  function asset(id) { return ASSETS.find(function (a) { return a.id === (id || state.aid); }); }
+  var toastT;
+  function toast(msg)
+  {
+    var t = $('toast'); t.textContent = msg; t.hidden = false;
+    clearTimeout(toastT); toastT = setTimeout(function () { t.hidden = true; }, 2600);
+  }
+
+  /* ---------- Prediction (sample rules, run in the page) ---------- */
+  // Scores one component from how much of its interval is used and its warning signs.
+  function score(a, c)
+  {
+    var used = c.since / c.interval;
+    var sig = c.signs.reduce(function (n, s) { return n + s.w; }, 0);
+    var sc = Math.min(100, Math.round(used * 50 + sig * 10));
+    var risk = sc >= 80 ? 'High' : sc >= 50 ? 'Medium' : 'Low';
+    var perWeek = c.unitOverride === 'weeks' ? 1 : a.perWeek;
+    var weeks = Math.max(0, (c.interval - c.since) / perWeek) / (1 + sig * 0.45);
+    return { score: sc, risk: risk, used: used, weeks: weeks, sig: sig };
+  }
+  function whenText(w)
+  {
+    if (w < 0.6) { return 'Now'; }
+    if (w < 1.5) { return 'Within a week'; }
+    if (w < 8) { return 'About ' + Math.round(w) + ' weeks'; }
+    return 'More than 2 months';
+  }
+  function assetRisk(a)
+  {
+    var worst = { score: 0, risk: 'Low' };
+    a.comps.forEach(function (c) { var s = score(a, c); if (s.score > worst.score) { worst = s; } });
+    return worst;
+  }
+  var RANK = { High: 3, Medium: 2, Low: 1 };
+
+  /* ---------- Workshop plan (rules) ---------- */
+  // Books one visit per asset for parts due within four weeks or rated high, riskiest first.
+  function buildPlan()
+  {
+    var days = [], d = addDays(today(), 1);
+    while (days.length < 20) { if (isWorkday(d)) { days.push({ date: iso(d), used: 0, jobs: [] }); } d = addDays(d, 1); }
+    var visits = ASSETS.map(function (a)
+    {
+      var jobs = a.comps.map(function (c) { return { c: c, s: score(a, c) }; }).filter(function (j) { return j.s.weeks <= 4 || j.s.risk === 'High'; });
+      if (!jobs.length) { return null; }
+      var worst = jobs.reduce(function (m, j) { return j.s.score > m.s.score ? j : m; });
+      return { a: a, jobs: jobs, hrs: jobs.reduce(function (n, j) { return n + j.c.hrs; }, 0), risk: worst.s.risk, score: worst.s.score, dueDays: Math.min.apply(null, jobs.map(function (j) { return j.s.weeks * 7; })) };
+    }).filter(Boolean).sort(function (x, y) { return y.score - x.score; });
+    visits.forEach(function (v)
+    {
+      // High risk: first day with room. Others: the latest day with room before it falls due.
+      var dueIdx = Math.max(0, Math.min(days.length - 1, Math.floor(v.dueDays * 5 / 7) - 2));
+      var pick = -1, i;
+      if (v.risk === 'High') { for (i = 0; i < days.length; i++) { if (days[i].used + v.hrs <= BAY_HOURS_PER_DAY) { pick = i; break; } } }
+      else
+      {
+        for (i = dueIdx; i >= 0; i--) { if (days[i].used + v.hrs <= BAY_HOURS_PER_DAY) { pick = i; break; } }
+        if (pick < 0) { for (i = dueIdx; i < days.length; i++) { if (days[i].used + v.hrs <= BAY_HOURS_PER_DAY) { pick = i; break; } } }
+      }
+      if (pick < 0) { v.unbooked = true; return; }
+      days[pick].used += v.hrs; days[pick].jobs.push(v); v.date = days[pick].date;
+    });
+    var planned = visits.filter(function (v) { return v.date; });
+    return {
+      days: days, visits: visits,
+      hours: planned.reduce(function (n, v) { return n + v.hrs; }, 0),
+      labour: planned.reduce(function (n, v) { return n + v.hrs * LABOUR_RATE; }, 0),
+      avoided: planned.reduce(function (n, v) { return n + v.jobs.reduce(function (m, j) { return m + (j.s.risk === 'Low' ? 0 : BREAKDOWN_COST[j.s.risk] * Math.min(1, j.s.score / 100)); }, 0); }, 0)
+    };
+  }
+
+  function planText(p)
+  {
+    var L = ['WORKSHOP PLAN, NEXT FOUR WEEKS (DRAFT)', 'Prepared ' + fmt(today()) + '. Sample data.', ''];
+    var byWeek = {};
+    p.days.forEach(function (d, i) { var w = Math.floor(i / 5); (byWeek[w] = byWeek[w] || []).push(d); });
+    Object.keys(byWeek).forEach(function (w)
+    {
+      var jobs = [];
+      byWeek[w].forEach(function (d) { d.jobs.forEach(function (v) { jobs.push({ d: d, v: v }); }); });
+      if (!jobs.length) { return; }
+      L.push('WEEK ' + (+w + 1));
+      jobs.forEach(function (x) { L.push('- ' + fmt(x.d.date) + ': ' + x.v.a.id + ' ' + x.v.a.type + ' (' + x.v.risk + ' risk, ' + x.v.hrs + ' h). ' + x.v.jobs.map(function (j) { return j.c.n; }).join(', ') + '.'); });
+      L.push('');
+    });
+    var un = p.visits.filter(function (v) { return v.unbooked; });
+    if (un.length) { L.push('NOT BOOKED (NO ROOM)'); un.forEach(function (v) { L.push('- ' + v.a.id + ' ' + v.a.type); }); L.push(''); }
+    L.push('Workshop hours booked: ' + p.hours + '. Labour about ' + money(p.labour) + '. Breakdown cost risk reduced by about ' + money(p.avoided) + ' (sample rates).');
+    return L.join('\n');
+  }
+
+  /* ---------- AI availability ---------- */
+  function setAi(mode)
+  {
+    var el = $('aistat');
+    el.className = 'aistat ' + (mode === 'ok' ? 'ok' : mode === 'off' ? 'off' : '');
+    el.querySelector('span').textContent = mode === 'ok' ? 'AI ready' : mode === 'off' ? 'AI off: rules mode' : 'Checking AI';
+  }
+  function initAi()
+  {
+    if (typeof window.claude === 'undefined' || !window.claude || typeof window.claude.use !== 'function')
+    {
+      setAi('off'); render(); return;
+    }
+    window.claude.use('sample').then(function (s) { sample = s || null; setAi(sample ? 'ok' : 'off'); render(); }, function () { setAi('off'); render(); });
+  }
+  function aiErrorCopy(code)
+  {
+    switch (code)
+    {
+      case 'not_granted': return 'AI was not allowed for this page, so this uses the built-in rules and fault library.';
+      case 'rate_limited': case 'queue_overflow': return 'AI is busy right now, so this uses the built-in rules. Try again in a minute.';
+      case 'invalid_json': case 'empty_completion': return 'AI sent back something the page could not read, so this uses the built-in rules.';
+      case 'cancelled': return 'You stopped AI, so this uses the built-in rules.';
+      default: return 'AI could not answer just now, so this uses the built-in rules and fault library.';
+    }
+  }
+  function aiFail(e)
+  {
+    state.error = aiErrorCopy(e && e.code);
+    if (e && e.code === 'not_granted') { sample = null; setAi('off'); }
+  }
+
+  /* ---------- Privacy: operator names never go to AI ---------- */
+  function redact(a, text)
+  {
+    var t = String(text || '');
+    if (a.defect && a.defect.by) { t = t.split(a.defect.by).join('[OPERATOR]'); t = t.split(a.defect.by.split(' ')[0]).join('[OPERATOR]'); }
+    return t.replace(/[\w.+-]+@[\w-]+\.[\w.]+/g, '[EMAIL]').replace(/(\+?61|0)4\d{2}[ ]?\d{3}[ ]?\d{3}/g, '[PHONE]');
+  }
+
+  /* ---------- Health summary ---------- */
+  function healthRules(a)
+  {
+    var rows = a.comps.map(function (c) { return { c: c, s: score(a, c) }; }).sort(function (x, y) { return y.s.score - x.s.score; });
+    var top = rows[0];
+    return {
+      source: 'rules',
+      summary: a.id + ' is rated ' + top.s.risk.toLowerCase() + ' risk. The part most likely to need work is ' + top.c.n.toLowerCase() + ' (' + whenText(top.s.weeks).toLowerCase() + ')' + (top.c.signs.length ? ', with ' + top.c.signs.map(function (s) { return s.t.toLowerCase(); }).join(' and ') + '.' : '.'),
+      actions: rows.filter(function (r) { return r.s.risk !== 'Low' || r.s.weeks <= 4; }).map(function (r) { return 'Book ' + r.c.n.toLowerCase() + ': ' + whenText(r.s.weeks).toLowerCase() + '.'; })
+    };
+  }
+  function healthPrompt(a)
+  {
+    var data = a.comps.map(function (c) { var s = score(a, c); return { part: c.n, interval: c.interval + ' ' + (c.unitOverride || a.unit), sinceService: c.since, riskScore: s.score, risk: s.risk, weeksLeftEstimate: Math.round(s.weeks * 10) / 10, warningSigns: c.signs.map(function (x) { return x.t; }) }; });
+    return ['You help a council fleet maintenance planner in Queensland.',
+      'Explain the health of this ' + a.type + ' (' + a.age + ' years old, ' + num(a.reading) + ' ' + a.unit + ', about ' + a.perWeek + ' ' + a.unit + ' a week, used for ' + a.use.toLowerCase() + ').',
+      'Rules: Australian English, plain English, short sentences, no em dashes or en dashes. Only use the data given. Do not invent readings or costs. The risk scores come from simple sample rules, so say what would make you more or less confident.',
+      'Return only JSON: {"summary": string (3 sentences max), "actions": [string] (up to 4, each starting with a verb, in order of urgency), "confidence": string (one sentence)}',
+      'Latest defect report: ' + (a.defect ? redact(a, a.defect.text) : 'none'),
+      'Active fault codes: ' + (a.codes.join(', ') || 'none'),
+      'Parts (JSON): ' + JSON.stringify(data)].join('\n');
+  }
+  function runHealth()
+  {
+    var a = asset();
+    if (!sample) { state.health[a.id] = healthRules(a); render(); return; }
+    state.busy = 'health'; state.error = ''; render();
+    ctl = new AbortController();
+    sample.json(healthPrompt(a), { signal: ctl.signal, modelTier: 'default' }).then(function (o)
+    {
+      if (!o || typeof o.summary !== 'string') { throw { code: 'invalid_json' }; }
+      state.health[a.id] = { source: 'ai', summary: noDash(o.summary), actions: (Array.isArray(o.actions) ? o.actions : []).slice(0, 4).map(noDash), confidence: noDash(o.confidence || '') };
+    }).catch(function (e) { aiFail(e); state.health[a.id] = healthRules(a); }).then(function () { state.busy = ''; ctl = null; render(); });
+  }
+
+  /* ---------- Diagnosis ---------- */
+  function pickedCodes(a)
+  {
+    if (!state.picked[a.id]) { state.picked[a.id] = a.codes.slice(); }
+    return state.picked[a.id];
+  }
+  function symptoms(a) { return state.symptoms[a.id] != null ? state.symptoms[a.id] : (a.defect ? a.defect.text : ''); }
+
+  // Matches fault codes and symptom words against the sample library.
+  function libMatches(a)
+  {
+    var codes = pickedCodes(a), text = symptoms(a).toLowerCase(), out = [];
+    Object.keys(LIBRARY).forEach(function (k)
+    {
+      var L = LIBRARY[k], hit = codes.indexOf(k) > -1 ? 3 : 0;
+      L.keys.forEach(function (w) { if (text.indexOf(w) > -1) { hit += 1; } });
+      if (hit) { out.push({ code: k, lib: L, hit: hit }); }
+    });
+    return out.sort(function (x, y) { return y.hit - x.hit; });
+  }
+  // Tag-out only for genuine safety-critical signals: a reported brake, steering or hydraulic fault,
+  // a brake air or hydraulic pressure code, or a failed safety check. An ABS light with normal braking is not one.
+  var SAFETY_CODES = ['AIR-02', 'HYD-01'];
+  var SAFETY_WORDS = /(brakes? (fail|failed|fade|fading|soft|spongy|pull|pulling|grab|grabbing|not holding|binding)|low air|air (buzzer|warning)|steering (heavy|loose|play|stiff|pull|pulling|wander)|hydraulic (oil )?(leak|burst|failure|fault)|(leak|drips?) of hydraulic|hydraulic oil under|failed (prestart|safety|brake) (check|test|inspection)|failed check)/i;
+  function safetyCritical(a)
+  {
+    var text = symptoms(a);
+    if (/brakes? (feel|feels|are|is) (normal|fine|ok|good)/i.test(text) && !pickedCodes(a).some(function (k) { return SAFETY_CODES.indexOf(k) > -1; })) { return false; }
+    return pickedCodes(a).some(function (k) { return SAFETY_CODES.indexOf(k) > -1; }) || SAFETY_WORDS.test(text);
+  }
+  function safetyNote(a)
+  {
+    return safetyCritical(a) ? 'Safety-critical: tag the vehicle out of service until the first checks are done and signed off.' : 'Not a safety-critical fault on what is reported. It can stay in use with care until booked, if the operator and supervisor agree.';
+  }
+
+  function diagRules(a)
+  {
+    var m = libMatches(a), causes = [];
+    m.slice(0, 2).forEach(function (x)
+    {
+      x.lib.causes.forEach(function (c, i) { causes.push({ cause: c.cause, likelihood: i === 0 && x.hit >= 3 ? 'High' : i < 2 ? 'Medium' : 'Low', why: 'Matches ' + x.code + ' (' + x.lib.label.toLowerCase() + ') in the sample fault library.', checks: c.checks, parts: c.parts }); });
+    });
+    causes = causes.slice(0, 4);
+    var risk = assetRisk(a).risk;
+    return {
+      source: 'rules',
+      summary: causes.length ? 'The fault codes and symptoms point to ' + m[0].lib.label.toLowerCase() + '. Start with the first check below, it is the quickest and most likely.' : 'No match in the sample fault library. Describe the symptoms in more detail or tick a fault code.',
+      causes: causes,
+      safety: safetyNote(a),
+      wo: workOrder(a, causes, 'rules')
+    };
+  }
+  function workOrder(a, causes, src)
+  {
+    var pri = causes.length && causes[0].likelihood === 'High' ? 'Priority 1 (within 24 hours)' : 'Priority 2 (within 5 working days)';
+    var L = ['WORK ORDER (DRAFT)', 'Asset: ' + a.id + ', ' + a.type + ', ' + a.depot, 'Reading: ' + num(a.reading) + ' ' + a.unit, 'Priority: ' + pri,
+      'Fault codes: ' + (pickedCodes(a).join(', ') || 'none'), 'Reported: ' + (a.defect ? fmt(a.defect.date) + ' by ' + a.defect.by : 'not stated'), '', 'SYMPTOMS', symptoms(a) || '[Describe the fault]', '', 'CHECKS IN ORDER'];
+    var n = 1;
+    causes.forEach(function (c) { c.checks.forEach(function (k) { L.push(n++ + '. ' + k + ' (' + c.cause.toLowerCase() + ')'); }); });
+    var parts = [];
+    causes.forEach(function (c) { c.parts.forEach(function (p) { if (parts.indexOf(p) < 0) { parts.push(p); } }); });
+    L.push('', 'PARTS TO HAVE ON HAND', parts.length ? parts.map(function (p) { return '- ' + p; }).join('\n') : '- None expected', '', 'Raised from the Fleet Maintenance Predictor (' + (src === 'ai' ? 'AI suggested' : 'rules') + '). A qualified mechanic confirms the diagnosis. Sample data.');
+    return L.join('\n');
+  }
+  function diagPrompt(a)
+  {
+    var lib = libMatches(a).map(function (x) { return { code: x.code, label: x.lib.label, knownCauses: x.lib.causes }; });
+    var hist = a.comps.map(function (c) { var s = score(a, c); return { part: c.n, sinceService: c.since + ' of ' + c.interval + ' ' + (c.unitOverride || a.unit), risk: s.risk, warningSigns: c.signs.map(function (x) { return x.t; }) }; });
+    return ['You help a council fleet mechanic in Queensland diagnose a fault on a ' + a.type + ' (' + a.age + ' years old, ' + num(a.reading) + ' ' + a.unit + ').',
+      'Rank the most likely causes using the fault codes, the symptoms, the service history and the sample fault library entries given. You may add a cause not in the library if the symptoms clearly point to it, but say so in "why".',
+      'Rules: Australian English, plain English, short sentences, no em dashes or en dashes. Do not invent readings, part numbers or prices. Put the quickest, cheapest checks first. Only say to tag the vehicle out of service for a genuine safety-critical signal: a reported brake, steering or hydraulic fault, a brake air or hydraulic pressure code, or a failed safety check. A warning light with normal braking or an engine fault that is not a safety risk is not a tag-out; say it can stay in use with care until booked.',
+      'Return only JSON: {"summary": string (2 sentences), "causes": [{"cause": string, "likelihood": "High"|"Medium"|"Low", "why": string, "checks": [string], "parts": [string]}] (2 to 4, most likely first), "safety": string (one sentence)}',
+      'Symptoms: """' + redact(a, symptoms(a)) + '"""',
+      'Active fault codes: ' + (pickedCodes(a).join(', ') || 'none'),
+      'Service history (JSON): ' + JSON.stringify(hist),
+      'Sample fault library matches (JSON): ' + JSON.stringify(lib)].join('\n');
+  }
+  function runDiag()
+  {
+    var a = asset();
+    if (!symptoms(a).trim() && !pickedCodes(a).length) { state.error = 'Describe the fault or tick a fault code first.'; render(); return; }
+    state.error = '';
+    if (!sample) { state.diag[a.id] = diagRules(a); render(); focusId('diag-h'); return; }
+    state.busy = 'diag'; render();
+    ctl = new AbortController();
+    sample.json(diagPrompt(a), { signal: ctl.signal, modelTier: 'default' }).then(function (o)
+    {
+      if (!o || !Array.isArray(o.causes) || !o.causes.length) { throw { code: 'invalid_json' }; }
+      var causes = o.causes.slice(0, 4).map(function (c)
+      {
+        return { cause: noDash(c.cause), likelihood: ['High', 'Medium', 'Low'].indexOf(c.likelihood) > -1 ? c.likelihood : 'Medium', why: noDash(c.why), checks: (Array.isArray(c.checks) ? c.checks : []).slice(0, 4).map(noDash), parts: (Array.isArray(c.parts) ? c.parts : []).slice(0, 4).map(noDash) };
+      }).filter(function (c) { return c.cause; });
+      state.diag[a.id] = { source: 'ai', summary: noDash(o.summary), causes: causes, safety: safetyCritical(a) ? safetyNote(a) : (/out of service/i.test(o.safety || '') ? safetyNote(a) : noDash(o.safety) || safetyNote(a)), wo: workOrder(a, causes, 'ai') };
+    }).catch(function (e) { aiFail(e); state.diag[a.id] = diagRules(a); }).then(function () { state.busy = ''; ctl = null; render(); focusId('diag-h'); });
+  }
+
+  /* ---------- Plan note ---------- */
+  function runPlanNote()
+  {
+    var p = buildPlan(), base = planText(p);
+    if (!sample) { state.planNote = { source: 'rules', text: base }; render(); return; }
+    state.busy = 'plan'; state.error = ''; render();
+    ctl = new AbortController();
+    var prompt = ['You help a council fleet maintenance planner in Queensland write a short note to the workshop supervisor about next month\'s plan.',
+      'Rules: Australian English, plain English, short sentences, no em dashes or en dashes. Only use the plan below. Start with two sentences on what matters most this week and why, then keep the plan list as given, then one line on anything not booked.',
+      'Return only JSON: {"note": string (plain text with line breaks)}', '', base].join('\n');
+    sample.json(prompt, { signal: ctl.signal, modelTier: 'default' }).then(function (o)
+    {
+      if (!o || typeof o.note !== 'string' || !o.note.trim()) { throw { code: 'invalid_json' }; }
+      state.planNote = { source: 'ai', text: noDash(o.note) };
+    }).catch(function (e) { aiFail(e); state.planNote = { source: 'rules', text: base }; }).then(function () { state.busy = ''; ctl = null; render(); });
+  }
+
+  /* ---------- Rendering ---------- */
+  function renderSide()
+  {
+    var list = ASSETS.slice().sort(function (x, y) { return assetRisk(y).score - assetRisk(x).score; }).filter(function (a)
+    {
+      return state.filter === 'all' || (state.filter === 'High' && assetRisk(a).risk === 'High') || (state.filter === 'faults' && (a.codes.length || a.defect));
+    });
+    $('plist').innerHTML = list.length ? list.map(function (a)
+    {
+      var r = assetRisk(a);
+      return '<li><button type="button" data-aid="' + a.id + '" aria-current="' + (a.id === state.aid) + '">' +
+        '<span class="nm">' + esc(a.id) + ' · ' + esc(a.type) + '</span><span class="ad">' + esc(a.use) + ' · ' + esc(a.depot) + '</span>' +
+        '<span class="rw"><span class="lvl ' + r.risk + '">' + r.risk + ' risk</span>' + (a.codes.length ? '<span class="st bad">' + a.codes.length + ' fault code' + (a.codes.length > 1 ? 's' : '') + '</span>' : '') + (a.defect ? '<span class="st">Defect reported</span>' : '') + '</span></button></li>';
+    }).join('') : '<li class="empty"><b>Nothing matches</b><span>Change the filter above.</span></li>';
+  }
+
+  function renderTop(a)
+  {
+    var r = assetRisk(a);
+    return '<div class="ws-top"><div><p class="label">' + esc(a.depot) + ' · ' + esc(a.use) + '</p><h2 class="ttl" tabindex="-1">' + esc(a.id) + ' ' + esc(a.type) + '</h2></div>' +
+      '<div class="facts"><div><span>Overall risk</span><b><span class="lvl ' + r.risk + '">' + r.risk + '</span> score ' + r.score + '</b></div>' +
+      '<div><span>' + (a.unit === 'h' ? 'Engine hours' : 'Odometer') + '</span><b>' + num(a.reading) + ' ' + a.unit + '</b></div>' +
+      '<div><span>Typical use</span><b>' + a.perWeek + ' ' + a.unit + ' a week</b></div><div><span>Age</span><b>' + a.age + ' years</b></div></div>' +
+      '<div class="tabs" role="tablist" aria-label="Workspace">' +
+      [['health', 'Health and prediction', 'Health'], ['diag', 'Diagnose a fault', 'Diagnose'], ['plan', 'Workshop plan', 'Plan']].map(function (t)
+      {
+        return '<button type="button" role="tab" id="tab-' + t[0] + '" aria-controls="tp" aria-selected="' + (state.tab === t[0]) + '" data-tab="' + t[0] + '"><span class="tl">' + t[1] + '</span><span class="ts" aria-hidden="true">' + t[2] + '</span>' + (t[0] === 'diag' && (a.codes.length || a.defect) ? '<span class="ct" aria-label="open fault">!</span>' : '') + '</button>';
+      }).join('') + '</div></div>';
+  }
+
+  function errHtml() { return state.error ? '<div class="callout warn" role="alert"><b>Heads up</b><span>' + esc(state.error) + '</span></div>' : ''; }
+  function busyHtml(msg) { return '<div aria-live="polite" style="display:grid;gap:10px"><p class="hint">' + msg + '</p><div class="thinking"><div class="skel" style="width:40%"></div><div class="skel"></div><div class="skel" style="width:85%"></div></div><div class="actions"><button class="ghost" type="button" id="stop">Stop</button></div></div>'; }
+
+  function renderHealth(a)
+  {
+    var rows = a.comps.map(function (c) { return { c: c, s: score(a, c) }; }).sort(function (x, y) { return y.s.score - x.s.score; });
+    var h = '<div class="panel-b" role="tabpanel" id="tp" aria-labelledby="tab-health"><div class="sect">';
+    if (a.defect) { h += '<div class="defect"><b>Latest defect report, ' + esc(fmt(a.defect.date)) + ':</b> ' + esc(a.defect.text) + ' <span class="hint">(' + esc(a.defect.by) + ', sample)</span></div>'; }
+    h += '<div class="tbl-wrap"><table><thead><tr><th>Part</th><th>Used since last service</th><th>Warning signs</th><th>Risk</th><th>Likely needs work</th></tr></thead><tbody>' + rows.map(function (r)
+    {
+      var pct = Math.min(100, Math.round(r.s.used * 100));
+      return '<tr><td class="wide"><b>' + esc(r.c.n) + '</b></td>' +
+        '<td data-label="Used"><div class="use"><div class="track" aria-hidden="true"><i class="' + r.s.risk + '" style="width:' + pct + '%"></i></div><span>' + num(r.c.since) + ' of ' + num(r.c.interval) + ' ' + esc(r.c.unitOverride || a.unit) + ' (' + pct + '%)</span></div></td>' +
+        '<td class="wide" data-label="Warning signs">' + (r.c.signs.length ? '<div class="sig">' + r.c.signs.map(function (s) { return '<span>' + esc(s.t) + '</span>'; }).join('') + '</div>' : '<span class="hint">None</span>') + '</td>' +
+        '<td data-label="Risk"><span class="lvl ' + r.s.risk + '">' + r.s.risk + '</span> <span class="mono">' + r.s.score + '</span></td>' +
+        '<td data-label="Likely needs work"><b>' + whenText(r.s.weeks) + '</b></td></tr>';
+    }).join('') + '</tbody></table></div>';
+    h += '<p class="hint">Risk score: half a point for each 1% of the service interval used, plus 10 points for each warning sign weight from oil samples, fault codes and defect reports (sample rules). High is 80 or more, Medium 50 to 79. More warning signs bring the date forward.</p>';
+    h += errHtml();
+    var hs = state.health[a.id];
+    if (state.busy === 'health') { h += busyHtml('AI is reading the service history and warning signs.'); }
+    else if (hs)
+    {
+      h += '<div class="callout info"><b>' + (hs.source === 'ai' ? 'AI summary' : 'Rules summary') + '</b><span>' + esc(hs.summary) + '</span>' + (hs.actions.length ? '<ul class="checks">' + hs.actions.map(function (x) { return '<li class="nt"><span class="ic" aria-hidden="true">›</span><span>' + esc(x) + '</span></li>'; }).join('') + '</ul>' : '') + (hs.confidence ? '<span class="hint">' + esc(hs.confidence) + '</span>' : '') + '</div>';
+      h += '<div class="actions"><button class="ghost" type="button" id="health">' + (sample ? 'Explain again with AI' : 'Explain again') + '</button><button class="btn sec sm" type="button" data-tab="plan">See the workshop plan</button></div>';
+    }
+    else { h += '<div class="actions"><button class="btn" type="button" id="health">' + (sample ? 'Explain this with AI' : 'Explain this') + '</button><button class="ghost" type="button" data-tab="diag">Diagnose a fault</button></div>'; }
+    return h + '</div></div>';
+  }
+
+  function renderDiag(a)
+  {
+    var codes = pickedCodes(a), allCodes = Object.keys(LIBRARY);
+    var h = '<div class="panel-b" role="tabpanel" id="tp" aria-labelledby="tab-diag"><div class="sect">';
+    h += '<div class="fld"><label for="sym">What is happening? <span class="hint">(defect report, operator words or your notes)</span></label><textarea id="sym" rows="4">' + esc(symptoms(a)) + '</textarea></div>';
+    h += '<fieldset style="border:0;padding:0;margin:0;display:grid;gap:6px"><legend class="lb" style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:6px">Fault codes from telematics <span class="hint">(ticked ones are active on this asset)</span></legend><div class="codes">' + allCodes.map(function (k)
+    {
+      return '<label><input type="checkbox" data-code="' + k + '"' + (codes.indexOf(k) > -1 ? ' checked' : '') + '><span><b class="mono">' + k + '</b> ' + esc(LIBRARY[k].label) + '</span></label>';
+    }).join('') + '</div></fieldset>';
+    h += errHtml();
+    h += '<div class="actions">' + (state.busy === 'diag' ? '' : '<button class="btn" type="button" id="diag">' + (sample ? 'Find likely causes with AI' : 'Find likely causes') + '</button>') + '<span class="hint">' + (sample ? 'Operator names are removed before AI sees the report.' : 'AI is not available here, so the page matches the sample fault library.') + '</span></div>';
+    h += '</div>';
+    var d = state.diag[a.id];
+    if (state.busy === 'diag') { h += '<div class="sect">' + busyHtml('AI is comparing the symptoms with the fault codes and service history. This usually takes 10 to 40 seconds.') + '</div>'; }
+    else if (d)
+    {
+      h += '<div class="sect"><div class="out-h"><h3 id="diag-h" tabindex="-1">Likely causes</h3><span class="st ' + (d.source === 'ai' ? 'ai' : '') + '">' + (d.source === 'ai' ? 'AI suggested' : 'Fault library match') + '</span></div>';
+      h += '<p style="margin:0">' + esc(d.summary) + '</p>';
+      if (d.safety) { h += '<div class="callout ' + (/^Safety-critical/.test(d.safety) ? 'bad' : 'info') + '"><b>Safety</b><span>' + esc(d.safety) + '</span></div>'; }
+      h += d.causes.length ? '<div style="display:grid;gap:8px">' + d.causes.map(function (c, i)
+      {
+        return '<div class="cause"><div class="top"><b>' + (i + 1) + '. ' + esc(c.cause) + '</b><span class="lvl ' + c.likelihood + '">' + c.likelihood + ' likelihood</span></div>' +
+          (c.why ? '<p class="why hint">' + esc(c.why) + '</p>' : '') +
+          (c.checks.length ? '<ul>' + c.checks.map(function (k) { return '<li>' + esc(k) + '</li>'; }).join('') + '</ul>' : '') +
+          (c.parts.length ? '<span class="hint">Parts: ' + esc(c.parts.join(', ')) + '</span>' : '') + '</div>';
+      }).join('') + '</div>' : '<div class="empty"><b>No likely causes found</b><span>Add more detail to the symptoms or tick a fault code, then try again.</span></div>';
+      h += '<div class="out-h"><h3>Work order for the workshop</h3></div><div class="paper"><label class="sr" for="wo">Work order text</label><textarea id="wo" spellcheck="true">' + esc(d.wo) + '</textarea></div>';
+      h += '<div class="actions"><button class="btn" type="button" id="copywo">Copy work order</button></div></div>';
+    }
+    return h + '</div>';
+  }
+
+  function renderPlan()
+  {
+    var p = buildPlan();
+    var high = p.visits.filter(function (v) { return v.risk === 'High'; }).length;
+    var h = '<div class="panel-b" role="tabpanel" id="tp" aria-labelledby="tab-plan"><div class="sect">';
+    h += '<div class="kpis"><div><b>' + p.visits.filter(function (v) { return v.date; }).length + '</b><span>Visits booked</span></div><div><b>' + high + '</b><span>High risk first</span></div><div><b>' + p.hours + ' h</b><span>Workshop time</span></div><div><b>' + money(p.avoided) + '</b><span>Breakdown risk reduced (sample)</span></div></div>';
+    h += '<p class="hint">Whole fleet, next 20 working days, ' + BAY_HOURS_PER_DAY + ' bay hours a day. High risk goes in the first free slot. Everything else is booked as late as is safe, so vehicles stay on the road. All jobs for one vehicle are done in one visit.</p>';
+    var weeks = {};
+    p.days.forEach(function (d, i) { (weeks[Math.floor(i / 5)] = weeks[Math.floor(i / 5)] || []).push(d); });
+    h += '<div class="tbl-wrap"><table><thead><tr><th>Day</th><th>Vehicle or plant</th><th>Work</th><th>Risk</th><th>Hours</th><th>Bays used</th></tr></thead><tbody>';
+    Object.keys(weeks).forEach(function (w)
+    {
+      var any = false;
+      weeks[w].forEach(function (d)
+      {
+        d.jobs.forEach(function (v, j)
+        {
+          any = true;
+          var dots = Math.round(d.used / BAY_HOURS_PER_DAY * 6);
+          h += '<tr><td data-label="Day" style="white-space:nowrap">' + (j === 0 ? '<b>' + esc(fmt(d.date)) + '</b>' : '<span class="hint">' + esc(fmt(d.date)) + '</span>') + '<span class="small">Week ' + (+w + 1) + '</span></td>' +
+            '<td data-label="Asset"><button class="link" type="button" data-goto="' + v.a.id + '">' + esc(v.a.id) + '</button><span class="small">' + esc(v.a.type) + '</span></td>' +
+            '<td class="wide" data-label="Work">' + esc(v.jobs.map(function (x) { return x.c.n; }).join(', ')) + '</td>' +
+            '<td data-label="Risk"><span class="lvl ' + v.risk + '">' + v.risk + '</span></td><td data-label="Hours">' + v.hrs + '</td>' +
+            '<td data-label="Bays used"><span class="cap" aria-label="' + Math.round(d.used / BAY_HOURS_PER_DAY * 100) + '% of the day booked">' + [0, 1, 2, 3, 4, 5].map(function (k) { return '<i class="' + (k < dots ? 'on' : '') + '"></i>'; }).join('') + '</span></td></tr>';
+        });
+      });
+      if (!any) { h += '<tr><td colspan="6" class="wide hint">Week ' + (+w + 1) + ': nothing due.</td></tr>'; }
+    });
+    h += '</tbody></table></div>';
+    var un = p.visits.filter(function (v) { return v.unbooked; });
+    if (un.length) { h += '<div class="callout warn"><b>Not booked</b><span>No room in the next four weeks for ' + esc(un.map(function (v) { return v.a.id; }).join(', ')) + '. Add capacity or move lower risk work.</span></div>'; }
+    h += '</div><div class="sect"><div class="out-h"><h3>Note to the workshop supervisor</h3>' + (state.planNote ? '<span class="st ' + (state.planNote.source === 'ai' ? 'ai' : '') + '">' + (state.planNote.source === 'ai' ? 'AI draft' : 'Rules draft') + '</span>' : '') + '</div>';
+    h += errHtml();
+    if (state.busy === 'plan') { h += busyHtml('AI is writing the note from the plan.'); }
+    else if (state.planNote)
+    {
+      h += '<div class="paper"><label class="sr" for="note">Plan note text</label><textarea id="note" spellcheck="true">' + esc(state.planNote.text) + '</textarea></div>';
+      h += '<div class="actions"><button class="btn" type="button" id="copyplan">Copy plan note</button><button class="ghost" type="button" id="plannote">' + (sample ? 'Redraft with AI' : 'Redraft') + '</button></div>';
+    }
+    else { h += '<div class="actions"><button class="btn" type="button" id="plannote">' + (sample ? 'Draft the note with AI' : 'Draft the note') + '</button></div>'; }
+    return h + '</div></div>';
+  }
+
+  function render()
+  {
+    var a = asset();
+    renderSide();
+    $('ws').innerHTML = renderTop(a) + (state.tab === 'health' ? renderHealth(a) : state.tab === 'diag' ? renderDiag(a) : renderPlan());
+  }
+  function focusId(id) { var el = $(id); if (el) { el.focus(); } }
+
+  /* ---------- Events ---------- */
+  function setMobile(m)
+  {
+    $('wrap').setAttribute('data-m', m);
+    $('mt-list').setAttribute('aria-pressed', String(m === 'list'));
+    $('mt-ws').setAttribute('aria-pressed', String(m === 'ws'));
+  }
+  $('mt-list').addEventListener('click', function () { setMobile('list'); });
+  $('mt-ws').addEventListener('click', function () { setMobile('ws'); });
+  $('filt').addEventListener('change', function (e) { state.filter = e.target.value; renderSide(); });
+
+  function goTo(id)
+  {
+    if (state.busy) { toast('Wait for AI to finish, or press Stop'); return; }
+    state.aid = id; state.error = '';
+    if (state.tab === 'plan') { state.tab = 'health'; }
+    render(); setMobile('ws');
+    var t = $('ws').querySelector('.ttl'); if (t) { t.focus(); }
+  }
+  $('plist').addEventListener('click', function (e) { var b = e.target.closest('[data-aid]'); if (b) { goTo(b.getAttribute('data-aid')); } });
+
+  function copyText(text, ok)
+  {
+    // Copies straight away inside the click so the Draft in Outlook link can pick the text up.
+    if (navigator.clipboard && navigator.clipboard.writeText)
+    {
+      navigator.clipboard.writeText(text).then(function () { toast(ok); }, function () { toast('Could not copy. Select the text and copy it by hand.'); });
+    }
+    else { toast('Could not copy. Select the text and copy it by hand.'); }
+  }
+
+  var ws = $('ws');
+  ws.addEventListener('click', function (e)
+  {
+    var t = e.target.closest('button');
+    if (!t) { return; }
+    if (t.dataset.tab) { if (state.busy) { return; } state.tab = t.dataset.tab; state.error = ''; render(); focusId('tab-' + state.tab); return; }
+    if (t.dataset.goto) { state.tab = 'health'; goTo(t.dataset.goto); return; }
+    if (t.id === 'stop') { if (ctl) { ctl.abort(); } return; }
+    if (t.id === 'health') { runHealth(); return; }
+    if (t.id === 'diag') { runDiag(); return; }
+    if (t.id === 'plannote') { runPlanNote(); return; }
+    if (t.id === 'copywo') { copyText($('wo').value, 'Work order copied. Paste it into the job system or an email.'); return; }
+    if (t.id === 'copyplan') { copyText($('note').value, 'Plan note copied'); return; }
+  });
+  ws.addEventListener('input', function (e)
+  {
+    var a = asset(), t = e.target;
+    if (t.id === 'sym') { state.symptoms[a.id] = t.value; return; }
+    if (t.id === 'wo' && state.diag[a.id]) { state.diag[a.id].wo = t.value; return; }
+    if (t.id === 'note' && state.planNote) { state.planNote.text = t.value; }
+  });
+  ws.addEventListener('change', function (e)
+  {
+    var a = asset(), t = e.target;
+    if (t.dataset.code)
+    {
+      var list = pickedCodes(a), k = t.dataset.code, i = list.indexOf(k);
+      if (t.checked && i < 0) { list.push(k); } else if (!t.checked && i > -1) { list.splice(i, 1); }
+    }
+  });
+
+  render();
+  initAi();
+})();
+</script>
+
+<!-- lpx-prod:start -->
+<style id="lpx-prod-css">
+#lpx-prod-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:calc(6px + env(safe-area-inset-top,0px)) 12px 6px;background:#F3F5F8;border-bottom:1px solid #DDE3EA;font:13px/1.3 Arial,Helvetica,sans-serif;color:#566273;position:relative;z-index:50}
+@media (prefers-color-scheme:dark){#lpx-prod-bar{background:#121922;border-color:#2B3546;color:#A3AFBF}}
+#lpx-prod-btn{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 14px;border-radius:999px;border:1px solid #003F75;background:#fff;color:#003F75;font:600 13px/1 Arial,Helvetica,sans-serif;cursor:pointer;white-space:nowrap}
+#lpx-prod-btn:hover{background:#003F75;color:#fff}
+@media (prefers-color-scheme:dark){#lpx-prod-btn{background:#18202C;color:#8EC1EC;border-color:#8EC1EC}#lpx-prod-btn:hover{background:#8EC1EC;color:#06233D}}
+#lpx-prod-btn:focus-visible{outline:2px solid #1F6FBF;outline-offset:2px}
+#lpx-prod-btn svg{width:16px;height:16px;flex:none}
+@media (max-width:480px){#lpx-prod-bar .lpx-q{display:none}}
+#lpx-prod-bar .lpx-right{display:flex;align-items:center;gap:10px;margin-left:auto}
+#lpx-protos-btn{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 14px;border-radius:999px;border:1px solid #003F75;background:#003F75;color:#fff;font:600 13px/1 Arial,Helvetica,sans-serif;text-decoration:none;white-space:nowrap}
+#lpx-protos-btn:hover{filter:brightness(1.15)}
+#lpx-protos-btn:focus-visible{outline:2px solid #1F6FBF;outline-offset:2px}
+#lpx-protos-btn svg{width:16px;height:16px;flex:none}
+@media (prefers-color-scheme:dark){#lpx-protos-btn{background:#8EC1EC;border-color:#8EC1EC;color:#06233D}}
+@media (pointer:coarse){#lpx-protos-btn{min-height:44px}}
+@media (pointer:coarse){#lpx-prod-btn{min-height:44px}}
+#lpx-prod{--bg:#fff;--soft:#F3F5F8;--ink:#1B2430;--muted:#566273;--rule:#DDE3EA;--brand:#003F75;--on:#fff;--az:#0F6CBD;--cl:#B4532A;
+  position:fixed;inset:0;z-index:2147483001;display:none;font:14px/1.5 Arial,Helvetica,sans-serif;color:var(--ink)}
+@media (prefers-color-scheme:dark){#lpx-prod{--bg:#18202C;--soft:#212B3B;--ink:#E7ECF2;--muted:#A3AFBF;--rule:#2B3546;--brand:#8EC1EC;--on:#06233D;--az:#6CB1F0;--cl:#F0A47E}}
+#lpx-prod.open{display:block}
+#lpx-prod .lpx-scrim{position:absolute;inset:0;background:rgba(10,20,35,.45)}
+#lpx-prod .lpx-panel{position:absolute;top:0;right:0;bottom:0;width:min(640px,100vw);background:var(--bg);box-shadow:-8px 0 30px rgba(0,0,0,.2);display:flex;flex-direction:column;outline:none}
+#lpx-prod .lpx-panel.lpx-wide{width:min(1040px,100vw)}
+#lpx-prod header{padding:calc(16px + env(safe-area-inset-top,0px)) 20px 12px;border-bottom:1px solid var(--rule)}
+#lpx-prod .lpx-hrow{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+#lpx-prod h2{margin:0;font-size:19px;color:var(--brand)}
+#lpx-prod .lpx-sub{margin:4px 0 0;color:var(--muted);font-size:13px}
+#lpx-prod .lpx-x{flex:none;width:36px;height:36px;border-radius:8px;border:1px solid var(--rule);background:var(--bg);color:var(--ink);font-size:20px;line-height:1;cursor:pointer}
+#lpx-prod .lpx-seg{display:inline-flex;gap:2px;margin-top:12px;padding:3px;border-radius:8px;background:var(--soft);flex-wrap:wrap}
+#lpx-prod .lpx-seg button{min-height:34px;padding:0 14px;border:0;border-radius:6px;background:none;color:var(--muted);font:600 13px Arial,Helvetica,sans-serif;cursor:pointer}
+#lpx-prod .lpx-seg button[aria-pressed="true"]{background:var(--bg);color:var(--brand);box-shadow:0 1px 2px rgba(0,0,0,.1),inset 0 0 0 1px var(--rule)}
+#lpx-prod .lpx-rec{margin-top:10px;font-size:13px;color:var(--ink);background:var(--soft);border-radius:6px;padding:8px 10px}
+#lpx-prod .lpx-rec b{color:var(--brand)}
+#lpx-prod .lpx-body{flex:1;overflow:auto;padding:16px 20px calc(24px + env(safe-area-inset-bottom,0px))}
+#lpx-prod .lpx-cols{display:grid;gap:16px;grid-template-columns:1fr}
+#lpx-prod .lpx-wide .lpx-cols{grid-template-columns:1fr 1fr}
+@media (max-width:760px){#lpx-prod .lpx-wide .lpx-cols{grid-template-columns:1fr}}
+#lpx-prod section{border:1px solid var(--rule);border-radius:8px;padding:14px 16px;margin-bottom:12px;background:var(--bg)}
+#lpx-prod h3{margin:0 0 8px;font-size:14px;display:flex;align-items:center;gap:8px}
+#lpx-prod .lpx-tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;color:#fff}
+#lpx-prod .lpx-tag.az{background:var(--az)}
+#lpx-prod .lpx-tag.cl{background:var(--cl)}
+#lpx-prod .lpx-tag.kn{background:#5B4237}
+#lpx-prod .lpx-tag.sh{background:#6B4FA0}
+#lpx-prod .lpx-sh{list-style:none;padding:0;margin:0}
+#lpx-prod .lpx-sh li{padding:8px 0;border-top:1px solid var(--rule);margin:0}
+#lpx-prod .lpx-sh li:first-child{border-top:0;padding-top:0}
+#lpx-prod .lpx-sh b{display:block}
+#lpx-prod .lpx-sh .lpx-role{font-size:12px;color:var(--muted)}
+#lpx-prod .lpx-sh .lpx-det{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+#lpx-prod ol,#lpx-prod ul{margin:0;padding-left:20px}
+#lpx-prod li{margin:4px 0}
+#lpx-prod .lpx-foot{color:var(--muted);font-size:12px;margin-top:4px}
+#lpx-prod button:focus-visible{outline:2px solid #1F6FBF;outline-offset:2px}
+@media (pointer:coarse){#lpx-prod .lpx-seg button,#lpx-prod .lpx-x{min-height:44px;min-width:44px}}
+</style>
+<script type="application/json" id="lpx-prod-plan">{"recommend": "azure", "why": "Predictions are only as good as the data behind them, so the real value comes from pulling service history, telematics fault codes and oil sample results together automatically every day, which needs an Azure data pipeline and integrations.", "knowledge": ["Manufacturers' service schedules and intervals for each make and model in the fleet.", "Workshop manuals and fault code guides for the main vehicle and plant types.", "City Fleet's service and repair history, including past breakdowns and what fixed them (export from the council's fleet management system).", "Telematics fault codes, engine hours and odometer readings (export from the council's telematics platform).", "Oil sample results from the council's oil analysis provider.", "Prestart check and defect reports from operators.", "Workshop capacity, labour rates and typical breakdown costs (tow, hire, lost crew time).", "City Fleet's maintenance procedures and Chain of Responsibility rules for taking a vehicle out of service."], "azure": {"technical": ["Move the prototype into an Azure DevOps repo and rebuild the front end in Vue and Bootstrap, hosted on Azure App Service with council (Entra ID) sign-in.", "Bring service history, work orders and asset details in from the council's fleet management system each night with Data Factory or Boomi, into Azure SQL.", "Bring telematics fault codes, engine hours and odometer readings in from the council's telematics platform with Logic Apps or Boomi, and oil sample results from the provider's export.", "Run the risk scoring and the workshop plan in an Azure Function App (Python), starting with simple rules and moving to a model trained on City Fleet's own breakdown history once there is enough of it.", "Move all AI calls (likely causes, health summaries, plan notes) into the Function App, with Claude through Microsoft Foundry or the council's Anthropic agreement (an ICT-DA exception, as it's outside the listed stack). Keys live in Key Vault, never in the page.", "Remove operator names and contact details from defect reports before anything goes to the model.", "Load workshop manuals and fault code guides into Blob Storage with an Azure AI Search index, so suggested causes and checks can quote their source.", "Write approved work orders back to the council's fleet management system through Boomi or Logic Apps, rather than people retyping them.", "Power BI report on predicted versus actual failures, so the scoring can be tuned and trusted.", "Security review against the OWASP Top 10 and the OWASP Top 10 for LLM apps, including prompt injection from free-text defect reports.", "Dev, Test and Prod resource groups, Application Insights logging and cost alerts, and Azure DevOps CI/CD pipelines for each environment."], "business": ["Confirm the business owner in City Fleet, the scope and success measures (for example fewer roadside breakdowns, less unplanned downtime, higher first-time fix rate), and raise an Azure DevOps card (why and how).", "Name a process owner for maintenance planning and a knowledge owner for service schedules, manuals and the fault code guide.", "Agree the rules for when a vehicle is tagged out of service, so the tool's safety advice matches City Fleet's procedures and Chain of Responsibility duties.", "Back-test the predictions against the last two years of breakdowns, then build a test plan and an AI evaluation set (30 to 50 past faults with the confirmed cause) and record how often the right cause is in the top three.", "Run UAT with workshop supervisors and mechanics using anonymised history, and a three-month side-by-side trial against the current service schedule.", "Train fleet officers and mechanics, and set up support: who to ask and how to report a wrong prediction.", "Get ICT-DA, CAB, PGG and Business System Owner approval, with a Go Live plan, service transition document and support playbook."]}, "claude": {"technical": ["Set up a Claude Project for City Fleet in the council's enterprise Claude, with the diagnosis rules (quickest checks first, safety first, never invent readings) as the project instructions.", "Add the workshop manuals, fault code guides and service schedules as project files, or connect the SharePoint library they live in.", "Build a Claude skill that turns fault codes and an operator's description into ranked likely causes, checks and a draft work order in City Fleet's format.", "Upload a weekly export from the council's fleet management system and telematics platform so Claude can flag vehicles due or at risk and draft the workshop plan note.", "Admin settings checked: data retention, sharing, connector permissions, and that operator names are left out of uploads."], "business": ["Confirm the business owner, who will use it and what it must never do (it suggests, a qualified mechanic diagnoses and decides).", "Test it on 30 past faults with known causes and record how often the right cause is in the top three.", "Pilot with one workshop for six weeks, give mechanics a 30-minute walkthrough, and track time to diagnose.", "Enterprise Claude seats for fleet officers, workshop supervisors and mechanics in the pilot.", "A project owner who keeps the manuals, schedules and instructions up to date.", "Weekly exports are manual, so predictions are only as fresh as the last upload.", "Get the use case approved (ICT-DA and PGG) and confirm privacy settings before rolling it out wider."]}, "stakeholders": [{"role": "Raised the request", "who": "Person 001", "detail": "Ticket 335101: Predictive asset maintenance and scheduling. team not stated, City Fleet, Transport Services. Asked for: \"Enable predictive asset maintenance and scheduling\". Triage: New AI solution / agent."}, {"role": "Raised the request", "who": "Person 001", "detail": "Ticket 335114: Fleet maintenance diagnostics and failure prediction. Fleet Operations, City Fleet, Transport Services. Asked for: \"Provide AI-assisted fleet maintenance diagnostics and predictive failure detection\". Triage: New AI solution / agent."}, {"role": "Business owner (to confirm)", "who": "City Fleet manager", "detail": "Owns the process, agrees what good looks like and signs off going live."}, {"role": "Knowledge owners (to confirm)", "who": "Owners of the source documents", "detail": "Keep the documents the tool relies on current and approved."}, {"role": "Delivery", "who": "AI team, Information Technology Services", "detail": "Builds the solution, runs testing and hands over to support."}, {"role": "Approvals", "who": "ICT-DA, CAB, PGG and the Business System Owner", "detail": "Approve the design, the change and going live."}]}</script>
+<script>
+(function(){
+  if (window.__lpxProd) return; window.__lpxProd = true;
+  function boot(){
+    var el = document.getElementById('lpx-prod-plan'); if (!el) return;
+    var P = JSON.parse(el.textContent);
+    function e(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+    function list(items, tag){return '<'+tag+'>'+(items||[]).map(function(x){return '<li>'+e(x)+'</li>';}).join('')+'</'+tag+'>';}
+    var btn = document.createElement('button');
+    btn.id = 'lpx-prod-btn'; btn.type = 'button'; btn.setAttribute('aria-haspopup','dialog');
+    btn.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 13l4-4 2 2 4-5M10 6h3v3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Steps to productionise</span>';
+    var wrap = document.createElement('div'); wrap.id = 'lpx-prod';
+    wrap.innerHTML = '<div class="lpx-scrim"></div><div class="lpx-panel" role="dialog" aria-modal="true" aria-labelledby="lpx-h" tabindex="-1">'+
+      '<header><div class="lpx-hrow"><div><h2 id="lpx-h">Steps to productionise</h2><p class="lpx-sub">How this prototype could become a supported council tool.</p></div>'+
+      '<button type="button" class="lpx-x" aria-label="Close">&times;</button></div>'+
+      '<div class="lpx-seg" role="group" aria-label="Show steps for"><button type="button" data-v="azure">Azure</button><button type="button" data-v="claude">Claude</button><button type="button" data-v="both">Show me both</button></div>'+
+      '<p class="lpx-rec"><b>Suggested route: '+(P.recommend==='claude'?'Claude':'Azure')+'.</b> '+e(P.why)+'</p></header>'+
+      '<div class="lpx-body" id="lpx-body"></div></div>';
+    var bar = document.createElement('div'); bar.id = 'lpx-prod-bar'; bar.innerHTML = '<a id="lpx-protos-btn" href="https://claude.ai/artifact/6PgxpQSDdJs1HjPxfZ7LvQ#ai-prototypes" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="2" width="5" height="5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="2" y="9" width="5" height="5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="9" width="5" height="5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span>All AI prototypes</span></a><div class="lpx-right"><span class="lpx-q">Thinking about going live?</span></div>'; bar.querySelector('.lpx-right').appendChild(btn);
+    document.body.insertBefore(bar, document.body.firstChild); document.body.appendChild(wrap);
+    var panel = wrap.querySelector('.lpx-panel'), body = wrap.querySelector('#lpx-body');
+    var view = P.recommend === 'claude' ? 'claude' : 'azure';
+    function sec(cls, label, title, inner){return '<section><h3><span class="lpx-tag '+cls+'">'+label+'</span>'+e(title)+'</h3>'+inner+'</section>';}
+    function col(k){
+      var az = k === 'azure', R = P[k] || {}, nm = az ? 'Azure' : 'Claude', c = az ? 'az' : 'cl';
+      var tech = R.technical || R.setup || [], bus = R.business || R.steps || [];
+      return '<div>'+
+        sec(c, nm, 'Technical setup ('+nm+')', list(tech,'ol'))+
+        sec(c, nm, 'Business readiness ('+nm+')', list(bus,'ol'))+
+        '</div>';
+    }
+    function people(){
+      var S = P.stakeholders || []; if (!S.length) return '';
+      return sec('sh','People','Stakeholders', '<ul class="lpx-sh">'+S.map(function(x){
+        return '<li><span class="lpx-role">'+e(x.role)+'</span><b>'+e(x.who)+'</b>'+(x.detail?'<span class="lpx-det">'+e(x.detail)+'</span>':'')+'</li>';
+      }).join('')+'</ul>');
+    }
+    function render(){
+      wrap.querySelectorAll('.lpx-seg button').forEach(function(b){b.setAttribute('aria-pressed', String(b.dataset.v===view));});
+      panel.classList.toggle('lpx-wide', view==='both');
+      var kn = sec('kn','Knowledge','What knowledge does it need', list(P.knowledge,'ul'));
+      body.innerHTML = (view==='both' ? '<div class="lpx-cols">'+col('azure')+col('claude')+'</div>' : col(view)) + people() + kn +
+        '<p class="lpx-foot">Draft for discussion. Systems, costs and approvals to be confirmed with ICT. Going live needs ICT-DA, CAB, PGG and Business System Owner approval.</p>';
+    }
+    var last = null;
+    function open(){ last = document.activeElement; wrap.classList.add('open'); render(); panel.focus(); document.addEventListener('keydown', key); }
+    function close(){ wrap.classList.remove('open'); document.removeEventListener('keydown', key); (last||btn).focus(); }
+    function key(ev){
+      if (ev.key === 'Escape') { close(); return; }
+      if (ev.key !== 'Tab') return;
+      var f = panel.querySelectorAll('button,a[href],[tabindex]:not([tabindex="-1"])'); if (!f.length) return;
+      var a = f[0], z = f[f.length-1];
+      if (ev.shiftKey && document.activeElement === a) { z.focus(); ev.preventDefault(); }
+      else if (!ev.shiftKey && document.activeElement === z) { a.focus(); ev.preventDefault(); }
+    }
+    btn.addEventListener('click', open);
+    wrap.querySelector('.lpx-x').addEventListener('click', close);
+    wrap.querySelector('.lpx-scrim').addEventListener('click', close);
+    wrap.querySelectorAll('.lpx-seg button').forEach(function(b){ b.addEventListener('click', function(){ view = b.dataset.v; render(); }); });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+</script>
+<!-- lpx-prod:end -->
+<!-- lpx-outlook:start -->
+<style id="lpx-ol-css">
+a.lpx-ol{display:inline-flex;align-items:center;gap:6px;text-decoration:none;cursor:pointer;white-space:nowrap}
+a.lpx-ol svg{width:14px;height:14px;flex:none}
+a.lpx-ol:focus-visible{outline:2px solid #1F6FBF;outline-offset:2px}
+a.lpx-ol.lpx-ol-plain{min-height:32px;padding:0 12px;border-radius:6px;border:1px solid #0F6CBD;color:#0F6CBD;background:#fff;font:600 13px Arial,Helvetica,sans-serif}
+a.lpx-ol.lpx-ol-plain:hover{background:#0F6CBD;color:#fff}
+#lpx-ol-toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:2147483002;max-width:min(520px,92vw);background:#1B2430;color:#fff;font:14px/1.4 Arial,Helvetica,sans-serif;padding:10px 14px;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.25);display:none}
+@media (pointer:coarse){a.lpx-ol{min-height:44px}}
+</style>
+<script>
+(function(){
+  if (window.__lpxOutlook) return; window.__lpxOutlook = true;
+  var MAX = 1600; // characters of body that fit safely in the Outlook link
+  var BASE = 'https://outlook.office.com/mail/deeplink/compose';
+  var ICON = '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="3.5" width="13" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2 4.5l6 4.5 6-4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+  function toast(msg){
+    var t = document.getElementById('lpx-ol-toast');
+    if (!t){ t = document.createElement('div'); t.id = 'lpx-ol-toast'; t.setAttribute('role','status'); document.body.appendChild(t); }
+    t.textContent = msg; t.style.display = 'block';
+    clearTimeout(t._h); t._h = setTimeout(function(){ t.style.display = 'none'; }, 6000);
+  }
+  function appName(){
+    var t = (document.title || '').split(/\s[|\u2013-]\s/)[0].trim();
+    if (t) return t;
+    var h = document.querySelector('h1'); return h ? (h.firstChild && h.firstChild.textContent || h.textContent).trim() : 'Prototype';
+  }
+  function context(btn){
+    var el = btn;
+    for (var i = 0; i < 8 && el; i++){
+      el = el.parentElement; if (!el) break;
+      var hs = el.querySelectorAll('h2,h3,h4'), pick = null;
+      for (var j = 0; j < hs.length; j++){
+        if (hs[j].compareDocumentPosition(btn) & Node.DOCUMENT_POSITION_FOLLOWING) pick = hs[j];
+      }
+      if (pick){
+        var t = pick.textContent.replace(/\s+/g,' ').trim();
+        if (t && t.length <= 60) return t;
+      }
+    }
+    return '';
+  }
+  function capture(btn){
+    var got = null, clip = navigator.clipboard, real = clip && clip.writeText;
+    if (clip && real){
+      try { clip.writeText = function(t){ got = String(t); return real.call(clip, t).catch(function(){}); }; } catch(e){}
+    }
+    try { btn.click(); } catch(e){}
+    if (clip && real){ try { clip.writeText = real; } catch(e){} }
+    return got;
+  }
+  function build(btn, a){
+    var text = capture(btn), ctx = context(btn), name = appName();
+    var subject = ctx && ctx.toLowerCase() !== name.toLowerCase() ? name + ': ' + ctx : name;
+    var body = '';
+    if (text){
+      body = text.length > MAX ? text.slice(0, MAX) + '\n\n[The full text is on your clipboard. Select everything above and paste with Ctrl+V.]' : text;
+      toast(text.length > MAX ? 'Opening Outlook. The text was long, so the full version is on your clipboard too.' : 'Opening a new email in Outlook. Check it, add who it goes to, then press Send.');
+    } else {
+      toast('Opening a new email in Outlook. Paste the text in with Ctrl+V.');
+    }
+    a.href = BASE + '?subject=' + encodeURIComponent(subject) + (body ? '&body=' + encodeURIComponent(body) : '');
+  }
+  function enhance(){
+    var btns = document.querySelectorAll('button');
+    for (var i = 0; i < btns.length; i++){
+      var b = btns[i];
+      if (b.dataset.lpxOl || b.closest('#lpx-prod') || b.id === 'lpx-prod-btn') continue;
+      var label = (b.textContent || '').replace(/\s+/g,' ').trim();
+      if (!/^Copy\b/i.test(label) || /^Copying/i.test(label)) continue;
+      b.dataset.lpxOl = '1';
+      var a = document.createElement('a');
+      a.href = BASE; a.target = '_blank'; a.rel = 'noopener';
+      a.className = (b.className ? b.className + ' ' : '') + 'lpx-ol' + (b.className ? '' : ' lpx-ol-plain');
+      a.innerHTML = ICON + '<span>Draft in Outlook</span>';
+      a.title = 'Opens a new email in Outlook with this text. Nothing is sent until you press Send.';
+      a.setAttribute('aria-label', 'Draft in Outlook: ' + label.replace(/^Copy\s*/i,'') );
+      (function(btn, link){ link.addEventListener('click', function(){ build(btn, link); }); })(b, a);
+      b.insertAdjacentElement('afterend', a);
+    }
+  }
+  function boot(){
+    enhance();
+    var pending = false;
+    new MutationObserver(function(){ if (pending) return; pending = true; requestAnimationFrame(function(){ pending = false; enhance(); }); })
+      .observe(document.body, {childList: true, subtree: true});
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+</script>
+<!-- lpx-outlook:end -->

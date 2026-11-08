@@ -1,0 +1,1166 @@
+<title>Fleet Knowledge and Learning Assistant</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: City Planner AI family shell. Navy masthead, prototype notice, fleet library beside an Ask / Learn / Toolbox talk workspace. */
+:root{
+  --navy:#003f75; --navy-ink:#002a4f; --on-navy:#ffffff;
+  --bg:#f3f6f9; --surface:#ffffff; --raised:#f6f9fc; --ink:#1f1f1f; --muted:#5b6670; --line:#dbe2e9; --field:#b9c4cf;
+  --accent:#003f75; --accent-soft:#e3edf6; --on-accent:#ffffff; --link:#003f75; --focus:#f2b705;
+  --hi:#b42318; --hi-bg:#fdecea; --med:#9a5b00; --med-bg:#fff3dc; --low:#1d6b35; --low-bg:#e6f4ea; --info:#5b6670; --info-bg:#f1f4f7;
+  --ext:#ffffff; --ext-bg:#8e1b12;
+  --proto:#8a4b00; --proto-bg:#fff6e5; --proto-line:#f2c879;
+  --paper:#ffffff; --paper-ink:#1f1f1f;
+  --f-head:"Figtree","Proxima Nova",Arial,Helvetica,sans-serif;
+  --f-body:"Figtree","Proxima Nova",Arial,Helvetica,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --radius:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --navy:#0b2c4d; --navy-ink:#071f37; --on-navy:#ffffff;
+  --bg:#0e141b; --surface:#151d26; --raised:#1a2430; --ink:#e7edf3; --muted:#9aa8b6; --line:#28323e; --field:#3a4655;
+  --accent:#7fb4e6; --accent-soft:#16304a; --on-accent:#0b1724; --link:#8fc0ee; --focus:#f2b705;
+  --hi:#f2a39b; --hi-bg:#3a1a17; --med:#f0c26b; --med-bg:#33280f; --low:#86d19c; --low-bg:#14301d; --info:#9aa8b6; --info-bg:#1d2733;
+  --ext:#1f0604; --ext-bg:#f2a39b;
+  --proto:#f3c77a; --proto-bg:#2c2312; --proto-line:#6b5420;
+  --paper:#1a2430; --paper-ink:#e7edf3; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --navy:#0b2c4d; --navy-ink:#071f37; --on-navy:#ffffff;
+  --bg:#0e141b; --surface:#151d26; --raised:#1a2430; --ink:#e7edf3; --muted:#9aa8b6; --line:#28323e; --field:#3a4655;
+  --accent:#7fb4e6; --accent-soft:#16304a; --on-accent:#0b1724; --link:#8fc0ee; --focus:#f2b705;
+  --hi:#f2a39b; --hi-bg:#3a1a17; --med:#f0c26b; --med-bg:#33280f; --low:#86d19c; --low-bg:#14301d; --info:#9aa8b6; --info-bg:#1d2733;
+  --ext:#1f0604; --ext-bg:#f2a39b;
+  --proto:#f3c77a; --proto-bg:#2c2312; --proto-line:#6b5420;
+  --paper:#1a2430; --paper-ink:#e7edf3; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+a{color:var(--link)}
+button{font:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+h1,h2,h3,h4{text-wrap:balance}
+.gut{padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+
+/* masthead */
+.mast{background:var(--navy);color:var(--on-navy)}
+.mast-in{max-width:1360px;margin:0 auto;padding-block:14px;display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.brand .org{font-family:var(--f-head);font-weight:800;font-size:13px;letter-spacing:.14em;text-transform:uppercase;line-height:1.1;padding-right:14px;border-right:1px solid rgba(255,255,255,.35)}
+.brand .org small{display:block;font-weight:600;font-size:10px;letter-spacing:.2em;opacity:.8}
+.brand .app{font-family:var(--f-head);font-weight:700;font-size:19px;line-height:1.15;margin:0}
+.brand .app small{display:block;font-weight:500;font-size:13px;opacity:.82}
+.mast-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.badge{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:#f2b705;color:#1f1f1f}
+.aistat{font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.35);display:inline-flex;align-items:center;gap:6px}
+.aistat i{width:8px;height:8px;border-radius:50%;background:#c9d3dd;display:inline-block}
+.aistat.ok i{background:#7ee2a0}.aistat.off i{background:#f2b705}
+
+/* prototype notice */
+.proto{background:var(--proto-bg);border-bottom:1px solid var(--proto-line);color:var(--ink)}
+.proto-in{max-width:1360px;margin:0 auto;padding-block:10px;font-size:14px;display:flex;gap:10px;align-items:flex-start}
+.proto-in b{color:var(--proto);white-space:nowrap}
+
+.wrap{max-width:1360px;margin:0 auto;padding-block:22px 40px;display:grid;grid-template-columns:320px minmax(0,1fr);gap:18px;align-items:start}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);min-width:0}
+.panel-h{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.panel-h h2{font-family:var(--f-head);font-size:17px;font-weight:700;margin:0;color:var(--navy)}
+:root[data-theme="dark"] .panel-h h2{color:var(--ink)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .panel-h h2{color:var(--ink)}}
+.panel-b{padding:16px}
+.label{font-family:var(--f-head);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.hint{font-size:13px;color:var(--muted);margin:0}
+.side{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}
+
+/* project list */
+.plist{list-style:none;margin:0;padding:8px;display:grid;gap:4px}
+.plist button{width:100%;text-align:left;background:transparent;border:1px solid transparent;border-radius:8px;padding:10px 12px;color:var(--ink);display:grid;gap:4px}
+.plist button:hover{background:var(--accent-soft)}
+.plist button[aria-current="true"]{background:var(--accent-soft);border-color:var(--accent)}
+.plist .nm{font-weight:700;font-family:var(--f-head);line-height:1.25}
+.plist .ad{font-size:13px;color:var(--muted)}
+.plist .rw{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px}
+.mono{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+
+/* pills */
+.lvl{font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap;display:inline-block}
+.lvl.Extreme{background:var(--ext-bg);color:var(--ext)}
+.lvl.High{background:var(--hi-bg);color:var(--hi)}.lvl.Medium{background:var(--med-bg);color:var(--med)}.lvl.Low{background:var(--low-bg);color:var(--low)}
+.st{font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap;background:var(--info-bg);color:var(--info);display:inline-block}
+.st.bad{background:var(--hi-bg);color:var(--hi)}.st.ok{background:var(--low-bg);color:var(--low)}.st.ai{background:var(--accent-soft);color:var(--link)}
+
+/* buttons */
+.btn{background:var(--accent);color:var(--on-accent);border:0;border-radius:999px;padding:10px 18px;font-weight:700;min-height:42px;display:inline-flex;align-items:center;gap:8px;justify-content:center;text-decoration:none}
+.btn:hover{filter:brightness(1.1)}
+.btn:disabled{opacity:.5;cursor:default;filter:none}
+.btn.sec{background:var(--surface);color:var(--accent);border:1.5px solid var(--accent)}
+.btn.sm{min-height:34px;padding:6px 14px;font-size:14px}
+.ghost{background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:8px 14px;min-height:38px}
+.ghost:hover{color:var(--ink);border-color:var(--field)}
+.link{background:transparent;border:0;color:var(--link);padding:0;text-decoration:underline;font-size:14px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+
+/* workspace */
+.ws-top{padding:16px;border-bottom:1px solid var(--line);display:grid;gap:12px}
+.ws-top h2.ttl{color:var(--ink);font-family:var(--f-head);font-size:22px;font-weight:800;margin:0;line-height:1.15}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.facts > div{background:var(--raised);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0}
+.facts > div > span{display:block;font-size:12px;color:var(--muted)}
+.facts b{font-size:14px;overflow-wrap:anywhere}
+.meter{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:6px}
+.meter i{display:block;height:100%;background:var(--accent)}
+.tabs{display:flex;gap:4px;padding:4px;background:var(--raised);border:1px solid var(--line);border-radius:999px;width:fit-content;max-width:100%;overflow-x:auto}
+.tabs button{border:0;border-radius:999px;background:transparent;color:var(--muted);padding:8px 16px;font-weight:700;font-size:14px;white-space:nowrap;display:inline-flex;gap:6px;align-items:center}
+.tabs button[aria-selected="true"]{background:var(--accent);color:var(--on-accent)}
+.tabs .ct{font-size:11px;min-width:20px;height:20px;border-radius:999px;display:inline-grid;place-items:center;padding:0 6px;background:var(--hi-bg);color:var(--hi)}
+.tabs button[aria-selected="true"] .ct{background:rgba(255,255,255,.25);color:inherit}
+
+/* write */
+.kinds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.kind{border:1.5px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);padding:12px;text-align:left;display:grid;gap:2px}
+.kind b{font-family:var(--f-head);font-size:15px}
+.kind span{font-size:13px;color:var(--muted)}
+.kind:hover{border-color:var(--field)}
+.kind[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.fld{display:grid;gap:4px;min-width:0}
+.fld label,.fld .lb{font-size:13px;font-weight:600;color:var(--muted)}
+input,textarea,select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--field);border-radius:8px;padding:9px 11px;min-width:0;width:100%}
+textarea{resize:vertical;line-height:1.45}
+select{padding-block:7px}
+textarea.notes{font-family:var(--f-mono);font-size:13px;min-height:200px}
+.err{color:var(--hi);font-size:13px;font-weight:600;margin:0}
+.callout{border-radius:8px;padding:12px 14px;font-size:14px;display:grid;gap:4px}
+.callout.info{background:var(--accent-soft)}
+.callout.warn{background:var(--med-bg);color:var(--ink)}
+.callout.bad{background:var(--hi-bg);color:var(--ink)}
+.callout b{font-family:var(--f-head)}
+.sect{display:grid;gap:14px}
+.sect + .sect{border-top:1px solid var(--line);padding-top:16px;margin-top:16px}
+.out-h{display:flex;flex-wrap:wrap;gap:8px 12px;justify-content:space-between;align-items:center}
+.out-h h3{margin:0;font-family:var(--f-head);font-size:18px}
+.paper{background:var(--paper);color:var(--paper-ink);border:1px solid var(--line);border-radius:6px;padding:4px;box-shadow:0 10px 30px -18px rgba(0,30,60,.35)}
+.paper textarea{border:0;background:transparent;color:var(--paper-ink);min-height:360px;padding:18px clamp(12px,3vw,28px);font-size:14.5px;line-height:1.6}
+.paper textarea:focus-visible{outline-offset:-3px}
+.thinking{display:grid;gap:10px;padding:8px 0}
+.skel{height:14px;border-radius:6px;background:linear-gradient(90deg,var(--raised),var(--accent-soft),var(--raised));background-size:200% 100%;animation:sh 1.4s infinite}
+@keyframes sh{0%{background-position:100% 0}100%{background-position:-100% 0}}
+.checks{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.checks li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px;font-size:14px;align-items:start}
+.checks .ic{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;margin-top:1px}
+.checks .ok .ic{background:var(--low-bg);color:var(--low)}
+.checks .no .ic{background:var(--hi-bg);color:var(--hi)}
+.checks .nt .ic{background:var(--med-bg);color:var(--med)}
+.sugg{display:grid;gap:8px}
+.sg{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;align-items:center;background:var(--surface)}
+.sg .t{display:flex;gap:8px;flex-wrap:wrap;align-items:baseline}
+.sg .meta{font-size:13px;color:var(--muted);grid-column:1}
+.sg .done{font-size:13px;font-weight:700;color:var(--low)}
+.two{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(260px,1fr);gap:16px;align-items:start}
+
+/* log */
+.lstats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.lstats div{background:var(--raised);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.lstats b{display:block;font-size:20px;font-family:var(--f-head);font-variant-numeric:tabular-nums;line-height:1.1}
+.lstats span{font-size:12px;color:var(--muted)}
+.tbl-wrap{border:1px solid var(--line);border-radius:8px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:640px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;color:var(--muted);font-weight:700;background:var(--raised);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td select{width:auto;min-width:64px;padding:4px 6px;font-size:13px}
+td.mono{white-space:nowrap}
+td .small{font-size:12px;color:var(--muted);display:block;margin-top:2px}
+tr.closed td{opacity:.6}
+.addf{border:1px dashed var(--field);border-radius:8px;padding:12px;display:grid;gap:10px}
+.addf .row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:10px}
+.addf .row3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.empty{padding:28px 16px;text-align:center;color:var(--muted);display:grid;gap:8px;justify-items:center;border:1px dashed var(--line);border-radius:8px}
+.empty b{color:var(--ink);font-family:var(--f-head);font-size:16px}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--navy-ink);color:#fff;padding:10px 16px;border-radius:999px;font-weight:600;font-size:14px;z-index:20;box-shadow:0 10px 30px -10px rgba(0,0,0,.5);max-width:calc(100vw - 32px)}
+
+.mtabs{display:none}
+footer.foot{border-top:1px solid var(--line);background:var(--surface)}
+.foot-in{max-width:1360px;margin:0 auto;padding-block:18px 28px;font-size:13px;color:var(--muted);display:grid;gap:8px}
+.foot-in b{color:var(--ink)}
+.foot-in details summary{cursor:pointer;color:var(--link);font-weight:600}
+.foot-in ul{margin:6px 0 0;padding-left:18px;display:grid;gap:3px}
+
+@media (max-width:1100px){.two{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:900px){
+  .gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .brand .org{display:none}
+  .brand .app{font-size:17px}
+  .proto-in{flex-direction:column;gap:2px}
+  .wrap{grid-template-columns:minmax(0,1fr);padding-block:14px 32px;gap:12px}
+  .side{position:static}
+  .mtabs{display:flex;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;gap:4px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:999px;box-shadow:0 6px 16px -10px rgba(0,30,60,.35)}
+  .mtabs button{flex:1;border:0;border-radius:999px;background:transparent;color:var(--muted);padding:9px 6px;font-weight:700;font-size:14px}
+  .mtabs button[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
+  .wrap[data-m="list"] #ws{display:none}
+  .wrap[data-m="ws"] #side{display:none}
+  input,textarea,select{font-size:16px}
+  .tabs{width:100%}
+  .tabs button{flex:1;justify-content:center}
+}
+@media (max-width:640px){
+  .kinds{grid-template-columns:minmax(0,1fr)}
+  .kind{grid-template-columns:auto minmax(0,1fr);column-gap:10px}
+  .grid2{grid-template-columns:minmax(0,1fr)}
+  .lstats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .addf .row,.addf .row3{grid-template-columns:minmax(0,1fr)}
+  .sg{grid-template-columns:minmax(0,1fr)}
+  .paper textarea{min-height:300px}
+  .tbl-wrap{overflow:visible;border:0;display:grid}
+  .tbl-wrap table{min-width:0;display:block}
+  .tbl-wrap thead{display:none}
+  .tbl-wrap tbody{display:grid;gap:8px}
+  .tbl-wrap tr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 10px;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+  .tbl-wrap td{border:0;padding:0;min-width:0}
+  .tbl-wrap td.wide{grid-column:1/-1}
+  .tbl-wrap td[data-label]::before{content:attr(data-label);display:block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+  .tbl-wrap td select{width:100%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* APP-23 additions: library chips, grounded answers, quiz cards */
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600;min-height:32px}
+.chip:hover{border-color:var(--field)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.plist .doc{font-size:12px;color:var(--muted);flex-basis:100%}
+.ask{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:end}
+.sugg-q{display:flex;flex-wrap:wrap;gap:6px}
+.sugg-q button{border:1px dashed var(--field);background:transparent;color:var(--link);border-radius:999px;padding:6px 12px;font-size:13px;text-align:left}
+.sugg-q button:hover{background:var(--accent-soft)}
+.answer{background:var(--paper);color:var(--paper-ink);border:1px solid var(--line);border-radius:8px;padding:16px 18px;display:grid;gap:10px;box-shadow:0 10px 30px -18px rgba(0,30,60,.35)}
+.answer p{margin:0}
+.answer ol{margin:0;padding-left:20px;display:grid;gap:4px}
+.cite{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:var(--accent-soft);color:var(--link);font-size:11px;font-weight:800;border:0;vertical-align:1px;margin:0 1px}
+.cite:hover{background:var(--accent);color:var(--on-accent)}
+.srcs{display:grid;gap:8px}
+.srcc{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;gap:4px;background:var(--surface)}
+.srcc.hl{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.srcc .h{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.srcc .h b{font-family:var(--f-head)}
+.srcc p{margin:0;font-size:14px}
+.gapbox{border:1px dashed var(--field);border-radius:8px;padding:12px;display:grid;gap:8px}
+.gapbox ul{margin:0;padding-left:18px;display:grid;gap:4px;font-size:14px}
+.mods{display:grid;gap:8px}
+.mod{border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:10px 12px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;text-align:left;color:var(--ink);width:100%}
+.mod:hover{border-color:var(--field)}
+.mod[aria-current="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.mod b{font-family:var(--f-head)}
+.mod .meta{font-size:13px;color:var(--muted)}
+.qcard{border:1px solid var(--line);border-radius:8px;padding:12px;display:grid;gap:8px;background:var(--surface)}
+.qcard legend{font-weight:700;font-family:var(--f-head);padding:0}
+.qcard fieldset{border:0;margin:0;padding:0;display:grid;gap:6px;min-width:0}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1px solid var(--line);border-radius:8px;cursor:pointer;font-size:14px}
+.opt input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--accent);flex:none}
+.opt.right{border-color:var(--low);background:var(--low-bg)}
+.opt.wrong{border-color:var(--hi);background:var(--hi-bg)}
+.explain{font-size:13px;color:var(--muted)}
+.keypts{margin:0;padding-left:18px;display:grid;gap:6px;font-size:14px}
+.score{font-family:var(--f-head);font-size:28px;font-weight:800;line-height:1}
+@media (max-width:640px){.ask{grid-template-columns:minmax(0,1fr)}.mod{grid-template-columns:minmax(0,1fr)}.mod .st{justify-self:start}}
+</style>
+
+<header class="mast gut"><div class="mast-in">
+  <div class="brand"><div class="org">Logan<small>AI</small></div><h1 class="app">Fleet Knowledge and Learning Assistant<small>Safety, onboarding, training and Chain of Responsibility answers in one place</small></h1></div>
+  <div class="mast-right"><span class="aistat" id="aistat" role="status"><i></i><span>Checking AI</span></span><span class="badge">Prototype</span></div>
+</div></header>
+<aside class="proto gut" aria-label="Prototype notice"><div class="proto-in"><b>Rapid AI prototype</b><span>Sample data only. Every procedure, clause, person and number here is made up. Always follow the council's approved procedures and your supervisor.</span></div></aside>
+
+<main class="wrap gut" id="wrap" data-m="ws">
+  <div class="mtabs" role="group" aria-label="Show" style="grid-column:1/-1">
+    <button type="button" id="mt-list" aria-pressed="false">Library</button>
+    <button type="button" id="mt-ws" aria-pressed="true">Assistant</button>
+  </div>
+
+  <aside class="panel side" id="side" aria-labelledby="side-h">
+    <div class="panel-h"><h2 id="side-h">Fleet library</h2><span class="hint">Sample documents</span></div>
+    <div class="panel-b" style="padding-bottom:8px;display:grid;gap:8px">
+      <div class="fld"><label for="libq">Search the library</label><input id="libq" type="search" placeholder="For example: tyre, fatigue, load"></div>
+      <div class="chips" id="topics" role="group" aria-label="Filter by topic"></div>
+    </div>
+    <ul class="plist" id="lib"></ul>
+  </aside>
+
+  <section class="panel" id="ws" aria-label="Assistant workspace"></section>
+</main>
+
+<footer class="foot gut"><div class="foot-in">
+  <div><b>How it works.</b> Ask a question in plain words and the assistant answers only from the fleet library, with numbered sources you can open. Pick your role so the answer fits your job. The Learn tab walks new starters and drivers through short modules with quick quizzes, and Toolbox talk drafts a five minute talk for a supervisor. If the library can't answer, flag it so the knowledge owner can fill the gap.</div>
+  <details><summary>Prototype handover notes</summary>
+    <ul>
+      <li>In the LCC stack for production: Vue and Bootstrap front end on Azure App Service, an Azure Function App for model calls, Azure AI Search over the approved fleet documents in SharePoint or Blob Storage, SQL or Cosmos DB for quiz results and flagged gaps, Entra ID sign-in.</li>
+      <li>Needs an ICT-DA exception: Claude (Anthropic) as the AI provider, through the council's enterprise agreement or Microsoft Foundry.</li>
+      <li>Privacy: names, email addresses, phone numbers and vehicle registrations are swapped for placeholders before a question goes to AI. Quiz results stay in the page.</li>
+      <li>All procedures, clauses and quiz questions here are samples. The real ones must come from City Fleet's approved documents, checked by the document owners.</li>
+      <li>Still needed for production: the approved document set and owners, a link to the council's learning system for training records, a test plan with an AI evaluation set, Dev, Test and Prod environments, and ICT-DA, CAB and business owner approvals.</li>
+    </ul>
+  </details>
+  <div>Based on idea 335110, fleet knowledge and learning assistant (City Fleet). Rapid AI prototype for discussion, not a council system.</div>
+</div></footer>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(function ()
+{
+  'use strict';
+
+  /* ---------- Sample fleet library (made up, labelled in the UI) ---------- */
+  var DOCS = [
+    { id: 'FS-01', title: 'Fleet Safety Procedure', topic: 'Safety', owner: 'Fleet Safety Advisor', ver: 'v3.2 (sample)', clauses: [
+      { n: '3.1', h: 'Seatbelts and phones', t: 'Everyone in a council vehicle wears a seatbelt. Drivers must not hold or touch a phone while the vehicle is moving or stopped in traffic. Use hands-free only for short calls, or pull over safely.' },
+      { n: '3.2', h: 'Speed and conditions', t: 'Drive to the speed limit or slower when conditions need it, such as rain, roadworks, school zones or a heavy load. Never speed to meet a job time. Tell your supervisor if a schedule cannot be met safely.' },
+      { n: '3.4', h: 'Reversing and spotters', t: 'Avoid reversing where you can. If you must reverse a truck or plant item near people, use a spotter who stays in your mirror view. If you lose sight of the spotter, stop.' },
+      { n: '3.6', h: 'Reporting incidents', t: 'Report every crash, near miss, injury or damage to your supervisor straight away and log it in the council\'s incident reporting system within 24 hours. Take photos if it is safe. Do not admit fault at the scene.' }
+    ] },
+    { id: 'PS-02', title: 'Vehicle Pre-start Checklist', topic: 'Vehicles and plant', owner: 'Fleet Workshop Coordinator', ver: 'v2.0 (sample)', clauses: [
+      { n: '1', h: 'When to do a pre-start', t: 'Do a pre-start check at the start of every shift and whenever a different driver takes the vehicle or plant item. It takes about five minutes.' },
+      { n: '2', h: 'What to check', t: 'Check tyres (tread, damage, pressure), lights and indicators, mirrors, windscreen and wipers, horn, beacons, fluid leaks under the vehicle, and that load restraints and tools are secure.' },
+      { n: '3', h: 'Defects and red tags', t: 'If you find a defect that affects safety, do not use the vehicle. Put a red Out of Service tag on the steering wheel, tell your supervisor and log a defect with the workshop. Minor defects are logged but the vehicle can be used.' },
+      { n: '4', h: 'Records', t: 'Record the pre-start in the vehicle app or the paper book in the cab. Supervisors check pre-start records weekly.' }
+    ] },
+    { id: 'ON-03', title: 'Driver Onboarding Guide', topic: 'Onboarding', owner: 'Fleet Services Team Leader', ver: 'v1.4 (sample)', clauses: [
+      { n: '1', h: 'Licence check', t: 'Your supervisor sights and records your driver licence before you drive any council vehicle. Licences are checked again every 12 months. Tell your supervisor straight away if your licence is suspended, cancelled or conditions change.' },
+      { n: '2', h: 'Fleet induction', t: 'Complete the fleet induction modules within your first five working days: fleet safety, pre-start checks, fatigue, load restraint and incident reporting.' },
+      { n: '3', h: 'Buddy shifts', t: 'New heavy vehicle drivers do their first two shifts with an experienced driver before driving alone. The buddy signs the onboarding checklist.' },
+      { n: '4', h: 'Fuel cards', t: 'Sign the fuel card agreement before you are given a card. Use it only for the vehicle it is assigned to, never share the PIN, and report a lost card the same day.' }
+    ] },
+    { id: 'COR-04', title: 'Chain of Responsibility Guide', topic: 'Chain of Responsibility', owner: 'CoR Officer', ver: 'v2.1 (sample)', clauses: [
+      { n: '1', h: 'What Chain of Responsibility means', t: 'Under heavy vehicle law, everyone who controls or influences heavy vehicle work shares responsibility for safety, not just the driver. That includes schedulers, supervisors, loaders and managers. Each person must do what is reasonably practicable to keep transport activities safe.' },
+      { n: '2', h: 'Mass, dimension and loading', t: 'Never load a heavy vehicle above its rated mass or let a load overhang beyond the limits. If you are unsure of a load weight, check the weighbridge docket or ask your supervisor before leaving.' },
+      { n: '3', h: 'Schedules and speed', t: 'Supervisors and schedulers must not set job times or targets that would need a driver to speed, skip breaks or drive tired. Drivers report any schedule that cannot be done safely.' },
+      { n: '4', h: 'Vehicle standards', t: 'Heavy vehicles must be maintained to the service schedule and roadworthy at all times. Defects that affect safety are fixed before the vehicle is used.' },
+      { n: '5', h: 'Raising a CoR concern', t: 'Raise any CoR concern with your supervisor or the CoR Officer. You can also log it anonymously in the council\'s incident reporting system. Nobody will be disadvantaged for raising a concern in good faith.' }
+    ] },
+    { id: 'LR-05', title: 'Load Restraint Procedure', topic: 'Safety', owner: 'Fleet Safety Advisor', ver: 'v1.7 (sample)', clauses: [
+      { n: '1', h: 'Restraint standard', t: 'Restrain every load so it cannot move in normal driving or hard braking. As a guide, restraints must hold 80% of the load weight forward and 50% sideways and backwards.' },
+      { n: '2', h: 'Check after you set off', t: 'Stop and recheck straps and chains within the first 10 minutes of driving and after any hard braking. Straps can loosen as the load settles.' },
+      { n: '3', h: 'Tools in the cab', t: 'Do not carry loose tools or equipment in the cab. Use the cab storage or secure them in the tray or toolbox.' },
+      { n: '4', h: 'Loose material', t: 'Cover loose material such as soil, mulch or gravel with a tarp before travelling on a public road, and close tailgates.' }
+    ] },
+    { id: 'FM-06', title: 'Fatigue Management Procedure', topic: 'Chain of Responsibility', owner: 'CoR Officer', ver: 'v2.3 (sample)', clauses: [
+      { n: '1', h: 'Work hours', t: 'Do not work more than 12 hours in any 24 hour period, including driving, and have at least 7 hours continuous rest between shifts.' },
+      { n: '2', h: 'Breaks while driving', t: 'Take at least a 15 minute break after every 5 hours of driving. Longer trips need longer breaks: plan them before you leave.' },
+      { n: '3', h: 'Signs of fatigue', t: 'Warning signs include yawning, heavy eyes, drifting in the lane, missing signs and not remembering the last few kilometres. If you notice any of these, stop as soon as it is safe.' },
+      { n: '4', h: 'Stop and report', t: 'If you are too tired to drive safely, stop, tell your supervisor and do not continue. Your supervisor will arrange another driver or a later finish.' },
+      { n: '5', h: 'Work diaries', t: 'Drivers of heavy vehicles over 12 tonnes who travel more than 100 km from base must keep a work diary. Ask the CoR Officer if you are unsure.' }
+    ] },
+    { id: 'EV-07', title: 'Electric Vehicle Charging Guide', topic: 'Vehicles and plant', owner: 'Fleet Asset Planner', ver: 'v1.1 (sample)', clauses: [
+      { n: '1', h: 'Depot charging', t: 'Plug in at a depot charger at the end of every shift. Unplug and move the vehicle once it is charged so others can use the charger.' },
+      { n: '2', h: 'Range planning', t: 'Check the range before you leave and keep at least 20% battery spare for detours and traffic. Tell your supervisor if a job is beyond the vehicle\'s range.' },
+      { n: '3', h: 'Damaged cables', t: 'Never use a charger or cable that is damaged, wet inside or hot to touch. Tag it out of service and report it to the workshop.' },
+      { n: '4', h: 'Public chargers', t: 'Use public fast chargers only when you need to finish a job. Pay with the council fuel card and keep the receipt.' }
+    ] },
+    { id: 'TR-08', title: 'Plant Operator Training and Tickets', topic: 'Training', owner: 'Fleet Training Coordinator', ver: 'v1.0 (sample)', clauses: [
+      { n: '1', h: 'Licences and tickets', t: 'Only operate plant you are licensed and trained for, such as a forklift or excavator. Your supervisor checks your ticket before you are rostered on that plant.' },
+      { n: '2', h: 'Verification of competency', t: 'Operators complete a verification of competency (VOC) on each plant type every two years, or sooner after an incident.' },
+      { n: '3', h: 'Training records', t: 'All training and VOCs are recorded in the council\'s learning system. Bring certificates to your supervisor so they can be uploaded.' },
+      { n: '4', h: 'New plant items', t: 'Before using a new model of plant, complete a familiarisation session with a trainer or experienced operator and sign the familiarisation record.' }
+    ] }
+  ];
+  var TOPICS = ['All', 'Safety', 'Onboarding', 'Training', 'Chain of Responsibility', 'Vehicles and plant'];
+  var ROLES = ['New starter', 'Light vehicle driver', 'Heavy vehicle driver', 'Plant operator', 'Supervisor or scheduler'];
+  var SUGGEST = [
+    'What do I do if I find a cracked tyre at pre-start?',
+    'How long can I drive before I need a break?',
+    'As a scheduler, what are my Chain of Responsibility duties?',
+    'Can I use a public charger for the EV?',
+    'Do I need a work diary?',
+    'What is the council\'s policy on carrying passengers who are not staff?'
+  ];
+
+  // Learning modules. Each has a sample quiz used when AI is off.
+  var MODULES = [
+    { id: 'M1', name: 'Fleet induction basics', doc: 'ON-03', mins: 10, quiz: [
+      { q: 'When are driver licences checked again?', o: ['Every 12 months', 'Every 5 years', 'Only when you start'], a: 0, why: 'Licences are checked again every 12 months.', src: 'ON-03 1' },
+      { q: 'How long do you have to finish the fleet induction?', o: ['First day', 'First five working days', 'First three months'], a: 1, why: 'Finish the induction modules within your first five working days.', src: 'ON-03 2' },
+      { q: 'What do you do with a fuel card PIN?', o: ['Write it on the card', 'Share it with your crew', 'Never share it'], a: 2, why: 'Never share the fuel card PIN.', src: 'ON-03 4' }
+    ] },
+    { id: 'M2', name: 'Pre-start checks', doc: 'PS-02', mins: 8, quiz: [
+      { q: 'When must you do a pre-start check?', o: ['Once a week', 'Start of every shift and when the driver changes', 'Only on heavy vehicles'], a: 1, why: 'Every shift and whenever a different driver takes the vehicle.', src: 'PS-02 1' },
+      { q: 'You find a defect that affects safety. What do you do?', o: ['Drive carefully to the workshop', 'Red tag it, tell your supervisor and log a defect', 'Note it for next week'], a: 1, why: 'Do not use it. Red tag it, tell your supervisor and log a defect.', src: 'PS-02 3' },
+      { q: 'Who checks pre-start records each week?', o: ['Supervisors', 'The workshop', 'Nobody'], a: 0, why: 'Supervisors check pre-start records weekly.', src: 'PS-02 4' }
+    ] },
+    { id: 'M3', name: 'Chain of Responsibility', doc: 'COR-04', mins: 12, quiz: [
+      { q: 'Who shares responsibility for heavy vehicle safety?', o: ['Only the driver', 'Anyone who controls or influences the work', 'Only managers'], a: 1, why: 'Everyone who controls or influences heavy vehicle work shares responsibility.', src: 'COR-04 1' },
+      { q: 'A job time can only be met by skipping a break. What should happen?', o: ['Skip the break this once', 'Report it; schedules must not need unsafe driving', 'Drive faster'], a: 1, why: 'Schedules must not need speeding, skipped breaks or tired driving.', src: 'COR-04 3' },
+      { q: 'Where can you raise a CoR concern?', o: ['Supervisor, CoR Officer or anonymously in the incident system', 'Only in writing to the CEO', 'Nowhere'], a: 0, why: 'Supervisor, CoR Officer, or anonymously in the incident reporting system.', src: 'COR-04 5' }
+    ] },
+    { id: 'M4', name: 'Load restraint', doc: 'LR-05', mins: 8, quiz: [
+      { q: 'As a guide, restraints must hold what share of the load weight forward?', o: ['20%', '50%', '80%'], a: 2, why: 'Hold 80% of the load weight forward.', src: 'LR-05 1' },
+      { q: 'When should you recheck straps after setting off?', o: ['Within the first 10 minutes', 'At the end of the day', 'Never'], a: 0, why: 'Recheck within the first 10 minutes and after hard braking.', src: 'LR-05 2' },
+      { q: 'You are carrying mulch on a public road. What must you do?', o: ['Drive slowly', 'Cover it with a tarp and close the tailgate', 'Nothing'], a: 1, why: 'Cover loose material and close tailgates.', src: 'LR-05 4' }
+    ] },
+    { id: 'M5', name: 'Fatigue', doc: 'FM-06', mins: 10, quiz: [
+      { q: 'What is the most you can work in 24 hours, including driving?', o: ['10 hours', '12 hours', '14 hours'], a: 1, why: 'No more than 12 hours in any 24 hours.', src: 'FM-06 1' },
+      { q: 'How often do you need a break while driving?', o: ['15 minutes after every 5 hours', 'Only at lunch', 'Every hour'], a: 0, why: 'At least 15 minutes after every 5 hours of driving.', src: 'FM-06 2' },
+      { q: 'You keep drifting in your lane. What do you do?', o: ['Open the window and keep going', 'Stop when safe and tell your supervisor', 'Drink coffee and push on'], a: 1, why: 'Stop as soon as it is safe and tell your supervisor.', src: 'FM-06 3' }
+    ] },
+    { id: 'M6', name: 'EV charging', doc: 'EV-07', mins: 6, quiz: [
+      { q: 'How much battery should you keep spare?', o: ['5%', '20%', '50%'], a: 1, why: 'Keep at least 20% spare for detours and traffic.', src: 'EV-07 2' },
+      { q: 'The charging cable is hot to touch. What do you do?', o: ['Use it anyway', 'Tag it out and report it', 'Pour water on it'], a: 1, why: 'Never use a damaged or hot cable. Tag it out and report it.', src: 'EV-07 3' },
+      { q: 'When should you use a public fast charger?', o: ['Whenever it is nearby', 'Only when you need it to finish a job', 'Never'], a: 1, why: 'Only when needed to finish a job, paid with the fuel card.', src: 'EV-07 4' }
+    ] },
+    { id: 'M7', name: 'Plant tickets and VOCs', doc: 'TR-08', mins: 6, quiz: [
+      { q: 'How often is a VOC needed on each plant type?', o: ['Every two years', 'Every ten years', 'Once only'], a: 0, why: 'Every two years, or sooner after an incident.', src: 'TR-08 2' },
+      { q: 'Where are training records kept?', o: ['In your glovebox', 'The council\'s learning system', 'Nowhere'], a: 1, why: 'Recorded in the council\'s learning system.', src: 'TR-08 3' },
+      { q: 'A new model of excavator arrives. What first?', o: ['Use it straight away', 'Familiarisation session and sign the record', 'Read the brochure'], a: 1, why: 'Complete a familiarisation session and sign the record.', src: 'TR-08 4' }
+    ] }
+  ];
+  var PATHWAYS = {
+    'New starter': ['M1', 'M2', 'M4', 'M5'],
+    'Light vehicle driver': ['M1', 'M2', 'M4', 'M6'],
+    'Heavy vehicle driver': ['M1', 'M2', 'M3', 'M4', 'M5'],
+    'Plant operator': ['M1', 'M2', 'M5', 'M7'],
+    'Supervisor or scheduler': ['M3', 'M5', 'M4']
+  };
+  var LEARNERS = [
+    { id: 'L1', name: 'Kai Sample', role: 'Heavy vehicle driver', depot: 'Sample depot north', done: { M1: 100, M2: 67 } },
+    { id: 'L2', name: 'Jo Example', role: 'Plant operator', depot: 'Sample depot south', done: { M1: 100, M2: 100, M5: 100 } },
+    { id: 'L3', name: 'Riley Demo', role: 'New starter', depot: 'Sample depot north', done: {} },
+    { id: 'L4', name: 'Sam Placeholder', role: 'Supervisor or scheduler', depot: 'Sample depot south', done: { M3: 100 } }
+  ];
+
+  /* ---------- State ---------- */
+  var state = {
+    tab: 'ask', topic: 'All', libq: '', role: 'Heavy vehicle driver',
+    q: SUGGEST[0], ans: null, busy: false, error: '', hl: 0,
+    gaps: [{ q: 'Can I take a council ute home overnight when I am on call?', when: 'Sample, flagged last week' }],
+    learner: 'L1', mod: null, quiz: null, answers: {}, checked: false, quizSrc: 'sample',
+    talkMod: 'M5', talkCtx: 'Hot weather this week and long runs to the western sites.', talk: null
+  };
+  var sample = null, ctl = null;
+
+  /* ---------- Helpers ---------- */
+  function $(id) { return document.getElementById(id); }
+  function esc(s)
+  {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; });
+  }
+  function noDash(s) { return String(s || '').replace(/\s*[—–]\s*/g, ', ').replace(/\s+,/g, ','); }
+  function doc(id) { return DOCS.find(function (d) { return d.id === id; }); }
+  function mod(id) { return MODULES.find(function (m) { return m.id === id; }); }
+  function learner() { return LEARNERS.find(function (l) { return l.id === state.learner; }); }
+  var toastT;
+  function toast(msg)
+  {
+    var t = $('toast'); t.textContent = msg; t.hidden = false;
+    clearTimeout(toastT); toastT = setTimeout(function () { t.hidden = true; }, 2600);
+  }
+  function copyText(text, ok)
+  {
+    if (navigator.clipboard && navigator.clipboard.writeText)
+    {
+      navigator.clipboard.writeText(text).then(function () { toast(ok); }, function () { toast('Could not copy. Select the text and copy it by hand.'); });
+    }
+    else { toast('Could not copy. Select the text and copy it by hand.'); }
+  }
+
+  /* ---------- Privacy: placeholders before AI ---------- */
+  function redact(text)
+  {
+    var t = String(text || '');
+    LEARNERS.forEach(function (l, i)
+    {
+      t = t.replace(new RegExp('\\b' + l.name + '\\b', 'g'), '[PERSON ' + (i + 1) + ']').replace(new RegExp('\\b' + l.name.split(' ')[0] + '\\b', 'g'), '[PERSON ' + (i + 1) + ']');
+    });
+    return t.replace(/[\w.+-]+@[\w-]+\.[\w.]+/g, '[EMAIL]')
+      .replace(/(\+?61|0)4\d{2}[ ]?\d{3}[ ]?\d{3}/g, '[PHONE]')
+      .replace(/\b(\d{3}\s?[A-Z]{2,3}|[A-Z]{3}\s?\d{2,3})\b/g, '[REGO]');
+  }
+
+  /* ---------- Search (no AI): scores clauses by matching words ---------- */
+  var STOP = 'a an and are as at be can do does for from how i if in is it me my of on or the to what when where who why will with you your should need much long work use get take go bring have has this that any about there they am council policy'.split(' ');
+  var SYN = { tired: 'fatigue', sleepy: 'fatigue', break: 'breaks', breaks: 'break', charger: 'charging', charge: 'charging', ev: 'electric', tyre: 'tyres', tyres: 'tyre', crack: 'defect', cracked: 'defect', damage: 'defect', diary: 'diaries', strap: 'straps', cor: 'chain', scheduler: 'schedulers', crash: 'incident', accident: 'incident' };
+  function terms(s)
+  {
+    var out = [];
+    String(s).toLowerCase().replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).forEach(function (w)
+    {
+      if (w.length < 2 || STOP.indexOf(w) > -1) { return; }
+      out.push(w);
+      if (SYN[w]) { out.push(SYN[w]); }
+      if (w.length > 4 && /s$/.test(w)) { out.push(w.slice(0, -1)); }
+    });
+    return out;
+  }
+  function search(q, limit)
+  {
+    var tq = terms(q), hits = [];
+    if (!tq.length) { return []; }
+    DOCS.forEach(function (d)
+    {
+      d.clauses.forEach(function (c)
+      {
+        var body = (c.h + ' ' + c.t + ' ' + d.title).toLowerCase(), head = c.h.toLowerCase(), s = 0, seen = {};
+        tq.forEach(function (w) { if (body.indexOf(w) > -1) { s += 1; seen[w] = 1; } if (head.indexOf(w) > -1) { s += 1.5; } });
+        // Needs two different words, or a heading match, so one common word does not count as an answer.
+        if (Object.keys(seen).length >= 2 || s >= 2.5) { hits.push({ d: d, c: c, s: s }); }
+      });
+    });
+    return hits.sort(function (a, b) { return b.s - a.s; }).slice(0, limit || 5);
+  }
+
+  /* ---------- AI ---------- */
+  function setAi(mode)
+  {
+    var el = $('aistat');
+    el.className = 'aistat ' + (mode === 'ok' ? 'ok' : mode === 'off' ? 'off' : '');
+    el.querySelector('span').textContent = mode === 'ok' ? 'AI ready' : mode === 'off' ? 'AI off: search mode' : 'Checking AI';
+  }
+  function initAi()
+  {
+    if (typeof window.claude === 'undefined' || !window.claude || typeof window.claude.use !== 'function') { setAi('off'); render(); return; }
+    window.claude.use('sample').then(function (s) { sample = s || null; setAi(sample ? 'ok' : 'off'); render(); }, function () { setAi('off'); render(); });
+  }
+  function aiErrorCopy(code)
+  {
+    switch (code)
+    {
+      case 'not_granted': return 'AI was not allowed for this page, so you are seeing library search results instead.';
+      case 'rate_limited': case 'queue_overflow': return 'AI is busy right now, so you are seeing library search results. Try again in a minute.';
+      case 'invalid_json': case 'empty_completion': return 'AI sent back something the page could not read, so you are seeing library search results.';
+      case 'cancelled': return 'You stopped the AI answer, so you are seeing library search results.';
+      default: return 'AI could not answer just now, so you are seeing library search results.';
+    }
+  }
+  var RULES = [
+    'Rules:',
+    '- Australian English, plain English, short sentences. Write for a council fleet worker, not a lawyer.',
+    '- Do not use em dashes or en dashes.',
+    '- Use ONLY the numbered library extracts given. Never add rules, numbers or limits from your own knowledge.',
+    '- Keep placeholders in square brackets exactly as written.'
+  ];
+
+  // Asks Claude to answer from the matched clauses only, citing them by number.
+  function askAi(q, hits)
+  {
+    var src = hits.map(function (h, i) { return '[' + (i + 1) + '] ' + h.d.title + ' (' + h.d.id + ') clause ' + h.c.n + ', ' + h.c.h + ': ' + h.c.t; }).join('\n');
+    var p = ['You answer questions from council fleet staff using the council\'s fleet safety, onboarding, training and Chain of Responsibility library.',
+      'The person asking is a: ' + state.role + '. Tailor the answer to what that role needs to do.', ''].concat(RULES).concat([
+      '- Cite every fact with the extract number in square brackets, like [2].',
+      '- If the extracts do not answer the question, set "covered" to false, say plainly that the library does not cover it and who to ask (their supervisor), and do not guess.',
+      '- "steps": up to 5 short action steps starting with a verb, each with a citation, or an empty array.',
+      'Return only JSON: {"covered": boolean, "answer": string (2 to 4 sentences), "steps": [string], "askNext": [string] (up to 2 follow-up questions the person might ask)}',
+      '', 'Library extracts:', src || '(none matched)', '', 'Question:', redact(q)]);
+    return sample.json(p.join('\n'), { signal: ctl.signal, modelTier: 'default', cache: false });
+  }
+
+  // Only keep citation numbers that point at a real extract.
+  function cleanCites(s, n)
+  {
+    return noDash(String(s || '')).replace(/\[(\d+)\]/g, function (m, k) { return +k >= 1 && +k <= n ? m : ''; });
+  }
+
+  function runAsk()
+  {
+    var q = state.q.trim();
+    if (!q) { state.error = 'Type a question first, or pick one of the examples.'; render(); return; }
+    if (state.busy) { return; }
+    state.error = ''; state.hl = 0;
+    var hits = search(q, 5);
+    if (!sample)
+    {
+      state.ans = { q: q, hits: hits, src: 'search', covered: hits.length > 0 };
+      render(); focusAns(); return;
+    }
+    state.busy = true; render();
+    ctl = new AbortController();
+    askAi(q, hits).then(function (out)
+    {
+      if (!out || typeof out.answer !== 'string') { throw { code: 'invalid_json' }; }
+      var n = hits.length;
+      state.ans = { q: q, hits: hits, src: 'ai', covered: out.covered !== false && n > 0,
+        answer: cleanCites(out.answer, n),
+        steps: (Array.isArray(out.steps) ? out.steps : []).slice(0, 5).map(function (x) { return cleanCites(x, n); }).filter(Boolean),
+        askNext: (Array.isArray(out.askNext) ? out.askNext : []).slice(0, 2).map(noDash).filter(Boolean) };
+    }).catch(function (e)
+    {
+      state.ans = { q: q, hits: hits, src: 'search', covered: hits.length > 0 };
+      state.error = aiErrorCopy(e && e.code);
+      if (e && e.code === 'not_granted') { sample = null; setAi('off'); }
+    }).then(function () { state.busy = false; ctl = null; render(); focusAns(); });
+  }
+  function focusAns() { var h = $('ans-h'); if (h) { h.focus(); } }
+
+  function answerText(a)
+  {
+    var L = ['Question: ' + a.q, ''];
+    if (a.src === 'ai') { L.push(a.answer.replace(/\[(\d+)\]/g, '[$1]')); if (a.steps.length) { L.push(''); a.steps.forEach(function (s, i) { L.push((i + 1) + '. ' + s); }); } }
+    else { L.push('What the fleet library says:'); a.hits.slice(0, 3).forEach(function (h, i) { L.push('[' + (i + 1) + '] ' + h.c.h + ': ' + h.c.t); }); }
+    L.push('', 'Sources:');
+    a.hits.forEach(function (h, i) { L.push('[' + (i + 1) + '] ' + h.d.title + ' ' + h.d.ver + ', clause ' + h.c.n); });
+    L.push('', 'Sample data. Rapid AI prototype, check the approved procedure before relying on this.');
+    return L.join('\n');
+  }
+
+  /* ---------- Quiz ---------- */
+  function startModule(id)
+  {
+    var m = mod(id);
+    state.mod = id; state.quiz = m.quiz.map(function (x) { return Object.assign({}, x); }); state.answers = {}; state.checked = false; state.quizSrc = 'sample'; state.error = '';
+    render(); var h = $('mod-h'); if (h) { h.focus(); }
+  }
+  function freshQuiz()
+  {
+    var m = mod(state.mod), d = doc(m.doc);
+    if (!sample || state.busy) { return; }
+    state.busy = true; state.error = ''; render();
+    ctl = new AbortController();
+    var src = d.clauses.map(function (c) { return 'Clause ' + c.n + ' ' + c.h + ': ' + c.t; }).join('\n');
+    var p = ['Write a short quiz for council fleet staff learning the module "' + m.name + '" from the procedure below.'].concat(RULES).concat([
+      '- 4 multiple choice questions, 3 options each, exactly one correct. Test practical actions, not trivia.',
+      '- "why": one sentence explaining the right answer. "clause": the clause number it comes from.',
+      'Return only JSON: {"questions": [{"q": string, "options": [string, string, string], "answer": 0|1|2, "why": string, "clause": string}]}',
+      '', d.title + ' (' + d.id + '):', src]);
+    sample.json(p.join('\n'), { signal: ctl.signal, modelTier: 'default', cache: false }).then(function (out)
+    {
+      var qs = (out && Array.isArray(out.questions) ? out.questions : []).filter(function (x)
+      {
+        return x && typeof x.q === 'string' && Array.isArray(x.options) && x.options.length === 3 && [0, 1, 2].indexOf(+x.answer) > -1;
+      }).slice(0, 4).map(function (x)
+      {
+        var cl = d.clauses.find(function (c) { return c.n === String(x.clause); });
+        return { q: noDash(x.q), o: x.options.map(noDash), a: +x.answer, why: noDash(x.why || ''), src: d.id + ' ' + (cl ? cl.n : '') };
+      });
+      if (qs.length < 2) { throw { code: 'invalid_json' }; }
+      state.quiz = qs; state.answers = {}; state.checked = false; state.quizSrc = 'ai';
+      toast('Fresh quiz ready');
+    }).catch(function (e)
+    {
+      state.error = 'AI could not write a fresh quiz just now, so the sample quiz is still showing.';
+      if (e && e.code === 'not_granted') { sample = null; setAi('off'); }
+    }).then(function () { state.busy = false; ctl = null; render(); });
+  }
+  function score()
+  {
+    var right = state.quiz.filter(function (x, i) { return state.answers[i] === x.a; }).length;
+    return Math.round(right / state.quiz.length * 100);
+  }
+  function completionText(l)
+  {
+    var path = PATHWAYS[l.role], L = ['Fleet learning summary: ' + l.name + ' (' + l.role + ', ' + l.depot + ')', ''];
+    path.forEach(function (id)
+    {
+      var m = mod(id), s = l.done[id];
+      L.push('- ' + m.name + ': ' + (s == null ? 'not started' : s >= 80 ? 'passed (' + s + '%)' : 'needs another go (' + s + '%)'));
+    });
+    var left = path.filter(function (id) { return !(l.done[id] >= 80); }).length;
+    L.push('', left ? left + ' module' + (left === 1 ? '' : 's') + ' still to finish.' : 'All modules in this pathway are passed.', '', 'Sample data. Rapid AI prototype. Official records live in the council\'s learning system.');
+    return L.join('\n');
+  }
+
+  /* ---------- Toolbox talk ---------- */
+  function talkTemplate(m)
+  {
+    var d = doc(m.doc), L = ['TOOLBOX TALK (5 MINUTES): ' + m.name.toUpperCase(), 'Source: ' + d.title + ' ' + d.ver, ''];
+    L.push('Why it matters today', state.talkCtx ? state.talkCtx : '[Say why this matters for the crew this week.]', '', 'Key points');
+    d.clauses.forEach(function (c) { L.push('- ' + c.h + ': ' + c.t + ' (clause ' + c.n + ')'); });
+    L.push('', 'Ask the crew', '- Where could this go wrong on our jobs this week?', '', 'Sign-on: everyone present signs the toolbox talk sheet.');
+    return L.join('\n');
+  }
+  function draftTalk()
+  {
+    var m = mod(state.talkMod), d = doc(m.doc);
+    if (state.busy) { return; }
+    state.error = '';
+    if (!sample) { state.talk = { body: talkTemplate(m), src: 'template' }; render(); return; }
+    state.busy = true; render();
+    ctl = new AbortController();
+    var src = d.clauses.map(function (c) { return 'Clause ' + c.n + ' ' + c.h + ': ' + c.t; }).join('\n');
+    var p = ['Write a five minute toolbox talk for a council fleet supervisor to read to a crew, on "' + m.name + '".'].concat(RULES).concat([
+      '- Plain text with these headings on their own lines: TOOLBOX TALK (5 MINUTES): <TOPIC>, Why it matters today, Key points (3 to 5 dot points, each ending with the clause number in brackets), Ask the crew (2 questions), Sign-on.',
+      '- Link it to this week\'s situation where the procedure allows.',
+      'Return only JSON: {"body": string}',
+      '', 'This week: ' + redact(state.talkCtx || 'nothing special'), '', d.title + ' (' + d.id + ', ' + d.ver + '):', src]);
+    sample.json(p.join('\n'), { signal: ctl.signal, modelTier: 'default', cache: false }).then(function (out)
+    {
+      if (!out || typeof out.body !== 'string' || out.body.length < 80) { throw { code: 'invalid_json' }; }
+      state.talk = { body: noDash(out.body) + '\n\nSource: ' + d.title + ' ' + d.ver, src: 'ai' };
+    }).catch(function (e)
+    {
+      state.talk = { body: talkTemplate(m), src: 'template' };
+      state.error = 'AI could not draft the talk just now, so this uses the standard template.';
+      if (e && e.code === 'not_granted') { sample = null; setAi('off'); }
+    }).then(function () { state.busy = false; ctl = null; render(); });
+  }
+
+  /* ---------- Rendering ---------- */
+  function renderSide()
+  {
+    $('topics').innerHTML = TOPICS.map(function (t) { return '<button type="button" class="chip" data-topic="' + esc(t) + '" aria-pressed="' + (state.topic === t) + '">' + esc(t) + '</button>'; }).join('');
+    var q = state.libq.trim().toLowerCase();
+    var list = DOCS.filter(function (d)
+    {
+      return (state.topic === 'All' || d.topic === state.topic) && (!q || (d.title + ' ' + d.clauses.map(function (c) { return c.h + ' ' + c.t; }).join(' ')).toLowerCase().indexOf(q) > -1);
+    });
+    $('lib').innerHTML = list.length ? list.map(function (d)
+    {
+      return '<li><button type="button" data-doc="' + d.id + '"><span class="nm">' + esc(d.title) + '</span><span class="ad">' + esc(d.topic) + ' · ' + d.clauses.length + ' clauses</span><span class="rw"><span class="mono">' + d.id + '</span><span class="doc">' + esc(d.ver) + ' · Owner: ' + esc(d.owner) + '</span></span></button></li>';
+    }).join('') : '<li class="empty" style="margin:8px"><b>No documents match</b><span>Try another word or pick All.</span></li>';
+  }
+
+  function tabs()
+  {
+    var t = [['ask', 'Ask'], ['learn', 'Learn'], ['talk', 'Toolbox talk']];
+    return '<div class="tabs" role="tablist" aria-label="Workspace">' + t.map(function (x)
+    {
+      return '<button type="button" role="tab" id="tab-' + x[0] + '" aria-controls="tp" aria-selected="' + (state.tab === x[0]) + '" data-tab="' + x[0] + '">' + x[1] + (x[0] === 'ask' && state.gaps.length ? '<span class="ct" aria-label="' + state.gaps.length + ' flagged gaps">' + state.gaps.length + '</span>' : '') + '</button>';
+    }).join('') + '</div>';
+  }
+
+  function renderTop()
+  {
+    var clauses = DOCS.reduce(function (n, d) { return n + d.clauses.length; }, 0);
+    return '<div class="ws-top"><div><p class="label">City Fleet · sample library</p><h2 class="ttl">Ask, learn and brief from one fleet library</h2></div>' +
+      '<div class="facts"><div><span>Documents</span><b>' + DOCS.length + '</b></div><div><span>Clauses searched</span><b>' + clauses + '</b></div><div><span>Learning modules</span><b>' + MODULES.length + '</b></div><div><span>Gaps flagged</span><b>' + state.gaps.length + '</b></div></div>' +
+      tabs() + '</div>';
+  }
+
+  function linkCites(s)
+  {
+    return esc(s).replace(/\[(\d+)\]/g, '<button type="button" class="cite" data-cite="$1" aria-label="Source $1">$1</button>');
+  }
+
+  function renderAsk()
+  {
+    var h = '<div class="panel-b" role="tabpanel" id="tp" aria-labelledby="tab-ask"><div class="sect">';
+    h += '<div class="grid2"><div class="fld"><label for="role">I am a</label><select id="role">' + ROLES.map(function (r) { return '<option' + (r === state.role ? ' selected' : '') + '>' + r + '</option>'; }).join('') + '</select></div><div></div></div>';
+    h += '<div class="ask"><div class="fld"><label for="q">Your question</label><input id="q" autocomplete="off" value="' + esc(state.q) + '" placeholder="For example: what do I check at pre-start?"></div>';
+    h += state.busy ? '<div class="actions"><button class="btn" type="button" disabled>Thinking…</button><button class="ghost" type="button" id="stop">Stop</button></div>' : '<button class="btn" type="button" id="askb">' + (sample ? 'Ask' : 'Search the library') + '</button>';
+    h += '</div><div><p class="label" style="margin-bottom:6px">Try one of these</p><div class="sugg-q">' + SUGGEST.map(function (s) { return '<button type="button" data-sq="' + esc(s) + '">' + esc(s) + '</button>'; }).join('') + '</div></div>';
+    if (state.error) { h += '<div class="callout warn" role="alert"><b>Heads up</b><span>' + esc(state.error) + '</span></div>'; }
+    h += '<p class="hint">' + (sample ? 'Answers come only from the library below. Names, phone numbers and vehicle registrations are swapped for placeholders before AI sees them.' : 'AI is not available here, so the page shows the library clauses that match your question.') + '</p></div>';
+
+    if (state.busy && state.tab === 'ask')
+    {
+      h += '<div class="sect" aria-live="polite"><p class="hint">Searching the library and writing an answer. This usually takes 5 to 30 seconds.</p><div class="thinking"><div class="skel" style="width:50%"></div><div class="skel"></div><div class="skel" style="width:85%"></div></div></div>';
+    }
+    else if (state.ans)
+    {
+      var a = state.ans;
+      h += '<div class="sect"><div class="out-h"><h3 id="ans-h" tabindex="-1">' + esc(a.q) + '</h3><span class="st ' + (a.src === 'ai' ? 'ai' : '') + '">' + (a.src === 'ai' ? 'AI answer' : 'Library search') + '</span></div>';
+      if (!a.covered)
+      {
+        h += '<div class="callout warn"><b>The library does not cover this</b><span>' + (a.src === 'ai' && a.answer ? linkCites(a.answer) : 'None of the fleet documents answer this question. Ask your supervisor, and flag it so the knowledge owner can add it.') + '</span><div class="actions" style="margin-top:6px"><button class="btn sec sm" type="button" id="flag">Flag this gap</button></div></div>';
+      }
+      else
+      {
+        h += '<div class="answer">';
+        if (a.src === 'ai')
+        {
+          h += '<p>' + linkCites(a.answer) + '</p>';
+          if (a.steps.length) { h += '<ol>' + a.steps.map(function (s) { return '<li>' + linkCites(s) + '</li>'; }).join('') + '</ol>'; }
+        }
+        else
+        {
+          h += '<p><b>What the fleet library says</b></p><ol>' + a.hits.slice(0, 3).map(function (x, i) { return '<li>' + esc(x.c.t) + ' <button type="button" class="cite" data-cite="' + (i + 1) + '" aria-label="Source ' + (i + 1) + '">' + (i + 1) + '</button></li>'; }).join('') + '</ol>';
+        }
+        h += '</div><div class="actions"><button class="btn" type="button" id="copyans">Copy answer</button><button class="ghost" type="button" id="flag">Answer not right? Flag it</button></div>';
+        if (a.askNext && a.askNext.length) { h += '<div class="sugg-q">' + a.askNext.map(function (s) { return '<button type="button" data-sq="' + esc(s) + '">' + esc(s) + '</button>'; }).join('') + '</div>'; }
+      }
+      if (a.hits.length)
+      {
+        h += '<div><p class="label">Sources</p><div class="srcs">' + a.hits.map(function (x, i)
+        {
+          return '<div class="srcc' + (state.hl === i + 1 ? ' hl' : '') + '" id="src-' + (i + 1) + '" tabindex="-1"><div class="h"><span class="cite" aria-hidden="true">' + (i + 1) + '</span><b>' + esc(x.d.title) + '</b><span class="mono">' + x.d.id + ' clause ' + x.c.n + ' · ' + esc(x.d.ver) + '</span></div><p><b>' + esc(x.c.h) + '.</b> ' + esc(x.c.t) + '</p></div>';
+        }).join('') + '</div></div>';
+      }
+      h += '</div>';
+    }
+    else
+    {
+      h += '<div class="sect"><div class="empty"><b>Ask the fleet library anything</b><span>Pick an example above or type your own question.</span></div></div>';
+    }
+
+    h += '<div class="sect"><div class="gapbox"><div class="out-h"><h3 style="font-size:16px">Flagged gaps for the knowledge owner</h3>' + (state.gaps.length ? '<span class="actions"><button class="btn sec sm" type="button" id="copygaps">Copy gap list</button></span>' : '') + '</div>';
+    h += state.gaps.length ? '<ul>' + state.gaps.map(function (g) { return '<li>' + esc(g.q) + ' <span class="hint">(' + esc(g.when) + ')</span></li>'; }).join('') + '</ul>' : '<p class="hint">No gaps flagged. Questions the library cannot answer will show here.</p>';
+    return h + '</div></div></div>';
+  }
+
+  function renderLearn()
+  {
+    var l = learner(), path = PATHWAYS[l.role];
+    var passed = path.filter(function (id) { return l.done[id] >= 80; }).length;
+    var h = '<div class="panel-b" role="tabpanel" id="tp" aria-labelledby="tab-learn"><div class="sect">';
+    h += '<div class="grid2"><div class="fld"><label for="learner">Learner</label><select id="learner">' + LEARNERS.map(function (x) { return '<option value="' + x.id + '"' + (x.id === l.id ? ' selected' : '') + '>' + esc(x.name) + ' (sample), ' + esc(x.role) + '</option>'; }).join('') + '</select></div>';
+    h += '<div class="facts"><div><span>Pathway</span><b>' + esc(l.role) + '</b></div><div><span>Passed</span><b>' + passed + ' of ' + path.length + '</b><div class="meter" aria-hidden="true"><i style="width:' + Math.round(passed / path.length * 100) + '%"></i></div></div></div></div>';
+    h += '<div class="two"><div style="display:grid;gap:8px;min-width:0"><p class="label" style="margin:0">Modules in this pathway</p><div class="mods">' + path.map(function (id)
+    {
+      var m = mod(id), s = l.done[id];
+      var pill = s == null ? '<span class="st">Not started</span>' : s >= 80 ? '<span class="st ok">Passed ' + s + '%</span>' : '<span class="st bad">Retry ' + s + '%</span>';
+      return '<button type="button" class="mod" data-mod="' + id + '" aria-current="' + (state.mod === id) + '"><span><b>' + esc(m.name) + '</b><span class="meta" style="display:block">' + esc(doc(m.doc).title) + ' · about ' + m.mins + ' min</span></span>' + pill + '</button>';
+    }).join('') + '</div><div class="actions"><button class="btn sec sm" type="button" id="copysum">Copy completion summary</button></div></div>';
+
+    h += '<div style="min-width:0">';
+    if (state.mod && path.indexOf(state.mod) > -1)
+    {
+      var m = mod(state.mod), d = doc(m.doc);
+      h += '<div class="sect" style="gap:10px"><div class="out-h"><h3 id="mod-h" tabindex="-1">' + esc(m.name) + '</h3><span class="st ' + (state.quizSrc === 'ai' ? 'ai' : '') + '">' + (state.quizSrc === 'ai' ? 'AI quiz' : 'Sample quiz') + '</span></div>';
+      h += '<p class="label" style="margin:0">Key points</p><ul class="keypts">' + d.clauses.map(function (c) { return '<li><b>' + esc(c.h) + '.</b> ' + esc(c.t) + ' <span class="mono">' + d.id + ' ' + c.n + '</span></li>'; }).join('') + '</ul>';
+      if (state.error) { h += '<div class="callout warn" role="alert"><span>' + esc(state.error) + '</span></div>'; }
+      if (state.busy) { h += '<div class="thinking" aria-live="polite"><p class="hint">Writing a fresh quiz…</p><div class="skel"></div><div class="skel" style="width:80%"></div></div>'; }
+      else
+      {
+        h += '<p class="label" style="margin:6px 0 0">Quick quiz</p>' + state.quiz.map(function (x, i)
+        {
+          return '<div class="qcard"><fieldset><legend>' + (i + 1) + '. ' + esc(x.q) + '</legend>' + x.o.map(function (o, k)
+          {
+            var cls = state.checked ? (k === x.a ? ' right' : state.answers[i] === k ? ' wrong' : '') : '';
+            return '<label class="opt' + cls + '"><input type="radio" name="q' + i + '" value="' + k + '"' + (state.answers[i] === k ? ' checked' : '') + (state.checked ? ' disabled' : '') + '><span>' + esc(o) + '</span></label>';
+          }).join('') + '</fieldset>' + (state.checked ? '<p class="explain">' + (state.answers[i] === x.a ? 'Correct. ' : 'Not quite. ') + esc(x.why) + ' <span class="mono">' + esc(x.src) + '</span></p>' : '') + '</div>';
+        }).join('');
+        if (state.checked)
+        {
+          var s = score();
+          h += '<div class="callout ' + (s >= 80 ? 'info' : 'warn') + '"><span class="score">' + s + '%</span><span>' + (s >= 80 ? 'Passed. This is saved against ' + esc(l.name) + ' in this demo.' : 'You need 80% to pass. Read the key points and try again.') + '</span></div>';
+          h += '<div class="actions"><button class="ghost" type="button" id="retry">Try again</button>' + (sample ? '<button class="ghost" type="button" id="fresh">Fresh quiz with AI</button>' : '') + '</div>';
+        }
+        else
+        {
+          var n = Object.keys(state.answers).length;
+          h += '<div class="actions"><button class="btn" type="button" id="check"' + (n < state.quiz.length ? ' disabled' : '') + '>Check answers</button>' + (sample ? '<button class="ghost" type="button" id="fresh">Fresh quiz with AI</button>' : '') + '<span class="hint">' + n + ' of ' + state.quiz.length + ' answered</span></div>';
+        }
+      }
+      h += '</div>';
+    }
+    else { h += '<div class="empty"><b>Pick a module</b><span>Read the key points, then take a three question quiz. 80% is a pass.</span></div>'; }
+    return h + '</div></div></div></div>';
+  }
+
+  function renderTalk()
+  {
+    var h = '<div class="panel-b" role="tabpanel" id="tp" aria-labelledby="tab-talk"><div class="sect">';
+    h += '<div class="grid2"><div class="fld"><label for="tmod">Topic</label><select id="tmod">' + MODULES.map(function (m) { return '<option value="' + m.id + '"' + (m.id === state.talkMod ? ' selected' : '') + '>' + esc(m.name) + '</option>'; }).join('') + '</select></div>';
+    h += '<div class="fld"><label for="tctx">What is happening this week? (optional)</label><input id="tctx" value="' + esc(state.talkCtx) + '"></div></div>';
+    if (state.error && state.tab === 'talk') { h += '<div class="callout warn" role="alert"><span>' + esc(state.error) + '</span></div>'; }
+    h += '<div class="actions">' + (state.busy ? '<button class="btn" type="button" disabled>Drafting…</button><button class="ghost" type="button" id="stop">Stop</button>' : '<button class="btn" type="button" id="talkb">' + (sample ? 'Draft talk with AI' : 'Draft talk from template') + '</button>') + '<span class="hint">Built only from the procedure for that topic.</span></div></div>';
+    if (state.busy) { h += '<div class="sect"><div class="thinking"><div class="skel" style="width:40%"></div><div class="skel"></div><div class="skel" style="width:90%"></div></div></div>'; }
+    else if (state.talk)
+    {
+      h += '<div class="sect"><div class="out-h"><h3>Toolbox talk: ' + esc(mod(state.talkMod).name) + '</h3><span class="st ' + (state.talk.src === 'ai' ? 'ai' : '') + '">' + (state.talk.src === 'ai' ? 'AI draft' : 'Template draft') + '</span></div>';
+      h += '<div class="paper"><label class="sr" for="tbody">Toolbox talk text</label><textarea id="tbody" spellcheck="true">' + esc(state.talk.body) + '</textarea></div>';
+      h += '<div class="actions"><button class="btn" type="button" id="copytalk">Copy toolbox talk</button></div></div>';
+    }
+    else { h += '<div class="sect"><div class="empty"><b>No talk drafted yet</b><span>Pick a topic and press Draft talk.</span></div></div>'; }
+    return h + '</div>';
+  }
+
+  function render()
+  {
+    renderSide();
+    $('ws').innerHTML = renderTop() + (state.tab === 'ask' ? renderAsk() : state.tab === 'learn' ? renderLearn() : renderTalk());
+  }
+
+  /* ---------- Events ---------- */
+  function setMobile(m)
+  {
+    $('wrap').setAttribute('data-m', m);
+    $('mt-list').setAttribute('aria-pressed', String(m === 'list'));
+    $('mt-ws').setAttribute('aria-pressed', String(m === 'ws'));
+  }
+  $('mt-list').addEventListener('click', function () { setMobile('list'); });
+  $('mt-ws').addEventListener('click', function () { setMobile('ws'); });
+
+  $('side').addEventListener('click', function (e)
+  {
+    var t = e.target.closest('button');
+    if (!t) { return; }
+    if (t.dataset.topic) { state.topic = t.dataset.topic; renderSide(); return; }
+    if (t.dataset.doc && !state.busy)
+    {
+      var d = doc(t.dataset.doc);
+      state.tab = 'ask'; state.error = '';
+      state.ans = { q: d.title + ' (full document)', hits: d.clauses.map(function (c) { return { d: d, c: c, s: 1 }; }), src: 'search', covered: true };
+      render(); setMobile('ws'); focusAns();
+    }
+  });
+  $('libq').addEventListener('input', function (e) { state.libq = e.target.value; renderSide(); });
+
+  var ws = $('ws');
+  ws.addEventListener('click', function (e)
+  {
+    var t = e.target.closest('button');
+    if (!t) { return; }
+    if (t.dataset.tab) { if (state.busy) { toast('Wait for AI to finish, or press Stop'); return; } state.tab = t.dataset.tab; state.error = ''; render(); $('tab-' + state.tab).focus(); return; }
+    if (t.dataset.sq) { state.q = t.dataset.sq; runAsk(); return; }
+    if (t.dataset.cite)
+    {
+      state.hl = +t.dataset.cite; render();
+      var el = $('src-' + state.hl); if (el) { el.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); el.focus({ preventScroll: true }); }
+      return;
+    }
+    if (t.dataset.mod) { startModule(t.dataset.mod); return; }
+    switch (t.id)
+    {
+      case 'askb': runAsk(); return;
+      case 'stop': if (ctl) { ctl.abort(); } return;
+      case 'copyans': copyText(answerText(state.ans), 'Answer copied with its sources'); return;
+      case 'flag':
+        if (!state.gaps.some(function (g) { return g.q === state.ans.q; })) { state.gaps.unshift({ q: state.ans.q, when: 'flagged today' }); }
+        render(); toast('Flagged for the knowledge owner'); return;
+      case 'copygaps':
+        copyText('Questions the fleet library could not answer (flagged by staff):\n\n' + state.gaps.map(function (g, i) { return (i + 1) + '. ' + g.q; }).join('\n') + '\n\nCould you tell us where the answer should come from, or add it to the right procedure?\n\nSample data. Rapid AI prototype.', 'Gap list copied');
+        return;
+      case 'check':
+        state.checked = true;
+        var s = score(), l = learner();
+        if (!(l.done[state.mod] >= s)) { l.done[state.mod] = s; }
+        render(); toast(s >= 80 ? 'Passed with ' + s + '%' : 'Scored ' + s + '%. 80% is a pass.'); return;
+      case 'retry': state.answers = {}; state.checked = false; render(); return;
+      case 'fresh': freshQuiz(); return;
+      case 'copysum': copyText(completionText(learner()), 'Completion summary copied'); return;
+      case 'talkb': draftTalk(); return;
+      case 'copytalk': copyText($('tbody') ? $('tbody').value : state.talk.body, 'Toolbox talk copied'); return;
+    }
+  });
+  ws.addEventListener('input', function (e)
+  {
+    var t = e.target;
+    if (t.id === 'q') { state.q = t.value; if (state.error) { state.error = ''; } }
+    else if (t.id === 'tctx') { state.talkCtx = t.value; }
+    else if (t.id === 'tbody' && state.talk) { state.talk.body = t.value; }
+  });
+  ws.addEventListener('keydown', function (e) { if (e.target.id === 'q' && e.key === 'Enter') { e.preventDefault(); runAsk(); } });
+  ws.addEventListener('change', function (e)
+  {
+    var t = e.target;
+    if (t.id === 'role') { state.role = t.value; return; }
+    if (t.id === 'learner') { state.learner = t.value; state.mod = null; state.error = ''; render(); $('learner').focus(); return; }
+    if (t.id === 'tmod') { state.talkMod = t.value; state.talk = null; render(); $('tmod').focus(); return; }
+    if (t.type === 'radio' && /^q\d+$/.test(t.name))
+    {
+      state.answers[+t.name.slice(1)] = +t.value;
+      render();
+      var back = ws.querySelector('input[name="' + t.name + '"][value="' + t.value + '"]'); if (back) { back.focus(); }
+    }
+  });
+
+  // Opens with a worked example so the page shows what it does.
+  state.ans = { q: state.q, hits: search(state.q, 5), src: 'search', covered: true };
+  render();
+  initAi();
+})();
+</script>
+
+<!-- lpx-prod:start -->
+<style id="lpx-prod-css">
+#lpx-prod-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:calc(6px + env(safe-area-inset-top,0px)) 12px 6px;background:#F3F5F8;border-bottom:1px solid #DDE3EA;font:13px/1.3 Arial,Helvetica,sans-serif;color:#566273;position:relative;z-index:50}
+@media (prefers-color-scheme:dark){#lpx-prod-bar{background:#121922;border-color:#2B3546;color:#A3AFBF}}
+#lpx-prod-btn{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 14px;border-radius:999px;border:1px solid #003F75;background:#fff;color:#003F75;font:600 13px/1 Arial,Helvetica,sans-serif;cursor:pointer;white-space:nowrap}
+#lpx-prod-btn:hover{background:#003F75;color:#fff}
+@media (prefers-color-scheme:dark){#lpx-prod-btn{background:#18202C;color:#8EC1EC;border-color:#8EC1EC}#lpx-prod-btn:hover{background:#8EC1EC;color:#06233D}}
+#lpx-prod-btn:focus-visible{outline:2px solid #1F6FBF;outline-offset:2px}
+#lpx-prod-btn svg{width:16px;height:16px;flex:none}
+@media (max-width:480px){#lpx-prod-bar .lpx-q{display:none}}
+#lpx-prod-bar .lpx-right{display:flex;align-items:center;gap:10px;margin-left:auto}
+#lpx-protos-btn{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 14px;border-radius:999px;border:1px solid #003F75;background:#003F75;color:#fff;font:600 13px/1 Arial,Helvetica,sans-serif;text-decoration:none;white-space:nowrap}
+#lpx-protos-btn:hover{filter:brightness(1.15)}
+#lpx-protos-btn:focus-visible{outline:2px solid #1F6FBF;outline-offset:2px}
+#lpx-protos-btn svg{width:16px;height:16px;flex:none}
+@media (prefers-color-scheme:dark){#lpx-protos-btn{background:#8EC1EC;border-color:#8EC1EC;color:#06233D}}
+@media (pointer:coarse){#lpx-protos-btn{min-height:44px}}
+@media (pointer:coarse){#lpx-prod-btn{min-height:44px}}
+#lpx-prod{--bg:#fff;--soft:#F3F5F8;--ink:#1B2430;--muted:#566273;--rule:#DDE3EA;--brand:#003F75;--on:#fff;--az:#0F6CBD;--cl:#B4532A;
+  position:fixed;inset:0;z-index:2147483001;display:none;font:14px/1.5 Arial,Helvetica,sans-serif;color:var(--ink)}
+@media (prefers-color-scheme:dark){#lpx-prod{--bg:#18202C;--soft:#212B3B;--ink:#E7ECF2;--muted:#A3AFBF;--rule:#2B3546;--brand:#8EC1EC;--on:#06233D;--az:#6CB1F0;--cl:#F0A47E}}
+#lpx-prod.open{display:block}
+#lpx-prod .lpx-scrim{position:absolute;inset:0;background:rgba(10,20,35,.45)}
+#lpx-prod .lpx-panel{position:absolute;top:0;right:0;bottom:0;width:min(640px,100vw);background:var(--bg);box-shadow:-8px 0 30px rgba(0,0,0,.2);display:flex;flex-direction:column;outline:none}
+#lpx-prod .lpx-panel.lpx-wide{width:min(1040px,100vw)}
+#lpx-prod header{padding:calc(16px + env(safe-area-inset-top,0px)) 20px 12px;border-bottom:1px solid var(--rule)}
+#lpx-prod .lpx-hrow{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+#lpx-prod h2{margin:0;font-size:19px;color:var(--brand)}
+#lpx-prod .lpx-sub{margin:4px 0 0;color:var(--muted);font-size:13px}
+#lpx-prod .lpx-x{flex:none;width:36px;height:36px;border-radius:8px;border:1px solid var(--rule);background:var(--bg);color:var(--ink);font-size:20px;line-height:1;cursor:pointer}
+#lpx-prod .lpx-seg{display:inline-flex;gap:2px;margin-top:12px;padding:3px;border-radius:8px;background:var(--soft);flex-wrap:wrap}
+#lpx-prod .lpx-seg button{min-height:34px;padding:0 14px;border:0;border-radius:6px;background:none;color:var(--muted);font:600 13px Arial,Helvetica,sans-serif;cursor:pointer}
+#lpx-prod .lpx-seg button[aria-pressed="true"]{background:var(--bg);color:var(--brand);box-shadow:0 1px 2px rgba(0,0,0,.1),inset 0 0 0 1px var(--rule)}
+#lpx-prod .lpx-rec{margin-top:10px;font-size:13px;color:var(--ink);background:var(--soft);border-radius:6px;padding:8px 10px}
+#lpx-prod .lpx-rec b{color:var(--brand)}
+#lpx-prod .lpx-body{flex:1;overflow:auto;padding:16px 20px calc(24px + env(safe-area-inset-bottom,0px))}
+#lpx-prod .lpx-cols{display:grid;gap:16px;grid-template-columns:1fr}
+#lpx-prod .lpx-wide .lpx-cols{grid-template-columns:1fr 1fr}
+@media (max-width:760px){#lpx-prod .lpx-wide .lpx-cols{grid-template-columns:1fr}}
+#lpx-prod section{border:1px solid var(--rule);border-radius:8px;padding:14px 16px;margin-bottom:12px;background:var(--bg)}
+#lpx-prod h3{margin:0 0 8px;font-size:14px;display:flex;align-items:center;gap:8px}
+#lpx-prod .lpx-tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;color:#fff}
+#lpx-prod .lpx-tag.az{background:var(--az)}
+#lpx-prod .lpx-tag.cl{background:var(--cl)}
+#lpx-prod .lpx-tag.kn{background:#5B4237}
+#lpx-prod .lpx-tag.sh{background:#6B4FA0}
+#lpx-prod .lpx-sh{list-style:none;padding:0;margin:0}
+#lpx-prod .lpx-sh li{padding:8px 0;border-top:1px solid var(--rule);margin:0}
+#lpx-prod .lpx-sh li:first-child{border-top:0;padding-top:0}
+#lpx-prod .lpx-sh b{display:block}
+#lpx-prod .lpx-sh .lpx-role{font-size:12px;color:var(--muted)}
+#lpx-prod .lpx-sh .lpx-det{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+#lpx-prod ol,#lpx-prod ul{margin:0;padding-left:20px}
+#lpx-prod li{margin:4px 0}
+#lpx-prod .lpx-foot{color:var(--muted);font-size:12px;margin-top:4px}
+#lpx-prod button:focus-visible{outline:2px solid #1F6FBF;outline-offset:2px}
+@media (pointer:coarse){#lpx-prod .lpx-seg button,#lpx-prod .lpx-x{min-height:44px;min-width:44px}}
+</style>
+<script type="application/json" id="lpx-prod-plan">{"recommend": "claude", "why": "The request is an assistant over fleet documents that City Fleet already holds, which the council's enterprise Claude can answer from straight away with a project and the SharePoint connector, and the triage already pointed to an existing AI assistant.", "knowledge": ["City Fleet's approved safety procedures (fleet safety, load restraint, fatigue management, reversing and spotters).", "Vehicle and plant pre-start checklists and the defect and red tag process.", "Driver and plant operator onboarding guides and the fleet induction checklist.", "The council's Chain of Responsibility guide, CoR duties by role and how to raise a CoR concern.", "Training, licence and ticket requirements, including verification of competency (VOC) rules.", "Electric vehicle charging guide and fuel card rules.", "The owner, version and review date of each document, so answers show which version they come from."], "azure": {"technical": ["Move the prototype into an Azure DevOps repo and rebuild the front end in Vue and Bootstrap, hosted on Azure App Service with council (Entra ID) sign-in.", "Move all AI calls into an Azure Function App, with Claude through Microsoft Foundry or the council's Anthropic agreement (an ICT-DA exception, as it's outside the listed stack). Keys live in Key Vault, never in the page.", "Index the approved fleet documents from their SharePoint library into Azure AI Search, split by clause, keeping document owner, version and review date so every answer can cite its source.", "Answer only from retrieved clauses, and say clearly when the library does not cover a question.", "Swap names, phone numbers, email addresses and vehicle registrations for placeholders before a question goes to the model.", "Store flagged gaps, quiz results and feedback in Azure SQL or Cosmos DB, with a weekly gap report to the knowledge owners.", "Send module completions to the council's learning system through Boomi or Logic Apps, so training records stay in one place.", "Security review against the OWASP Top 10 and the OWASP Top 10 for LLM apps, including prompt injection through questions and uploaded documents.", "Dev, Test and Prod resource groups, Application Insights logging and cost alerts, and Azure DevOps CI/CD pipelines for each environment."], "business": ["Confirm the business owner in City Fleet, the scope and success measures (for example fewer questions to supervisors, induction finished in the first week, and quiz pass rates), and raise an Azure DevOps card (why and how).", "Name a knowledge owner for each document set (safety, onboarding, training, CoR) who keeps it current and answers flagged gaps.", "Have the Fleet Safety Advisor and CoR Officer sign off the answer rules and the quiz questions.", "Build a test plan and an AI evaluation set (40 to 60 real-style questions with the expected answer and clause), including questions the library must refuse, then run UAT with drivers, operators and supervisors.", "Train supervisors to use it for inductions and toolbox talks, and set up support: who to ask and how to report a wrong answer.", "Get ICT-DA, CAB, PGG and Business System Owner approval, with a Go Live plan, service transition document and support playbook."]}, "claude": {"technical": ["Set up a Claude Project for City Fleet in the council's enterprise Claude, with the prototype's answer rules (answer only from the documents, cite the clause, say when it isn't covered) as the project instructions.", "Connect the SharePoint library that holds the approved fleet documents through the Microsoft 365 connector, so answers always use the current version.", "Build Claude skills for the three jobs: answer a fleet question with sources, write a short module quiz, and draft a five minute toolbox talk.", "Admin settings checked: data retention, sharing, which connectors are on, and that only the approved fleet library is connected."], "business": ["Confirm the business owner, who will use it and what it must never do (it explains procedures, it does not replace supervisor sign-off or training records).", "Name knowledge owners for each document set and agree how flagged gaps reach them.", "Test it with 40 to 60 real-style questions and record how often it gives the right answer and clause, and how often it correctly says it doesn't know.", "Pilot with one depot for four weeks, give supervisors a 30-minute walkthrough, and collect feedback.", "Enterprise Claude seats for supervisors and staff in the pilot (field staff may need shared or mobile access).", "A project owner who keeps the instructions, skills and connected library up to date.", "Keep official training records in the council's learning system; Claude quizzes are practice only.", "Get the use case approved (ICT-DA and PGG) and confirm privacy settings before rolling it out wider."]}, "stakeholders": [{"role": "Raised the request", "who": "Person 001", "detail": "Ticket 335110: Fleet knowledge and learning assistant. team not stated, City Fleet, Transport Services. Asked for: \"Provide an AI-powered fleet knowledge and learning assistant\". Triage: Existing AI capability: M365 Copilot agent."}, {"role": "Business owner (to confirm)", "who": "City Fleet manager", "detail": "Owns the process, agrees what good looks like and signs off going live."}, {"role": "Knowledge owners (to confirm)", "who": "Owners of the source documents", "detail": "Keep the documents the tool relies on current and approved."}, {"role": "Delivery", "who": "AI team, Information Technology Services", "detail": "Builds the solution, runs testing and hands over to support."}, {"role": "Approvals", "who": "ICT-DA, CAB, PGG and the Business System Owner", "detail": "Approve the design, the change and going live."}]}</script>
+<script>
+(function(){
+  if (window.__lpxProd) return; window.__lpxProd = true;
+  function boot(){
+    var el = document.getElementById('lpx-prod-plan'); if (!el) return;
+    var P = JSON.parse(el.textContent);
+    function e(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+    function list(items, tag){return '<'+tag+'>'+(items||[]).map(function(x){return '<li>'+e(x)+'</li>';}).join('')+'</'+tag+'>';}
+    var btn = document.createElement('button');
+    btn.id = 'lpx-prod-btn'; btn.type = 'button'; btn.setAttribute('aria-haspopup','dialog');
+    btn.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 13l4-4 2 2 4-5M10 6h3v3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Steps to productionise</span>';
+    var wrap = document.createElement('div'); wrap.id = 'lpx-prod';
+    wrap.innerHTML = '<div class="lpx-scrim"></div><div class="lpx-panel" role="dialog" aria-modal="true" aria-labelledby="lpx-h" tabindex="-1">'+
+      '<header><div class="lpx-hrow"><div><h2 id="lpx-h">Steps to productionise</h2><p class="lpx-sub">How this prototype could become a supported council tool.</p></div>'+
+      '<button type="button" class="lpx-x" aria-label="Close">&times;</button></div>'+
+      '<div class="lpx-seg" role="group" aria-label="Show steps for"><button type="button" data-v="azure">Azure</button><button type="button" data-v="claude">Claude</button><button type="button" data-v="both">Show me both</button></div>'+
+      '<p class="lpx-rec"><b>Suggested route: '+(P.recommend==='claude'?'Claude':'Azure')+'.</b> '+e(P.why)+'</p></header>'+
+      '<div class="lpx-body" id="lpx-body"></div></div>';
+    var bar = document.createElement('div'); bar.id = 'lpx-prod-bar'; bar.innerHTML = '<a id="lpx-protos-btn" href="https://claude.ai/artifact/6PgxpQSDdJs1HjPxfZ7LvQ#ai-prototypes" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="2" width="5" height="5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="2" y="9" width="5" height="5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="9" width="5" height="5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span>All AI prototypes</span></a><div class="lpx-right"><span class="lpx-q">Thinking about going live?</span></div>'; bar.querySelector('.lpx-right').appendChild(btn);
+    document.body.insertBefore(bar, document.body.firstChild); document.body.appendChild(wrap);
+    var panel = wrap.querySelector('.lpx-panel'), body = wrap.querySelector('#lpx-body');
+    var view = P.recommend === 'claude' ? 'claude' : 'azure';
+    function sec(cls, label, title, inner){return '<section><h3><span class="lpx-tag '+cls+'">'+label+'</span>'+e(title)+'</h3>'+inner+'</section>';}
+    function col(k){
+      var az = k === 'azure', R = P[k] || {}, nm = az ? 'Azure' : 'Claude', c = az ? 'az' : 'cl';
+      var tech = R.technical || R.setup || [], bus = R.business || R.steps || [];
+      return '<div>'+
+        sec(c, nm, 'Technical setup ('+nm+')', list(tech,'ol'))+
+        sec(c, nm, 'Business readiness ('+nm+')', list(bus,'ol'))+
+        '</div>';
+    }
+    function people(){
+      var S = P.stakeholders || []; if (!S.length) return '';
+      return sec('sh','People','Stakeholders', '<ul class="lpx-sh">'+S.map(function(x){
+        return '<li><span class="lpx-role">'+e(x.role)+'</span><b>'+e(x.who)+'</b>'+(x.detail?'<span class="lpx-det">'+e(x.detail)+'</span>':'')+'</li>';
+      }).join('')+'</ul>');
+    }
+    function render(){
+      wrap.querySelectorAll('.lpx-seg button').forEach(function(b){b.setAttribute('aria-pressed', String(b.dataset.v===view));});
+      panel.classList.toggle('lpx-wide', view==='both');
+      var kn = sec('kn','Knowledge','What knowledge does it need', list(P.knowledge,'ul'));
+      body.innerHTML = (view==='both' ? '<div class="lpx-cols">'+col('azure')+col('claude')+'</div>' : col(view)) + people() + kn +
+        '<p class="lpx-foot">Draft for discussion. Systems, costs and approvals to be confirmed with ICT. Going live needs ICT-DA, CAB, PGG and Business System Owner approval.</p>';
+    }
+    var last = null;
+    function open(){ last = document.activeElement; wrap.classList.add('open'); render(); panel.focus(); document.addEventListener('keydown', key); }
+    function close(){ wrap.classList.remove('open'); document.removeEventListener('keydown', key); (last||btn).focus(); }
+    function key(ev){
+      if (ev.key === 'Escape') { close(); return; }
+      if (ev.key !== 'Tab') return;
+      var f = panel.querySelectorAll('button,a[href],[tabindex]:not([tabindex="-1"])'); if (!f.length) return;
+      var a = f[0], z = f[f.length-1];
+      if (ev.shiftKey && document.activeElement === a) { z.focus(); ev.preventDefault(); }
+      else if (!ev.shiftKey && document.activeElement === z) { a.focus(); ev.preventDefault(); }
+    }
+    btn.addEventListener('click', open);
+    wrap.querySelector('.lpx-x').addEventListener('click', close);
+    wrap.querySelector('.lpx-scrim').addEventListener('click', close);
+    wrap.querySelectorAll('.lpx-seg button').forEach(function(b){ b.addEventListener('click', function(){ view = b.dataset.v; render(); }); });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+</script>
+<!-- lpx-prod:end -->
+<!-- lpx-outlook:start -->
+<style id="lpx-ol-css">
+a.lpx-ol{display:inline-flex;align-items:center;gap:6px;text-decoration:none;cursor:pointer;white-space:nowrap}
+a.lpx-ol svg{width:14px;height:14px;flex:none}
+a.lpx-ol:focus-visible{outline:2px solid #1F6FBF;outline-offset:2px}
+a.lpx-ol.lpx-ol-plain{min-height:32px;padding:0 12px;border-radius:6px;border:1px solid #0F6CBD;color:#0F6CBD;background:#fff;font:600 13px Arial,Helvetica,sans-serif}
+a.lpx-ol.lpx-ol-plain:hover{background:#0F6CBD;color:#fff}
+#lpx-ol-toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:2147483002;max-width:min(520px,92vw);background:#1B2430;color:#fff;font:14px/1.4 Arial,Helvetica,sans-serif;padding:10px 14px;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.25);display:none}
+@media (pointer:coarse){a.lpx-ol{min-height:44px}}
+</style>
+<script>
+(function(){
+  if (window.__lpxOutlook) return; window.__lpxOutlook = true;
+  var MAX = 1600; // characters of body that fit safely in the Outlook link
+  var BASE = 'https://outlook.office.com/mail/deeplink/compose';
+  var ICON = '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="3.5" width="13" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2 4.5l6 4.5 6-4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+  function toast(msg){
+    var t = document.getElementById('lpx-ol-toast');
+    if (!t){ t = document.createElement('div'); t.id = 'lpx-ol-toast'; t.setAttribute('role','status'); document.body.appendChild(t); }
+    t.textContent = msg; t.style.display = 'block';
+    clearTimeout(t._h); t._h = setTimeout(function(){ t.style.display = 'none'; }, 6000);
+  }
+  function appName(){
+    var t = (document.title || '').split(/\s[|\u2013-]\s/)[0].trim();
+    if (t) return t;
+    var h = document.querySelector('h1'); return h ? (h.firstChild && h.firstChild.textContent || h.textContent).trim() : 'Prototype';
+  }
+  function context(btn){
+    var el = btn;
+    for (var i = 0; i < 8 && el; i++){
+      el = el.parentElement; if (!el) break;
+      var hs = el.querySelectorAll('h2,h3,h4'), pick = null;
+      for (var j = 0; j < hs.length; j++){
+        if (hs[j].compareDocumentPosition(btn) & Node.DOCUMENT_POSITION_FOLLOWING) pick = hs[j];
+      }
+      if (pick){
+        var t = pick.textContent.replace(/\s+/g,' ').trim();
+        if (t && t.length <= 60) return t;
+      }
+    }
+    return '';
+  }
+  function capture(btn){
+    var got = null, clip = navigator.clipboard, real = clip && clip.writeText;
+    if (clip && real){
+      try { clip.writeText = function(t){ got = String(t); return real.call(clip, t).catch(function(){}); }; } catch(e){}
+    }
+    try { btn.click(); } catch(e){}
+    if (clip && real){ try { clip.writeText = real; } catch(e){} }
+    return got;
+  }
+  function build(btn, a){
+    var text = capture(btn), ctx = context(btn), name = appName();
+    var subject = ctx && ctx.toLowerCase() !== name.toLowerCase() ? name + ': ' + ctx : name;
+    var body = '';
+    if (text){
+      body = text.length > MAX ? text.slice(0, MAX) + '\n\n[The full text is on your clipboard. Select everything above and paste with Ctrl+V.]' : text;
+      toast(text.length > MAX ? 'Opening Outlook. The text was long, so the full version is on your clipboard too.' : 'Opening a new email in Outlook. Check it, add who it goes to, then press Send.');
+    } else {
+      toast('Opening a new email in Outlook. Paste the text in with Ctrl+V.');
+    }
+    a.href = BASE + '?subject=' + encodeURIComponent(subject) + (body ? '&body=' + encodeURIComponent(body) : '');
+  }
+  function enhance(){
+    var btns = document.querySelectorAll('button');
+    for (var i = 0; i < btns.length; i++){
+      var b = btns[i];
+      if (b.dataset.lpxOl || b.closest('#lpx-prod') || b.id === 'lpx-prod-btn') continue;
+      var label = (b.textContent || '').replace(/\s+/g,' ').trim();
+      if (!/^Copy\b/i.test(label) || /^Copying/i.test(label)) continue;
+      b.dataset.lpxOl = '1';
+      var a = document.createElement('a');
+      a.href = BASE; a.target = '_blank'; a.rel = 'noopener';
+      a.className = (b.className ? b.className + ' ' : '') + 'lpx-ol' + (b.className ? '' : ' lpx-ol-plain');
+      a.innerHTML = ICON + '<span>Draft in Outlook</span>';
+      a.title = 'Opens a new email in Outlook with this text. Nothing is sent until you press Send.';
+      a.setAttribute('aria-label', 'Draft in Outlook: ' + label.replace(/^Copy\s*/i,'') );
+      (function(btn, link){ link.addEventListener('click', function(){ build(btn, link); }); })(b, a);
+      b.insertAdjacentElement('afterend', a);
+    }
+  }
+  function boot(){
+    enhance();
+    var pending = false;
+    new MutationObserver(function(){ if (pending) return; pending = true; requestAnimationFrame(function(){ pending = false; enhance(); }); })
+      .observe(document.body, {childList: true, subtree: true});
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+</script>
+<!-- lpx-outlook:end -->

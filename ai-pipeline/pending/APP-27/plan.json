@@ -1,0 +1,53 @@
+{
+ "recommend": "azure",
+ "why": "The activation dashboard and evidence register need shared, auditable records across every branch, so an Azure app with a database fits better than a chat tool, with Claude called behind it to write the exercises.",
+ "knowledge": [
+  "Each branch's approved Business Continuity Plan (critical functions, maximum acceptable outage, recovery times, dependencies and workarounds).",
+  "The council's business continuity framework and testing requirements (how often each plan must be tested and what counts as evidence).",
+  "The council's BCP exercise template, facilitator guide and evidence report template.",
+  "Activation levels and escalation rules (Normal, Standby, Activated, Stand-down) and who can change them.",
+  "Lessons learned from past exercises and real events, including open improvement actions.",
+  "The local disaster management arrangements that branch plans link to."
+ ],
+ "azure": {
+  "technical": [
+   "Move the prototype into an Azure DevOps repo and rebuild the front end in Vue and Bootstrap, hosted on Azure App Service with council (Entra ID) sign-in.",
+   "Move all AI calls into an Azure Function App, with Claude through Microsoft Foundry or the council's Anthropic agreement (an ICT-DA exception, as it's outside the listed stack). Keys live in Key Vault, never in the page.",
+   "Swap people's names, emails and phone numbers for their role before anything goes to the model, as the prototype does.",
+   "Store branch plans, exercises, results, improvement actions and the activation log in Azure SQL, with an audit trail of who changed what and when.",
+   "Load the approved Business Continuity Plans and the continuity framework into Blob Storage with an Azure AI Search index, so scenarios use each branch's real critical functions and workarounds.",
+   "Read branch plans from the council's document management system through Boomi or Logic Apps, so the tool always uses the approved version.",
+   "Save finished evidence reports to the records system against the branch plan.",
+   "Send activation status changes to the Crisis Management Team through a Teams channel or email using Logic Apps.",
+   "Role-based access: branch coordinators edit their own branch, Crisis and Disaster Management see and change everything.",
+   "Security review against the OWASP Top 10 and the OWASP Top 10 for LLM apps, including prompt injection through typed observations.",
+   "Dev, Test and Prod resource groups, Application Insights logging and cost alerts, and Azure DevOps CI/CD pipelines for each environment."
+  ],
+  "business": [
+   "Confirm the business owner (Crisis and Disaster Management Program), the scope and success measures, such as every plan tested within 12 months and improvement actions closed on time, and raise an Azure DevOps card (why and how).",
+   "Agree the activation levels, who can change them and how changes are communicated.",
+   "Name knowledge owners: each branch's BCP coordinator keeps their plan current; Crisis and Disaster Management owns the framework and templates.",
+   "Build a test plan and an AI evaluation set (scenarios checked by experienced facilitators for realism and accuracy against each plan), then run UAT with two or three branches.",
+   "Train BCP coordinators to build, run and record exercises, and set up support: who to ask and how to report a poor scenario.",
+   "Get ICT-DA, CAB, PGG and Business System Owner approval, with a Go Live plan, service transition document and support playbook."
+  ]
+ },
+ "claude": {
+  "technical": [
+   "Set up a Claude Project for Crisis and Disaster Management in the council's enterprise Claude, with the prototype's scenario rules as the project instructions.",
+   "Add the approved Business Continuity Plans, framework and exercise templates as project files, or connect the SharePoint library they live in.",
+   "Build Claude skills for writing a desktop exercise and drafting an evidence report in the council's template.",
+   "Keep the activation log and evidence register in SharePoint lists, and use the Microsoft 365 connector so Claude can read them for summaries and add entries when asked.",
+   "Admin settings checked: data retention, sharing, which connectors are on, and that only role names (not people's details) are pasted in."
+  ],
+  "business": [
+   "Confirm the business owner and what it must never do (it writes practice exercises and drafts reports; people decide on real activations).",
+   "Agree the exercise and evidence templates and the standard fields for the SharePoint lists.",
+   "Test it with 10 to 15 scenarios across different branches and have facilitators rate each for realism and accuracy.",
+   "Pilot with the Crisis and Disaster Management team and two branches for one exercise cycle, with a 30-minute walkthrough.",
+   "Enterprise Claude seats for the Crisis and Disaster Management team and BCP coordinators in the pilot.",
+   "A project owner who keeps the instructions, skills and plan files up to date.",
+   "Get the use case approved (ICT-DA and PGG) and confirm privacy settings before rolling it out wider."
+  ]
+ }
+}

@@ -1,0 +1,1310 @@
+<title>BCP Scenario Generator</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: City Planner AI family shell. Navy masthead, prototype notice, branch list beside a dashboard, exercise builder and evidence register. */
+:root{
+  --navy:#003f75; --navy-ink:#002a4f; --on-navy:#ffffff;
+  --bg:#f3f6f9; --surface:#ffffff; --raised:#f6f9fc; --ink:#1f1f1f; --muted:#5b6670; --line:#dbe2e9; --field:#b9c4cf;
+  --accent:#003f75; --accent-soft:#e3edf6; --on-accent:#ffffff; --link:#003f75; --focus:#f2b705;
+  --hi:#b42318; --hi-bg:#fdecea; --med:#9a5b00; --med-bg:#fff3dc; --low:#1d6b35; --low-bg:#e6f4ea; --info:#5b6670; --info-bg:#f1f4f7;
+  --ext:#ffffff; --ext-bg:#8e1b12;
+  --proto:#8a4b00; --proto-bg:#fff6e5; --proto-line:#f2c879;
+  --paper:#ffffff; --paper-ink:#1f1f1f;
+  --f-head:"Figtree","Proxima Nova",Arial,Helvetica,sans-serif;
+  --f-body:"Figtree","Proxima Nova",Arial,Helvetica,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --radius:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --navy:#0b2c4d; --navy-ink:#071f37; --on-navy:#ffffff;
+  --bg:#0e141b; --surface:#151d26; --raised:#1a2430; --ink:#e7edf3; --muted:#9aa8b6; --line:#28323e; --field:#3a4655;
+  --accent:#7fb4e6; --accent-soft:#16304a; --on-accent:#0b1724; --link:#8fc0ee; --focus:#f2b705;
+  --hi:#f2a39b; --hi-bg:#3a1a17; --med:#f0c26b; --med-bg:#33280f; --low:#86d19c; --low-bg:#14301d; --info:#9aa8b6; --info-bg:#1d2733;
+  --ext:#1f0604; --ext-bg:#f2a39b;
+  --proto:#f3c77a; --proto-bg:#2c2312; --proto-line:#6b5420;
+  --paper:#1a2430; --paper-ink:#e7edf3; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --navy:#0b2c4d; --navy-ink:#071f37; --on-navy:#ffffff;
+  --bg:#0e141b; --surface:#151d26; --raised:#1a2430; --ink:#e7edf3; --muted:#9aa8b6; --line:#28323e; --field:#3a4655;
+  --accent:#7fb4e6; --accent-soft:#16304a; --on-accent:#0b1724; --link:#8fc0ee; --focus:#f2b705;
+  --hi:#f2a39b; --hi-bg:#3a1a17; --med:#f0c26b; --med-bg:#33280f; --low:#86d19c; --low-bg:#14301d; --info:#9aa8b6; --info-bg:#1d2733;
+  --ext:#1f0604; --ext-bg:#f2a39b;
+  --proto:#f3c77a; --proto-bg:#2c2312; --proto-line:#6b5420;
+  --paper:#1a2430; --paper-ink:#e7edf3; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+a{color:var(--link)}
+button{font:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+h1,h2,h3,h4{text-wrap:balance}
+.gut{padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+
+/* masthead */
+.mast{background:var(--navy);color:var(--on-navy)}
+.mast-in{max-width:1360px;margin:0 auto;padding-block:14px;display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.brand .org{font-family:var(--f-head);font-weight:800;font-size:13px;letter-spacing:.14em;text-transform:uppercase;line-height:1.1;padding-right:14px;border-right:1px solid rgba(255,255,255,.35)}
+.brand .org small{display:block;font-weight:600;font-size:10px;letter-spacing:.2em;opacity:.8}
+.brand .app{font-family:var(--f-head);font-weight:700;font-size:19px;line-height:1.15;margin:0}
+.brand .app small{display:block;font-weight:500;font-size:13px;opacity:.82}
+.mast-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.badge{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:#f2b705;color:#1f1f1f}
+.aistat{font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.35);display:inline-flex;align-items:center;gap:6px}
+.aistat i{width:8px;height:8px;border-radius:50%;background:#c9d3dd;display:inline-block}
+.aistat.ok i{background:#7ee2a0}.aistat.off i{background:#f2b705}
+
+/* prototype notice */
+.proto{background:var(--proto-bg);border-bottom:1px solid var(--proto-line);color:var(--ink)}
+.proto-in{max-width:1360px;margin:0 auto;padding-block:10px;font-size:14px;display:flex;gap:10px;align-items:flex-start}
+.proto-in b{color:var(--proto);white-space:nowrap}
+
+.wrap{max-width:1360px;margin:0 auto;padding-block:22px 40px;display:grid;grid-template-columns:320px minmax(0,1fr);gap:18px;align-items:start}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);min-width:0}
+.panel-h{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.panel-h h2{font-family:var(--f-head);font-size:17px;font-weight:700;margin:0;color:var(--navy)}
+:root[data-theme="dark"] .panel-h h2{color:var(--ink)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .panel-h h2{color:var(--ink)}}
+.panel-b{padding:16px}
+.label{font-family:var(--f-head);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.hint{font-size:13px;color:var(--muted);margin:0}
+.side{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}
+
+/* project list */
+.plist{list-style:none;margin:0;padding:8px;display:grid;gap:4px}
+.plist button{width:100%;text-align:left;background:transparent;border:1px solid transparent;border-radius:8px;padding:10px 12px;color:var(--ink);display:grid;gap:4px}
+.plist button:hover{background:var(--accent-soft)}
+.plist button[aria-current="true"]{background:var(--accent-soft);border-color:var(--accent)}
+.plist .nm{font-weight:700;font-family:var(--f-head);line-height:1.25}
+.plist .ad{font-size:13px;color:var(--muted)}
+.plist .rw{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px}
+.mono{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+
+/* pills */
+.lvl{font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap;display:inline-block}
+.lvl.Extreme{background:var(--ext-bg);color:var(--ext)}
+.lvl.High{background:var(--hi-bg);color:var(--hi)}.lvl.Medium{background:var(--med-bg);color:var(--med)}.lvl.Low{background:var(--low-bg);color:var(--low)}
+.st{font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap;background:var(--info-bg);color:var(--info);display:inline-block}
+.st.bad{background:var(--hi-bg);color:var(--hi)}.st.ok{background:var(--low-bg);color:var(--low)}.st.ai{background:var(--accent-soft);color:var(--link)}
+
+/* buttons */
+.btn{background:var(--accent);color:var(--on-accent);border:0;border-radius:999px;padding:10px 18px;font-weight:700;min-height:42px;display:inline-flex;align-items:center;gap:8px;justify-content:center;text-decoration:none}
+.btn:hover{filter:brightness(1.1)}
+.btn:disabled{opacity:.5;cursor:default;filter:none}
+.btn.sec{background:var(--surface);color:var(--accent);border:1.5px solid var(--accent)}
+.btn.sm{min-height:34px;padding:6px 14px;font-size:14px}
+.ghost{background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:8px 14px;min-height:38px}
+.ghost:hover{color:var(--ink);border-color:var(--field)}
+.link{background:transparent;border:0;color:var(--link);padding:0;text-decoration:underline;font-size:14px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+
+/* workspace */
+.ws-top{padding:16px;border-bottom:1px solid var(--line);display:grid;gap:12px}
+.ws-top h2.ttl{color:var(--ink);font-family:var(--f-head);font-size:22px;font-weight:800;margin:0;line-height:1.15}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.facts > div{background:var(--raised);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0}
+.facts > div > span{display:block;font-size:12px;color:var(--muted)}
+.facts b{font-size:14px;overflow-wrap:anywhere}
+.meter{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:6px}
+.meter i{display:block;height:100%;background:var(--accent)}
+.tabs{display:flex;gap:4px;padding:4px;background:var(--raised);border:1px solid var(--line);border-radius:999px;width:fit-content;max-width:100%;overflow-x:auto}
+.tabs button{border:0;border-radius:999px;background:transparent;color:var(--muted);padding:8px 16px;font-weight:700;font-size:14px;white-space:nowrap;display:inline-flex;gap:6px;align-items:center}
+.tabs button[aria-selected="true"]{background:var(--accent);color:var(--on-accent)}
+.tabs .ct{font-size:11px;min-width:20px;height:20px;border-radius:999px;display:inline-grid;place-items:center;padding:0 6px;background:var(--hi-bg);color:var(--hi)}
+.tabs button[aria-selected="true"] .ct{background:rgba(255,255,255,.25);color:inherit}
+
+/* write */
+.kinds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.kind{border:1.5px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);padding:12px;text-align:left;display:grid;gap:2px}
+.kind b{font-family:var(--f-head);font-size:15px}
+.kind span{font-size:13px;color:var(--muted)}
+.kind:hover{border-color:var(--field)}
+.kind[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.fld{display:grid;gap:4px;min-width:0}
+.fld label,.fld .lb{font-size:13px;font-weight:600;color:var(--muted)}
+input,textarea,select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--field);border-radius:8px;padding:9px 11px;min-width:0;width:100%}
+textarea{resize:vertical;line-height:1.45}
+select{padding-block:7px}
+textarea.notes{font-family:var(--f-mono);font-size:13px;min-height:200px}
+.err{color:var(--hi);font-size:13px;font-weight:600;margin:0}
+.callout{border-radius:8px;padding:12px 14px;font-size:14px;display:grid;gap:4px}
+.callout.info{background:var(--accent-soft)}
+.callout.warn{background:var(--med-bg);color:var(--ink)}
+.callout.bad{background:var(--hi-bg);color:var(--ink)}
+.callout b{font-family:var(--f-head)}
+.sect{display:grid;gap:14px}
+.sect + .sect{border-top:1px solid var(--line);padding-top:16px;margin-top:16px}
+.out-h{display:flex;flex-wrap:wrap;gap:8px 12px;justify-content:space-between;align-items:center}
+.out-h h3{margin:0;font-family:var(--f-head);font-size:18px}
+.paper{background:var(--paper);color:var(--paper-ink);border:1px solid var(--line);border-radius:6px;padding:4px;box-shadow:0 10px 30px -18px rgba(0,30,60,.35)}
+.paper textarea{border:0;background:transparent;color:var(--paper-ink);min-height:360px;padding:18px clamp(12px,3vw,28px);font-size:14.5px;line-height:1.6}
+.paper textarea:focus-visible{outline-offset:-3px}
+.thinking{display:grid;gap:10px;padding:8px 0}
+.skel{height:14px;border-radius:6px;background:linear-gradient(90deg,var(--raised),var(--accent-soft),var(--raised));background-size:200% 100%;animation:sh 1.4s infinite}
+@keyframes sh{0%{background-position:100% 0}100%{background-position:-100% 0}}
+.checks{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.checks li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px;font-size:14px;align-items:start}
+.checks .ic{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;margin-top:1px}
+.checks .ok .ic{background:var(--low-bg);color:var(--low)}
+.checks .no .ic{background:var(--hi-bg);color:var(--hi)}
+.checks .nt .ic{background:var(--med-bg);color:var(--med)}
+.sugg{display:grid;gap:8px}
+.sg{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;align-items:center;background:var(--surface)}
+.sg .t{display:flex;gap:8px;flex-wrap:wrap;align-items:baseline}
+.sg .meta{font-size:13px;color:var(--muted);grid-column:1}
+.sg .done{font-size:13px;font-weight:700;color:var(--low)}
+.two{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(260px,1fr);gap:16px;align-items:start}
+
+/* log */
+.lstats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.lstats div{background:var(--raised);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.lstats b{display:block;font-size:20px;font-family:var(--f-head);font-variant-numeric:tabular-nums;line-height:1.1}
+.lstats span{font-size:12px;color:var(--muted)}
+.tbl-wrap{border:1px solid var(--line);border-radius:8px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:640px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;color:var(--muted);font-weight:700;background:var(--raised);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td select{width:auto;min-width:64px;padding:4px 6px;font-size:13px}
+td.mono{white-space:nowrap}
+td .small{font-size:12px;color:var(--muted);display:block;margin-top:2px}
+tr.closed td{opacity:.6}
+.addf{border:1px dashed var(--field);border-radius:8px;padding:12px;display:grid;gap:10px}
+.addf .row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:10px}
+.addf .row3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.empty{padding:28px 16px;text-align:center;color:var(--muted);display:grid;gap:8px;justify-items:center;border:1px dashed var(--line);border-radius:8px}
+.empty b{color:var(--ink);font-family:var(--f-head);font-size:16px}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--navy-ink);color:#fff;padding:10px 16px;border-radius:999px;font-weight:600;font-size:14px;z-index:20;box-shadow:0 10px 30px -10px rgba(0,0,0,.5);max-width:calc(100vw - 32px)}
+
+.mtabs{display:none}
+footer.foot{border-top:1px solid var(--line);background:var(--surface)}
+.foot-in{max-width:1360px;margin:0 auto;padding-block:18px 28px;font-size:13px;color:var(--muted);display:grid;gap:8px}
+.foot-in b{color:var(--ink)}
+.foot-in details summary{cursor:pointer;color:var(--link);font-weight:600}
+.foot-in ul{margin:6px 0 0;padding-left:18px;display:grid;gap:3px}
+
+@media (max-width:1100px){.two{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:900px){
+  .gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .brand .org{display:none}
+  .brand .app{font-size:17px}
+  .proto-in{flex-direction:column;gap:2px}
+  .wrap{grid-template-columns:minmax(0,1fr);padding-block:14px 32px;gap:12px}
+  .side{position:static}
+  .mtabs{display:flex;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;gap:4px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:999px;box-shadow:0 6px 16px -10px rgba(0,30,60,.35)}
+  .mtabs button{flex:1;border:0;border-radius:999px;background:transparent;color:var(--muted);padding:9px 6px;font-weight:700;font-size:14px}
+  .mtabs button[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
+  .wrap[data-m="list"] #ws{display:none}
+  .wrap[data-m="ws"] #side{display:none}
+  input,textarea,select{font-size:16px}
+  .tabs{width:100%}
+  .tabs button{flex:1;justify-content:center}
+}
+@media (max-width:640px){
+  .kinds{grid-template-columns:minmax(0,1fr)}
+  .kind{grid-template-columns:auto minmax(0,1fr);column-gap:10px}
+  .grid2{grid-template-columns:minmax(0,1fr)}
+  .lstats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .addf .row,.addf .row3{grid-template-columns:minmax(0,1fr)}
+  .sg{grid-template-columns:minmax(0,1fr)}
+  .paper textarea{min-height:300px}
+  .tbl-wrap{overflow:visible;border:0;display:grid}
+  .tbl-wrap table{min-width:0;display:block}
+  .tbl-wrap thead{display:none}
+  .tbl-wrap tbody{display:grid;gap:8px}
+  .tbl-wrap tr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 10px;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+  .tbl-wrap td{border:0;padding:0;min-width:0}
+  .tbl-wrap td.wide{grid-column:1/-1}
+  .tbl-wrap td[data-label]::before{content:attr(data-label);display:block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+  .tbl-wrap td select{width:100%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+/* ---------- BCP Scenario Generator additions ---------- */
+.dtiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.dtiles div{background:var(--raised);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.dtiles b{display:block;font-size:22px;font-family:var(--f-head);font-variant-numeric:tabular-nums;line-height:1.1}
+.dtiles span{font-size:12px;color:var(--muted)}
+.tabs .ts{display:none}
+@media (max-width:640px){.tabs .tl{display:none}.tabs .ts{display:inline}}
+.st.warn{background:var(--med-bg);color:var(--med)}
+.lv{font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap;display:inline-block}
+.lv.Normal{background:var(--low-bg);color:var(--low)}
+.lv.Standby{background:var(--med-bg);color:var(--med)}
+.lv.Activated{background:var(--hi-bg);color:var(--hi)}
+.lv.Stand-down{background:var(--info-bg);color:var(--info)}
+.bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.bc{border:1px solid var(--line);border-radius:10px;padding:12px;display:grid;gap:8px;background:var(--surface);align-content:start}
+.bc.sel{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.bc h4{margin:0;font-family:var(--f-head);font-size:15px;line-height:1.25}
+.bc .row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px}
+.bc .lvsel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:6px}
+.bc .lvsel select,.bc .lvsel input{padding:6px 8px;font-size:13px}
+.log{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.log li{display:grid;grid-template-columns:120px minmax(0,1fr);gap:10px;font-size:14px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.log time{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.cfg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.roles{display:flex;flex-wrap:wrap;gap:8px}
+.roles label{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:14px;background:var(--surface);cursor:pointer}
+.roles input{width:auto;accent-color:var(--accent)}
+.fnlist{display:grid;gap:6px}
+.fnlist div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--raised);font-size:14px}
+.fnlist small{display:block;color:var(--muted);font-size:12px}
+.steps{display:flex;gap:4px;padding:4px;background:var(--raised);border:1px solid var(--line);border-radius:999px;width:fit-content;max-width:100%;overflow-x:auto}
+.steps button{border:0;border-radius:999px;background:transparent;color:var(--muted);padding:7px 12px;font-weight:700;font-size:13px;white-space:nowrap;display:inline-flex;gap:6px;align-items:center}
+.steps button .n{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;border:1.5px solid currentColor;font-size:11px}
+.steps button[aria-current="step"]{background:var(--accent);color:var(--on-accent)}
+.steps button:disabled{opacity:.45;cursor:default}
+.pack{display:grid;gap:12px}
+.pack h4{margin:0;font-family:var(--f-head);font-size:15px}
+.pack p{margin:0}
+.pack ul{margin:0;padding-left:20px;display:grid;gap:4px}
+.inj{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
+.inj-h{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;padding:10px 12px;background:var(--raised);border-bottom:1px solid var(--line)}
+.inj-h b{font-family:var(--f-head)}
+.inj-b{padding:10px 12px;display:grid;gap:8px;font-size:14px}
+.inj-b .two{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.inj-run{display:grid;grid-template-columns:170px minmax(0,1fr);gap:10px;align-items:start;padding:10px 12px;border-top:1px dashed var(--line)}
+.inj-run textarea{min-height:64px}
+.tagfn{font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--link)}
+.oc{font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap;display:inline-block;background:var(--info-bg);color:var(--info)}
+.oc.Met{background:var(--low-bg);color:var(--low)}.oc.Partly{background:var(--med-bg);color:var(--med)}.oc.Not{background:var(--hi-bg);color:var(--hi)}
+.paperv{background:var(--paper);color:var(--paper-ink);border:1px solid var(--line);border-radius:6px;padding:4px;box-shadow:0 10px 30px -18px rgba(0,30,60,.35)}
+.paperv textarea{border:0;background:transparent;color:var(--paper-ink);min-height:340px;padding:16px clamp(12px,3vw,24px);font-size:14px;line-height:1.6}
+@media (max-width:900px){.dtiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){
+  .cfg{grid-template-columns:minmax(0,1fr)}
+  .inj-b .two{grid-template-columns:minmax(0,1fr)}
+  .inj-run{grid-template-columns:minmax(0,1fr)}
+  .log li{grid-template-columns:minmax(0,1fr)}
+  .steps{width:100%}
+  .steps button{flex:1;justify-content:center;padding:7px 6px}
+}
+@media (max-width:420px){.steps button .t{display:none}.steps button[aria-current="step"] .t{display:inline}}
+</style>
+
+<header class="mast gut"><div class="mast-in">
+  <div class="brand"><div class="org">Logan<small>AI</small></div><h1 class="app">BCP Scenario Generator<small>Branch desktop exercises, evidence of testing and an activation dashboard</small></h1></div>
+  <div class="mast-right"><span class="aistat" id="aistat" role="status"><i></i><span>Checking AI</span></span><span class="badge">Prototype</span></div>
+</div></header>
+<aside class="proto gut" aria-label="Prototype notice"><div class="proto-in"><b>Rapid AI prototype</b><span>Sample data only. All branch plans, people, exercises and outages are made up. Exercises are for practice; real activations follow the approved Business Continuity Plans.</span></div></aside>
+
+<main class="wrap gut" id="wrap" data-m="ws">
+  <div class="mtabs" role="group" aria-label="Show" style="grid-column:1/-1">
+    <button type="button" id="mt-list" aria-pressed="false">Branches</button>
+    <button type="button" id="mt-ws" aria-pressed="true">Workspace</button>
+  </div>
+
+  <aside class="panel side" id="side" aria-labelledby="side-h">
+    <div class="panel-h"><h2 id="side-h">Branch plans</h2><span class="hint">Sample data</span></div>
+    <ul class="plist" id="plist"></ul>
+  </aside>
+
+  <section class="panel" id="ws" aria-label="Workspace"></section>
+</main>
+
+<footer class="foot gut"><div class="foot-in">
+  <div><b>How it works.</b> The dashboard shows each branch's plan status, when it was last tested and whether it is activated. Pick a branch to build a desktop exercise: AI writes a realistic scenario with timed injects tied to that branch's critical functions. Run it with the team, record what happened against each inject, then let AI draft the evidence report and improvement actions. Saving it updates the evidence register and the branch's last tested date.</div>
+  <details><summary>Prototype handover notes</summary>
+    <ul>
+      <li>In the LCC stack for production: HTML, CSS and JavaScript front end (move to Vue and Bootstrap) on Azure App Service, an Azure Function App for model calls, SQL for plans, exercises, evidence and activation history, Entra ID sign-in.</li>
+      <li>Needs an ICT-DA exception: Claude (Anthropic) as the AI provider, through the council's enterprise agreement or Microsoft Foundry.</li>
+      <li>Privacy: people's names, emails and phone numbers are swapped for their role before anything goes to AI. Only branch functions, dependencies and the team's observations are sent.</li>
+      <li>Critical functions, outage times and the 12 month testing cycle are samples. They must come from the approved branch Business Continuity Plans and the council's business continuity framework.</li>
+      <li>Still needed for production: the approved BCP template and plans, a test plan with an AI evaluation set, Dev, Test and Prod environments, and ICT-DA, CAB and business owner approvals.</li>
+    </ul>
+  </details>
+  <div>Based on idea 333714, BCP scenario generator and activation dashboard (Crisis and Disaster Management Program). Rapid AI prototype for discussion, not a council system.</div>
+</div></footer>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(function ()
+{
+  'use strict';
+
+  /* ---------- Dates (sample data is placed relative to today so it never goes stale) ---------- */
+  function today() { var d = new Date(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+  function addDays(d, n) { var x = new Date(d); x.setDate(x.getDate() + n); return x; }
+  function iso(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function rel(n) { return iso(addDays(today(), n)); }
+  function parseDate(s) { var p = String(s || '').split('-'); return p.length === 3 ? new Date(+p[0], +p[1] - 1, +p[2]) : null; }
+  function fmt(s) { var d = typeof s === 'string' ? parseDate(s) : s; return d ? d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' }) : ''; }
+  function daysSince(s) { var d = parseDate(s); return d ? Math.round((today() - d) / 86400000) : null; }
+  function hoursAgo(h) { var d = new Date(Date.now() - h * 3600000); return d; }
+  function fmtTime(d) { return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' }) + ' ' + d.toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' }); }
+
+  /* ---------- Sample data (made up, labelled in the UI) ---------- */
+  // Each branch plan lists its critical functions with a sample maximum acceptable outage (MAO) and recovery time (RTO).
+  var BRANCHES = [
+    {
+      id: 'CS', name: 'Customer Service', area: 'Contact centre and service counters', version: '3.2', approved: rel(-220), lastTest: rel(-410), level: 'Normal',
+      people: [{ name: 'Jesse Sample', role: 'BCP coordinator' }, { name: 'Rowan Example', role: 'Branch manager' }, { name: 'Kai Placeholder', role: 'Contact centre team leader', email: 'kai.placeholder@example.com' }],
+      functions: [
+        { name: 'Contact centre phone line', mao: '4 hours', rto: '2 hours', deps: ['phone system', 'customer request system', 'staff roster'] },
+        { name: 'Counter payments', mao: '1 day', rto: '4 hours', deps: ['payment terminals', 'finance system'] },
+        { name: 'After hours emergency calls', mao: '1 hour', rto: '30 minutes', deps: ['after hours call service', 'on call roster'] }
+      ],
+      alt: 'Staff work from home on laptops, calls overflow to the after hours call service, counters take card payments offline.'
+    },
+    {
+      id: 'ITS', name: 'Information Technology Services', area: 'Networks, sign-in and business systems', version: '2.4', approved: rel(-120), lastTest: rel(-150), level: 'Standby',
+      people: [{ name: 'Avery Mock', role: 'BCP coordinator' }, { name: 'Sam Trial', role: 'Infrastructure manager' }, { name: 'Lee Specimen', role: 'Service desk lead', phone: '0400 000 222' }],
+      functions: [
+        { name: 'Network and internet access', mao: '4 hours', rto: '2 hours', deps: ['core switches', 'internet links', 'data centre power'] },
+        { name: 'Staff sign-in and email', mao: '4 hours', rto: '2 hours', deps: ['identity service', 'cloud email service'] },
+        { name: 'Core business systems', mao: '1 day', rto: '8 hours', deps: ['server hosting', 'backups', 'vendor support'] }
+      ],
+      alt: 'Fail over to the second data centre, use the emergency sign-in accounts, and post updates on the staff intranet and SMS.'
+    },
+    {
+      id: 'WR', name: 'Waste and Recycling Operations', area: 'Kerbside contract, transfer stations', version: '1.9', approved: rel(-300), lastTest: rel(-335), level: 'Normal',
+      people: [{ name: 'Drew Example', role: 'BCP coordinator' }, { name: 'Jamie Sample', role: 'Operations manager' }, { name: 'Casey Demo', role: 'Contract supervisor' }],
+      functions: [
+        { name: 'Kerbside collection oversight', mao: '2 days', rto: '1 day', deps: ['collection contractor', 'truck tracking system', 'customer request system'] },
+        { name: 'Transfer station operations', mao: '1 day', rto: '4 hours', deps: ['weighbridge system', 'site staff', 'gate access'] },
+        { name: 'Illegal dumping response', mao: '5 days', rto: '2 days', deps: ['field officers', 'vehicles'] }
+      ],
+      alt: 'Manual weighbridge dockets, catch-up collections on Saturday, and a shared mailbox for contractor updates.'
+    },
+    {
+      id: 'WO', name: 'Water Operations', area: 'Drinking water, sewage pump stations', version: '4.0', approved: rel(-80), lastTest: rel(-90), level: 'Normal',
+      people: [{ name: 'Morgan Demo', role: 'BCP coordinator' }, { name: 'Taylor Test', role: 'Network operations manager' }, { name: 'Robin Mock', role: 'Control room supervisor' }],
+      functions: [
+        { name: 'Water supply monitoring', mao: '2 hours', rto: '1 hour', deps: ['control system (SCADA)', 'telemetry links', 'control room staff'] },
+        { name: 'Sewage pump stations', mao: '4 hours', rto: '2 hours', deps: ['site power', 'generators', 'on call crews'] },
+        { name: 'Water main break response', mao: '4 hours', rto: '2 hours', deps: ['crews and vehicles', 'customer request system', 'stores'] }
+      ],
+      alt: 'Local manual operation at key sites, portable generators, and a backup control room at the sample depot.'
+    },
+    {
+      id: 'LIB', name: 'Libraries and Community Venues', area: 'Branch libraries, public PCs, venue hire', version: '1.3', approved: rel(-520), lastTest: rel(-505), level: 'Normal',
+      people: [{ name: 'Charlie Placeholder', role: 'BCP coordinator' }, { name: 'Jordan Sample', role: 'Libraries manager' }],
+      functions: [
+        { name: 'Branch library opening', mao: '2 days', rto: '1 day', deps: ['branch staff', 'building access', 'library system'] },
+        { name: 'Venue bookings', mao: '3 days', rto: '1 day', deps: ['booking system', 'venue keys and alarms'] },
+        { name: 'Public PCs and wifi', mao: '3 days', rto: '1 day', deps: ['network', 'PC booking system'] }
+      ],
+      alt: 'Move staff between branches, take bookings by phone on paper forms, and post closures on the council website.'
+    },
+    {
+      id: 'CF', name: 'City Fleet', area: 'Fuel, vehicles and workshop', version: '2.1', approved: rel(-190), lastTest: rel(-200), level: 'Normal',
+      people: [{ name: 'Alex Trial', role: 'BCP coordinator' }, { name: 'Pat Example', role: 'Fleet manager' }],
+      functions: [
+        { name: 'Fuel supply for crews', mao: '1 day', rto: '4 hours', deps: ['depot fuel tanks', 'fuel cards', 'fuel supplier'] },
+        { name: 'Vehicle availability', mao: '2 days', rto: '1 day', deps: ['pool vehicles', 'booking system', 'hire company'] },
+        { name: 'Workshop repairs', mao: '3 days', rto: '1 day', deps: ['mechanics', 'parts suppliers', 'workshop system'] }
+      ],
+      alt: 'Use fuel cards at retail sites, short term hire vehicles, and send urgent repairs to an approved outside workshop.'
+    }
+  ];
+
+  var SCEN = {
+    ict: { label: 'Loss of ICT systems', hook: 'systems go down without warning' },
+    site: { label: 'Loss of building access', hook: 'the main building cannot be used' },
+    weather: { label: 'Severe weather and flooding', hook: 'a severe storm and local flooding hit the city' },
+    people: { label: 'Staff shortage (illness outbreak)', hook: 'an illness outbreak takes out a large share of staff' },
+    cyber: { label: 'Cyber incident', hook: 'a suspected cyber attack locks staff out of key systems' },
+    supplier: { label: 'Key supplier failure', hook: 'a key supplier stops trading with no notice' },
+    power: { label: 'Extended power outage', hook: 'a widespread power outage is expected to last more than a day' }
+  };
+  var SEVERITY = ['Moderate', 'Major', 'Severe'];
+  var DURATION = ['60 minutes', '90 minutes', 'Half day'];
+  var ROLES = ['Branch manager', 'BCP coordinator', 'Team leaders', 'Communications', 'ICT contact', 'Crisis and Disaster Management'];
+  var LEVELS = ['Normal', 'Standby', 'Activated', 'Stand-down'];
+
+  // Evidence register: past exercises (sample).
+  var EXERCISES = [
+    { id: 'EX-101', bid: 'WO', date: rel(-90), type: 'power', title: 'Pump stations without power during a storm', facilitator: 'Morgan Demo', attendees: 7, outcome: 'Partly met',
+      summary: 'The team activated the plan within 30 minutes and found generators quickly. Two pump stations had no generator plug, so overflow risk was not managed in time.',
+      actions: [{ id: 'A-1', text: 'Fit generator connection points at the two sample pump stations without one.', owner: 'Network operations manager', due: rel(40), status: 'Open' },
+        { id: 'A-2', text: 'Add the after hours generator hire contact to the plan.', owner: 'BCP coordinator', due: rel(-20), status: 'Done' }] },
+    { id: 'EX-102', bid: 'ITS', date: rel(-150), type: 'cyber', title: 'Ransomware on the file servers', facilitator: 'Avery Mock', attendees: 9, outcome: 'Met',
+      summary: 'Roles and escalation were clear and backups were restored in the agreed time. Staff messaging was slow because the template was out of date.',
+      actions: [{ id: 'A-1', text: 'Update the staff SMS template for system outages.', owner: 'BCP coordinator', due: rel(-60), status: 'Open' }] },
+    { id: 'EX-103', bid: 'CF', date: rel(-200), type: 'supplier', title: 'Fuel supplier stops deliveries', facilitator: 'Alex Trial', attendees: 5, outcome: 'Partly met',
+      summary: 'The team knew to switch to fuel cards, but no one knew the card limits or how many crews could be kept on the road.',
+      actions: [{ id: 'A-1', text: 'Record fuel card limits and a priority list of crews in the plan.', owner: 'Fleet manager', due: rel(-30), status: 'Open' }] },
+    { id: 'EX-104', bid: 'WR', date: rel(-335), type: 'weather', title: 'Flooded transfer station access road', facilitator: 'Drew Example', attendees: 6, outcome: 'Met',
+      summary: 'Diversion to the second site and public messaging worked well. The contractor contact list was correct.',
+      actions: [] }
+  ];
+
+  var LOG = [
+    { at: hoursAgo(2.5), bid: 'ITS', from: 'Normal', to: 'Standby', reason: 'Cloud email vendor reports degraded service across the region.', by: 'Avery Mock' },
+    { at: hoursAgo(26), bid: 'WO', from: 'Activated', to: 'Stand-down', reason: 'Power restored to all sample pump stations.', by: 'Morgan Demo' },
+    { at: hoursAgo(31), bid: 'WO', from: 'Normal', to: 'Activated', reason: 'Storm cut power to three sample pump stations.', by: 'Morgan Demo' }
+  ];
+
+  /* ---------- State ---------- */
+  var state = {
+    bid: 'CS',
+    tab: 'dash',
+    ex: {},          // branch id -> { cfg, pack, step, run, report, source, reportSource }
+    busy: false,
+    error: '',
+    onlyBranch: false,
+    levelReason: {}
+  };
+  var sample = null, ctl = null;
+
+  /* ---------- Helpers ---------- */
+  function $(id) { return document.getElementById(id); }
+  function esc(s)
+  {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; });
+  }
+  function noDash(s) { return String(s || '').replace(/\s*[—–]\s*/g, ', ').replace(/\s+,/g, ','); }
+  function branch(id) { return BRANCHES.find(function (b) { return b.id === (id || state.bid); }); }
+  var toastT;
+  function toast(msg)
+  {
+    var t = $('toast'); t.textContent = msg; t.hidden = false;
+    clearTimeout(toastT); toastT = setTimeout(function () { t.hidden = true; }, 2600);
+  }
+  // Copies text inside the click handler so the Draft in Outlook link can pick it up.
+  function copyText(text, done)
+  {
+    if (navigator.clipboard && navigator.clipboard.writeText)
+    {
+      navigator.clipboard.writeText(text).then(function () { toast(done); }, function () { toast('Could not copy. Select the text and copy it by hand.'); });
+    }
+    else { toast('Could not copy. Select the text and copy it by hand.'); }
+  }
+
+  // Testing status on a sample 12 month cycle.
+  function testStatus(b)
+  {
+    var d = daysSince(b.lastTest);
+    if (d > 365) { return { k: 'bad', t: 'Test overdue', d: d }; }
+    if (d > 300) { return { k: 'warn', t: 'Test due soon', d: d }; }
+    return { k: 'ok', t: 'Tested', d: d };
+  }
+  function openActions(bid)
+  {
+    var n = 0;
+    EXERCISES.forEach(function (e) { if (!bid || e.bid === bid) { e.actions.forEach(function (a) { if (a.status === 'Open') { n++; } }); } });
+    return n;
+  }
+  function overdueActions(bid)
+  {
+    var n = 0;
+    EXERCISES.forEach(function (e) { if (!bid || e.bid === bid) { e.actions.forEach(function (a) { if (a.status === 'Open' && daysSince(a.due) > 0) { n++; } }); } });
+    return n;
+  }
+  function exState(b)
+  {
+    if (!state.ex[b.id])
+    {
+      state.ex[b.id] = { cfg: { type: b.id === 'ITS' ? 'cyber' : b.id === 'WO' ? 'weather' : 'ict', sev: 'Major', dur: '90 minutes', roles: ['Branch manager', 'BCP coordinator', 'Team leaders'] }, pack: null, step: 'build', run: null, report: null };
+    }
+    return state.ex[b.id];
+  }
+
+  /* ---------- AI availability ---------- */
+  function setAi(mode)
+  {
+    var el = $('aistat');
+    el.className = 'aistat ' + (mode === 'ok' ? 'ok' : mode === 'off' ? 'off' : '');
+    el.querySelector('span').textContent = mode === 'ok' ? 'AI ready' : mode === 'off' ? 'AI off: template mode' : 'Checking AI';
+  }
+  function initAi()
+  {
+    if (typeof window.claude === 'undefined' || !window.claude || typeof window.claude.use !== 'function')
+    {
+      setAi('off'); render(); return;
+    }
+    window.claude.use('sample').then(function (s)
+    {
+      sample = s || null; setAi(sample ? 'ok' : 'off'); render();
+    }, function () { setAi('off'); render(); });
+  }
+  function aiErrorCopy(code)
+  {
+    switch (code)
+    {
+      case 'not_granted': return 'AI was not allowed for this page, so this uses the standard template. You can still edit and use it.';
+      case 'rate_limited': case 'queue_overflow': return 'AI is busy right now, so this uses the standard template. Try again in a minute.';
+      case 'invalid_json': case 'empty_completion': return 'AI sent back something the page could not read, so this uses the standard template.';
+      case 'cancelled': return 'You stopped AI, so this uses the standard template.';
+      default: return 'AI could not help just now, so this uses the standard template.';
+    }
+  }
+
+  /* ---------- Privacy: swap people's names and contact details for their role before AI ---------- */
+  function redact(b, text)
+  {
+    var t = String(text || '');
+    b.people.forEach(function (p)
+    {
+      if (p.email) { t = t.split(p.email).join('[email]'); }
+      if (p.phone) { t = t.split(p.phone).join('[phone]'); }
+      t = t.split(p.name).join('[' + p.role + ']');
+      t = t.replace(new RegExp('\\b' + p.name.split(' ')[0] + '\\b', 'g'), '[' + p.role + ']');
+    });
+    return t.replace(/[\w.+-]+@[\w-]+\.[\w.]+/g, '[email]').replace(/(\+?61|0)4\d{2}[ ]?\d{3}[ ]?\d{3}/g, '[phone]');
+  }
+
+  /* ---------- Scenario templates (used when AI is off or fails) ---------- */
+  function templatePack(b, cfg)
+  {
+    var s = SCEN[cfg.type], f = b.functions;
+    var sevWord = cfg.sev === 'Severe' ? 'more than two days' : cfg.sev === 'Major' ? 'at least a full day' : 'several hours';
+    var times = cfg.dur === '60 minutes' ? ['0:00', '0:15', '0:30', '0:45'] : cfg.dur === '90 minutes' ? ['0:00', '0:20', '0:45', '1:10'] : ['0:00', '0:45', '1:45', '2:45'];
+    var injects = [
+      { time: times[0], title: 'First reports', fn: f[0].name,
+        detail: 'At 8:40am on a weekday, ' + s.hook + '. ' + cap(f[0].name) + ' is affected straight away because it relies on the ' + f[0].deps[0] + '. Early advice is that it could take ' + sevWord + ' to fix.',
+        questions: ['Who is told first, and who decides whether to activate the plan?', 'How long can ' + f[0].name.toLowerCase() + ' be down before it becomes critical (the plan says ' + f[0].mao + ')?'],
+        expected: ['Coordinator confirms the facts and briefs the branch manager.', 'Branch manager decides on Standby or Activated and records the time.'] },
+      { time: times[1], title: 'Pressure builds', fn: f[1].name,
+        detail: cap(f[1].name) + ' is now also affected through the ' + f[1].deps[0] + '. Customers and a councillor are asking what is happening.',
+        questions: ['What workaround does the plan give, and can we start it now?', 'What do we tell customers, councillors and staff, and who approves it?'],
+        expected: ['Start the workaround: ' + b.alt, 'Agree key messages with Communications within 30 minutes.'] },
+      { time: times[2], title: 'A second problem', fn: f[2].name,
+        detail: 'Two key staff who know ' + f[2].name.toLowerCase() + ' are away sick, and the ' + f[2].deps[f[2].deps.length - 1] + ' is not answering. The outage is still not fixed.',
+        questions: ['Who else can do this work, and where is the procedure written down?', 'Does this need escalating to the Crisis Management Team?'],
+        expected: ['Use the backup contacts and procedures in the plan.', 'Escalate if the maximum acceptable outage (' + f[2].mao + ') will be passed.'] },
+      { time: times[3], title: 'Recovery and stand down', fn: f[0].name,
+        detail: 'Services start coming back but there is a backlog of work and some data entered offline needs to be loaded.',
+        questions: ['How do we clear the backlog and check nothing was lost?', 'When do we stand down, and how do we capture lessons learned?'],
+        expected: ['Recovery checklist followed and backlog plan agreed.', 'Stand down recorded and a debrief booked.'] }
+    ];
+    return {
+      title: s.label + ': ' + b.name + ' desktop exercise',
+      objectives: ['Test that the team knows when and how to activate the plan.', 'Check the workarounds for each critical function still work.', 'Practise messages to customers, councillors and staff.'],
+      context: 'A ' + cfg.sev.toLowerCase() + ' ' + s.label.toLowerCase() + ' scenario for ' + b.name + ' (' + cfg.dur + '). This is a practice exercise and no real systems are touched.',
+      injects: injects,
+      facilitatorNotes: ['Read each inject aloud and give the group a few minutes per question.', 'Ask people to point to the page in the plan they are using.', 'Note anything the plan does not cover; it becomes an improvement action.'],
+      debrief: ['What worked well?', 'What was missing or unclear in the plan?', 'What should change before the next real event?']
+    };
+  }
+  function cap(s) { s = String(s || ''); return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  /* ---------- AI: scenario ---------- */
+  function scenarioPrompt(b, cfg)
+  {
+    return [
+      'You write business continuity desktop exercises for a Queensland local council. Write one exercise for the branch below.',
+      'Branch: ' + b.name + ' (' + b.area + ').',
+      'Critical functions (name, maximum acceptable outage, recovery time, dependencies):',
+      JSON.stringify(b.functions.map(function (f) { return { name: f.name, mao: f.mao, rto: f.rto, dependencies: f.deps }; })),
+      'Workarounds in the plan: ' + redact(b, b.alt),
+      'Scenario type: ' + SCEN[cfg.type].label + '. Severity: ' + cfg.sev + '. Exercise length: ' + cfg.dur + '.',
+      'Participants: ' + cfg.roles.join(', ') + '.',
+      '',
+      'Rules:',
+      '- Realistic for a council, Australian English, plain English, short sentences. No em dashes or en dashes.',
+      '- 4 or 5 injects with times from 0:00 that fit the exercise length. Each inject escalates or adds a twist.',
+      '- Every inject names one critical function from the list exactly in "fn" and tests it against its maximum acceptable outage.',
+      '- Do not name real people, companies or places. Use roles only.',
+      '- 2 or 3 questions and 2 or 3 expected actions per inject.',
+      'Return only JSON in this shape:',
+      '{"title": string, "objectives": [string], "context": string, "injects": [{"time": string, "title": string, "detail": string, "fn": string, "questions": [string], "expected": [string]}], "facilitatorNotes": [string], "debrief": [string]}'
+    ].join('\n');
+  }
+  function cleanPack(b, out)
+  {
+    if (!out || !Array.isArray(out.injects) || out.injects.length < 2) { return null; }
+    var names = b.functions.map(function (f) { return f.name; });
+    function s(v) { return noDash(typeof v === 'string' ? v : '').trim(); }
+    function arr(v, n) { return (Array.isArray(v) ? v : []).slice(0, n).map(s).filter(Boolean); }
+    var inj = out.injects.slice(0, 6).map(function (i)
+    {
+      var fn = names.indexOf(s(i && i.fn)) > -1 ? s(i.fn) : names[0];
+      return { time: s(i && i.time) || '', title: s(i && i.title) || 'Inject', detail: s(i && i.detail), fn: fn, questions: arr(i && i.questions, 4), expected: arr(i && i.expected, 4) };
+    }).filter(function (i) { return i.detail; });
+    if (inj.length < 2) { return null; }
+    return { title: s(out.title) || 'Desktop exercise', objectives: arr(out.objectives, 5), context: s(out.context), injects: inj, facilitatorNotes: arr(out.facilitatorNotes, 5), debrief: arr(out.debrief, 5) };
+  }
+
+  function generate()
+  {
+    var b = branch(), ex = exState(b);
+    if (state.busy) { return; }
+    if (!ex.cfg.roles.length) { state.error = 'Pick at least one participant role so the exercise can be pitched at the right people.'; render(); return; }
+    state.error = '';
+    function done(pack, src)
+    {
+      ex.pack = pack; ex.source = src; ex.step = 'build';
+      ex.run = { date: iso(today()), facilitator: b.people[0].name, attendees: '', results: pack.injects.map(function () { return { outcome: '', obs: '' }; }) };
+      ex.report = null;
+    }
+    if (!sample)
+    {
+      done(templatePack(b, ex.cfg), 'template'); render(); focusPack(); toast('Exercise made from the standard template'); return;
+    }
+    state.busy = true; render();
+    ctl = new AbortController();
+    sample.json(scenarioPrompt(b, ex.cfg), { signal: ctl.signal, modelTier: 'default', cache: false }).then(function (out)
+    {
+      var p = cleanPack(b, out);
+      if (!p) { throw { code: 'invalid_json' }; }
+      done(p, 'ai'); toast('AI exercise ready to check');
+    }).catch(function (e)
+    {
+      done(templatePack(b, ex.cfg), 'template');
+      state.error = aiErrorCopy(e && e.code);
+      if (e && e.code === 'not_granted') { sample = null; setAi('off'); }
+    }).then(function () { state.busy = false; ctl = null; render(); focusPack(); });
+  }
+  function focusPack() { var h = $('pack-h'); if (h) { h.focus(); } }
+
+  /* ---------- Evidence report ---------- */
+  function overallFrom(results)
+  {
+    var tested = results.filter(function (r) { return r.outcome && r.outcome !== 'Not tested'; });
+    if (!tested.length) { return 'Not met'; }
+    if (tested.every(function (r) { return r.outcome === 'Met'; })) { return 'Met'; }
+    if (tested.filter(function (r) { return r.outcome === 'Not met'; }).length * 2 > tested.length) { return 'Not met'; }
+    return 'Partly met';
+  }
+  function templateReport(b, ex)
+  {
+    var res = ex.run.results, inj = ex.pack.injects;
+    var gaps = [], strengths = [], actions = [];
+    inj.forEach(function (i, k)
+    {
+      var r = res[k];
+      if (r.outcome === 'Met') { strengths.push(i.title + ' (' + i.fn + '): handled as the plan expects.' + (r.obs ? ' ' + r.obs : '')); }
+      else if (r.outcome === 'Partly met' || r.outcome === 'Not met')
+      {
+        gaps.push(i.title + ' (' + i.fn + '): ' + r.outcome.toLowerCase() + '.' + (r.obs ? ' ' + r.obs : ''));
+        actions.push({ text: 'Review and update the plan for ' + i.fn.toLowerCase() + ' after the "' + i.title + '" inject.', owner: 'BCP coordinator', dueInDays: r.outcome === 'Not met' ? 30 : 60 });
+      }
+    });
+    return {
+      overall: overallFrom(res),
+      summary: b.name + ' ran a desktop exercise (' + ex.cfg.dur + ') on ' + fmt(ex.run.date) + ' using the scenario "' + SCEN[ex.cfg.type].label + '". ' + strengths.length + ' of ' + inj.length + ' injects were fully met.',
+      strengths: strengths.length ? strengths : ['[Add what worked well.]'],
+      gaps: gaps.length ? gaps : ['No gaps recorded.'],
+      actions: actions
+    };
+  }
+  function reportPrompt(b, ex)
+  {
+    var data = ex.pack.injects.map(function (i, k) { return { inject: i.title, function: i.fn, expected: i.expected, outcome: ex.run.results[k].outcome || 'Not recorded', observation: redact(b, ex.run.results[k].obs) }; });
+    return [
+      'You write the evidence report for a council business continuity desktop exercise. Use only the facts below.',
+      'Branch: ' + b.name + '. Exercise: ' + ex.pack.title + '. Objectives: ' + ex.pack.objectives.join(' ') + '.',
+      'Results per inject (JSON):', JSON.stringify(data, null, 1),
+      '',
+      'Rules: Australian English, plain English, short sentences, no em dashes or en dashes. Do not invent results. Refer to people by role only.',
+      '"overall" is one of "Met", "Partly met", "Not met". "actions" are specific improvements to the plan or training, each with an owner role and dueInDays (14 to 120).',
+      'Return only JSON: {"overall": string, "summary": string, "strengths": [string], "gaps": [string], "actions": [{"text": string, "owner": string, "dueInDays": number}]}'
+    ].join('\n');
+  }
+  function cleanReport(out, fallback)
+  {
+    if (!out || typeof out.summary !== 'string') { return null; }
+    function s(v) { return noDash(typeof v === 'string' ? v : '').trim(); }
+    function arr(v) { return (Array.isArray(v) ? v : []).slice(0, 8).map(s).filter(Boolean); }
+    var ov = ['Met', 'Partly met', 'Not met'].indexOf(out.overall) > -1 ? out.overall : fallback.overall;
+    return {
+      overall: ov, summary: s(out.summary), strengths: arr(out.strengths), gaps: arr(out.gaps),
+      actions: (Array.isArray(out.actions) ? out.actions : []).slice(0, 8).map(function (a) { var n = parseInt(a && a.dueInDays, 10); return { text: s(a && a.text), owner: s(a && a.owner) || 'BCP coordinator', dueInDays: isNaN(n) ? 60 : Math.max(7, Math.min(180, n)) }; }).filter(function (a) { return a.text; })
+    };
+  }
+  function draftReport()
+  {
+    var b = branch(), ex = exState(b);
+    if (state.busy) { return; }
+    var recorded = ex.run.results.filter(function (r) { return r.outcome; }).length;
+    if (!recorded) { state.error = 'Record an outcome for at least one inject first, so the report has something to say.'; render(); return; }
+    state.error = '';
+    var base = templateReport(b, ex);
+    if (!sample) { ex.report = base; ex.reportSource = 'template'; ex.step = 'report'; render(); focusPack(); toast('Report made from the standard template'); return; }
+    state.busy = true; ex.step = 'report'; render();
+    ctl = new AbortController();
+    sample.json(reportPrompt(b, ex), { signal: ctl.signal, modelTier: 'default', cache: false }).then(function (out)
+    {
+      var r = cleanReport(out, base);
+      if (!r) { throw { code: 'invalid_json' }; }
+      ex.report = r; ex.reportSource = 'ai'; toast('AI report ready to check');
+    }).catch(function (e)
+    {
+      ex.report = base; ex.reportSource = 'template';
+      state.error = aiErrorCopy(e && e.code);
+      if (e && e.code === 'not_granted') { sample = null; setAi('off'); }
+    }).then(function () { state.busy = false; ctl = null; render(); focusPack(); });
+  }
+
+  /* ---------- Text outputs ---------- */
+  function packText(b, ex)
+  {
+    var p = ex.pack, L = [p.title.toUpperCase(), 'Facilitator pack (practice exercise)', 'Branch: ' + b.name + ' · Plan version ' + b.version + ' · Length: ' + ex.cfg.dur, '', 'CONTEXT', p.context, '', 'OBJECTIVES'];
+    p.objectives.forEach(function (o, i) { L.push((i + 1) + '. ' + o); });
+    L.push('', 'INJECTS');
+    p.injects.forEach(function (i, k)
+    {
+      L.push('', (k + 1) + '. ' + i.time + '  ' + i.title + ' (critical function: ' + i.fn + ')', i.detail, 'Questions:');
+      i.questions.forEach(function (q) { L.push('- ' + q); });
+      L.push('Expected actions:');
+      i.expected.forEach(function (q) { L.push('- ' + q); });
+    });
+    L.push('', 'FACILITATOR NOTES');
+    p.facilitatorNotes.forEach(function (n) { L.push('- ' + n); });
+    L.push('', 'DEBRIEF QUESTIONS');
+    p.debrief.forEach(function (n) { L.push('- ' + n); });
+    L.push('', 'Sample data. Rapid AI prototype.');
+    return L.join('\n');
+  }
+  function inviteText(b, ex)
+  {
+    var p = ex.pack;
+    return ['Subject: Business continuity desktop exercise, ' + b.name, '', 'Hi team,', '',
+      'You are invited to a ' + ex.cfg.dur + ' desktop exercise to test the ' + b.name + ' Business Continuity Plan (version ' + b.version + ').',
+      'Date and place: [add date, time and room or Teams link]', '',
+      'What we will test:'].concat(p.objectives.map(function (o) { return '- ' + o; })).concat(['',
+      'Please bring a copy of the plan (or have it open) and come ready to talk through what you would do. It is a practice session, so there are no wrong answers.', '',
+      'Kind regards,', b.people[0].name, b.people[0].role + ', ' + b.name]).join('\n');
+  }
+  function reportText(b, ex)
+  {
+    var r = ex.report, L = ['BCP EXERCISE EVIDENCE REPORT (DRAFT)', b.name + ' · ' + ex.pack.title, 'Date: ' + fmt(ex.run.date) + ' · Facilitator: ' + ex.run.facilitator + ' · Attendees: ' + (ex.run.attendees || '[add]'), 'Plan version: ' + b.version, '', 'OVERALL RESULT: ' + r.overall, '', 'SUMMARY', r.summary, '', 'WHAT WORKED'];
+    r.strengths.forEach(function (x) { L.push('- ' + x); });
+    L.push('', 'GAPS FOUND');
+    r.gaps.forEach(function (x) { L.push('- ' + x); });
+    L.push('', 'IMPROVEMENT ACTIONS');
+    if (r.actions.length) { r.actions.forEach(function (a) { L.push('- ' + a.text + ' Owner: ' + a.owner + '. Due: ' + fmt(rel(a.dueInDays)) + '.'); }); } else { L.push('- None.'); }
+    L.push('', 'RESULTS BY INJECT');
+    ex.pack.injects.forEach(function (i, k) { var x = ex.run.results[k]; L.push('- ' + i.time + ' ' + i.title + ': ' + (x.outcome || 'Not recorded') + (x.obs ? '. ' + x.obs : '')); });
+    L.push('', 'Sample data. Rapid AI prototype.');
+    return L.join('\n');
+  }
+  function activationText()
+  {
+    var act = BRANCHES.filter(function (b) { return b.level !== 'Normal'; });
+    var L = ['Business continuity activation update', 'As at ' + fmtTime(new Date()), ''];
+    if (!act.length) { L.push('All branches are operating normally. No plans are activated.'); }
+    else
+    {
+      L.push('Branches not at Normal:');
+      act.forEach(function (b)
+      {
+        var last = LOG.filter(function (l) { return l.bid === b.id; })[0];
+        L.push('- ' + b.name + ': ' + b.level + (last ? ' since ' + fmtTime(last.at) + '. ' + last.reason : '.'));
+      });
+    }
+    var overdue = BRANCHES.filter(function (b) { return testStatus(b).k === 'bad'; });
+    L.push('', 'Plan testing: ' + BRANCHES.filter(function (b) { return testStatus(b).k !== 'bad'; }).length + ' of ' + BRANCHES.length + ' branch plans tested in the last 12 months.');
+    if (overdue.length) { L.push('Overdue: ' + overdue.map(function (b) { return b.name; }).join(', ') + '.'); }
+    L.push('Open improvement actions: ' + openActions() + ' (' + overdueActions() + ' overdue).', '', 'Sample data. Rapid AI prototype.');
+    return L.join('\n');
+  }
+  function evidenceText()
+  {
+    var L = ['BCP testing evidence summary', 'As at ' + fmt(today()), ''];
+    BRANCHES.forEach(function (b)
+    {
+      var st = testStatus(b), ex = EXERCISES.filter(function (e) { return e.bid === b.id; });
+      L.push(b.name + ': last tested ' + fmt(b.lastTest) + ' (' + st.t.toLowerCase() + '), ' + ex.length + ' exercise' + (ex.length === 1 ? '' : 's') + ' on file, ' + openActions(b.id) + ' open action' + (openActions(b.id) === 1 ? '' : 's') + '.');
+    });
+    L.push('', 'Sample data. Rapid AI prototype.');
+    return L.join('\n');
+  }
+
+  /* ---------- Rendering ---------- */
+  function stPill(b)
+  {
+    var st = testStatus(b);
+    return '<span class="st ' + (st.k === 'bad' ? 'bad' : st.k === 'ok' ? 'ok' : 'warn') + '">' + st.t + '</span>';
+  }
+  function renderSide()
+  {
+    $('plist').innerHTML = BRANCHES.map(function (b)
+    {
+      return '<li><button type="button" data-bid="' + b.id + '" aria-current="' + (b.id === state.bid) + '">' +
+        '<span class="nm">' + esc(b.name) + '</span><span class="ad">' + esc(b.area) + '</span>' +
+        '<span class="rw"><span class="lv ' + b.level + '">' + b.level + '</span>' + stPill(b) + '<span class="mono">Plan v' + esc(b.version) + '</span></span></button></li>';
+    }).join('');
+  }
+
+  function renderTop()
+  {
+    var b = branch(), st = testStatus(b);
+    return '<div class="ws-top">' +
+      '<div><p class="label">Branch plan v' + esc(b.version) + ' · approved ' + esc(fmt(b.approved)) + '</p><h2 class="ttl" tabindex="-1">' + esc(b.name) + '</h2></div>' +
+      '<div class="facts">' +
+        '<div><span>Status</span><b><span class="lv ' + b.level + '">' + b.level + '</span></b></div>' +
+        '<div><span>Last tested</span><b>' + esc(fmt(b.lastTest)) + '</b><span>' + st.d + ' days ago · ' + st.t.toLowerCase() + '</span></div>' +
+        '<div><span>Critical functions</span><b>' + b.functions.length + '</b></div>' +
+        '<div><span>Open improvement actions</span><b>' + openActions(b.id) + '</b></div>' +
+      '</div>' +
+      '<div class="tabs" role="tablist" aria-label="Workspace">' +
+        tabBtn('dash', 'Activation dashboard', 'Dashboard') + tabBtn('ex', 'Build an exercise', 'Exercise') + tabBtn('ev', 'Evidence register', 'Evidence') +
+      '</div></div>';
+  }
+  function tabBtn(id, label, short)
+  {
+    return '<button type="button" role="tab" id="tab-' + id + '" aria-controls="tp" aria-selected="' + (state.tab === id) + '" data-tab="' + id + '" aria-label="' + label + '"><span class="tl">' + label + '</span><span class="ts" aria-hidden="true">' + short + '</span></button>';
+  }
+
+  function renderDash()
+  {
+    var act = BRANCHES.filter(function (b) { return b.level === 'Activated'; }).length;
+    var sb = BRANCHES.filter(function (b) { return b.level === 'Standby'; }).length;
+    var tested = BRANCHES.filter(function (b) { return testStatus(b).k !== 'bad'; }).length;
+    var h = '<div class="panel-b" role="tabpanel" id="tp" aria-labelledby="tab-dash"><div class="sect">';
+    h += '<div class="dtiles"><div><b>' + act + '</b><span>Plans activated</span></div><div><b>' + sb + '</b><span>On standby</span></div><div><b>' + tested + ' of ' + BRANCHES.length + '</b><span>Tested in last 12 months</span></div><div><b>' + openActions() + '</b><span>Open actions (' + overdueActions() + ' overdue)</span></div></div>';
+    h += '<div class="out-h"><h3>All branches</h3><div class="actions"><button class="btn sec sm" type="button" id="copyact">Copy activation update</button></div></div>';
+    h += '<div class="bgrid">' + BRANCHES.map(function (b)
+    {
+      return '<div class="bc' + (b.id === state.bid ? ' sel' : '') + '"><h4>' + esc(b.name) + '</h4>' +
+        '<div class="row"><span class="lv ' + b.level + '">' + b.level + '</span>' + stPill(b) + '<span class="hint">Last tested ' + esc(fmt(b.lastTest)) + '</span></div>' +
+        '<div class="lvsel"><div class="fld"><label for="lv-' + b.id + '">Change status</label><select id="lv-' + b.id + '" data-lv="' + b.id + '">' + LEVELS.map(function (l) { return '<option' + (l === b.level ? ' selected' : '') + '>' + l + '</option>'; }).join('') + '</select></div>' +
+        '<div class="fld"><label for="rs-' + b.id + '">Reason</label><input id="rs-' + b.id + '" data-rs="' + b.id + '" autocomplete="off" placeholder="What has happened" value="' + esc(state.levelReason[b.id] || '') + '"></div></div>' +
+        '<div class="actions"><button class="ghost" type="button" data-plan="' + b.id + '">Plan an exercise</button></div></div>';
+    }).join('') + '</div>';
+    h += '<div class="out-h"><h3>Activation log</h3><span class="hint">Most recent first</span></div>';
+    h += LOG.length ? '<ul class="log">' + LOG.map(function (l)
+    {
+      var b = branch(l.bid);
+      return '<li><time>' + esc(fmtTime(l.at)) + '</time><span><b>' + esc(b.name) + '</b>: <span class="lv ' + l.from + '">' + l.from + '</span> to <span class="lv ' + l.to + '">' + l.to + '</span>. ' + esc(l.reason) + ' <span class="hint">(' + esc(l.by) + ')</span></span></li>';
+    }).join('') + '</ul>' : '<div class="empty"><b>No changes logged</b><span>Change a branch status above to record it here.</span></div>';
+    return h + '</div></div>';
+  }
+
+  function stepNav(ex)
+  {
+    var steps = [['build', 'Exercise pack'], ['run', 'Run and record'], ['report', 'Evidence report']];
+    return '<nav class="steps" aria-label="Steps">' + steps.map(function (s, k)
+    {
+      var dis = (k > 0 && !ex.pack) || (k === 2 && !ex.report);
+      return '<button type="button" data-step="' + s[0] + '"' + (ex.step === s[0] ? ' aria-current="step"' : '') + (dis ? ' disabled' : '') + '><span class="n">' + (k + 1) + '</span><span class="t">' + s[1] + '</span></button>';
+    }).join('') + '</nav>';
+  }
+
+  function renderEx()
+  {
+    var b = branch(), ex = exState(b), c = ex.cfg;
+    var h = '<div class="panel-b" role="tabpanel" id="tp" aria-labelledby="tab-ex"><div class="sect">';
+    h += '<div><p class="label">Critical functions in this plan</p><div class="fnlist">' + b.functions.map(function (f) { return '<div><span>' + esc(f.name) + '<small>Depends on ' + esc(f.deps.join(', ')) + '</small></span><span class="mono">MAO ' + esc(f.mao) + '</span></div>'; }).join('') + '</div></div>';
+    h += '<div class="cfg"><div class="fld"><label for="c-type">Scenario</label><select id="c-type">' + Object.keys(SCEN).map(function (k) { return '<option value="' + k + '"' + (k === c.type ? ' selected' : '') + '>' + SCEN[k].label + '</option>'; }).join('') + '</select></div>' +
+      '<div class="fld"><label for="c-sev">Severity</label><select id="c-sev">' + SEVERITY.map(function (k) { return '<option' + (k === c.sev ? ' selected' : '') + '>' + k + '</option>'; }).join('') + '</select></div>' +
+      '<div class="fld"><label for="c-dur">Length</label><select id="c-dur">' + DURATION.map(function (k) { return '<option' + (k === c.dur ? ' selected' : '') + '>' + k + '</option>'; }).join('') + '</select></div></div>';
+    h += '<fieldset style="border:0;padding:0;margin:0"><legend class="label">Who is taking part?</legend><div class="roles">' + ROLES.map(function (r, i) { return '<label><input type="checkbox" data-role="' + esc(r) + '"' + (c.roles.indexOf(r) > -1 ? ' checked' : '') + '> ' + esc(r) + '</label>'; }).join('') + '</div></fieldset>';
+    if (state.error && (!ex.pack || ex.step === 'build')) { h += '<div class="callout warn" role="alert"><b>Heads up</b><span>' + esc(state.error) + '</span></div>'; }
+    h += '<div class="actions">';
+    if (state.busy && (!ex.pack || ex.step === 'build')) { h += '<button class="btn" type="button" disabled>Working…</button><button class="ghost" type="button" id="stop">Stop</button>'; }
+    else { h += '<button class="btn" type="button" id="gen"' + (state.busy ? ' disabled' : '') + '>' + (sample ? (ex.pack ? 'Write a new exercise with AI' : 'Write exercise with AI') : 'Build from template') + '</button>'; }
+    h += '<span class="hint">' + (sample ? 'Only the branch functions and settings go to AI. People are referred to by role.' : 'AI is not available here, so the page uses its standard scenario template.') + '</span></div>';
+    h += '</div>';
+
+    if (state.busy && !ex.pack || state.busy && ex.step === 'build')
+    {
+      h += '<div class="sect" aria-live="polite"><p class="hint">AI is writing the exercise. This usually takes 15 to 45 seconds.</p><div class="thinking"><div class="skel" style="width:45%"></div><div class="skel"></div><div class="skel" style="width:90%"></div><div class="skel" style="width:70%"></div></div></div>';
+    }
+    else if (ex.pack)
+    {
+      h += '<div class="sect"><div class="out-h"><h3 id="pack-h" tabindex="-1">' + esc(ex.pack.title) + '</h3><span class="st ' + (ex.source === 'ai' ? 'ai' : '') + '">' + (ex.source === 'ai' ? 'AI draft' : 'Template') + '</span></div>' + stepNav(ex);
+      if (ex.step === 'build') { h += renderPack(b, ex); }
+      else if (ex.step === 'run') { h += renderRun(b, ex); }
+      else { h += renderReport(b, ex); }
+      h += '</div>';
+    }
+    else
+    {
+      h += '<div class="sect"><div class="empty"><b>No exercise yet</b><span>Pick a scenario, severity and who is taking part, then press ' + (sample ? 'Write exercise with AI' : 'Build from template') + '.</span></div></div>';
+    }
+    return h + '</div>';
+  }
+
+  function renderPack(b, ex)
+  {
+    var p = ex.pack;
+    var h = '<div class="pack"><p>' + esc(p.context) + '</p><div><h4>Objectives</h4><ul>' + p.objectives.map(function (o) { return '<li>' + esc(o) + '</li>'; }).join('') + '</ul></div>';
+    p.injects.forEach(function (i, k)
+    {
+      h += '<div class="inj"><div class="inj-h"><span class="mono">' + esc(i.time) + '</span><b>' + (k + 1) + '. ' + esc(i.title) + '</b><span class="tagfn">' + esc(i.fn) + '</span></div><div class="inj-b"><p>' + esc(i.detail) + '</p>' +
+        '<div class="two" style="display:grid"><div><p class="label" style="margin-bottom:4px">Ask the group</p><ul>' + i.questions.map(function (q) { return '<li>' + esc(q) + '</li>'; }).join('') + '</ul></div>' +
+        '<div><p class="label" style="margin-bottom:4px">What good looks like</p><ul>' + i.expected.map(function (q) { return '<li>' + esc(q) + '</li>'; }).join('') + '</ul></div></div></div></div>';
+    });
+    h += '<div><h4>Debrief questions</h4><ul>' + p.debrief.map(function (o) { return '<li>' + esc(o) + '</li>'; }).join('') + '</ul></div></div>';
+    h += '<div class="actions"><button class="btn" type="button" id="torun">Run it and record results</button><button class="btn sec sm" type="button" id="copypack">Copy facilitator pack</button><button class="btn sec sm" type="button" id="copyinv">Copy invitation email</button></div>';
+    return h;
+  }
+
+  function renderRun(b, ex)
+  {
+    var r = ex.run;
+    var h = '<div class="grid2"><div class="fld"><label for="r-date">Exercise date</label><input id="r-date" type="date" value="' + esc(r.date) + '"></div>' +
+      '<div class="fld"><label for="r-fac">Facilitator</label><select id="r-fac">' + b.people.map(function (p) { return '<option' + (p.name === r.facilitator ? ' selected' : '') + '>' + esc(p.name) + '</option>'; }).join('') + '</select></div></div>' +
+      '<div class="fld"><label for="r-att">Who attended</label><input id="r-att" autocomplete="off" placeholder="Names or roles, for example 6 staff from the contact centre" value="' + esc(r.attendees) + '"></div>';
+    h += '<p class="hint">For each inject, record how the team went and anything worth noting. Names you type are swapped for roles before AI sees them.</p>';
+    ex.pack.injects.forEach(function (i, k)
+    {
+      var x = r.results[k];
+      h += '<div class="inj"><div class="inj-h"><span class="mono">' + esc(i.time) + '</span><b>' + (k + 1) + '. ' + esc(i.title) + '</b><span class="tagfn">' + esc(i.fn) + '</span>' + (x.outcome ? '<span class="oc ' + x.outcome.split(' ')[0] + '">' + esc(x.outcome) + '</span>' : '') + '</div>' +
+        '<div class="inj-run"><div class="fld"><label for="o-' + k + '">Outcome</label><select id="o-' + k + '" data-oc="' + k + '"><option value="">Choose</option>' + ['Met', 'Partly met', 'Not met', 'Not tested'].map(function (o) { return '<option' + (o === x.outcome ? ' selected' : '') + '>' + o + '</option>'; }).join('') + '</select></div>' +
+        '<div class="fld"><label for="ob-' + k + '">What happened</label><textarea id="ob-' + k + '" data-ob="' + k + '" rows="2">' + esc(x.obs) + '</textarea></div></div></div>';
+    });
+    if (state.error) { h += '<div class="callout warn" role="alert"><b>Heads up</b><span>' + esc(state.error) + '</span></div>'; }
+    h += '<div class="actions"><button class="ghost" type="button" id="fillsample">Fill with sample results</button>' + (state.busy ? '<button class="btn" type="button" disabled>Working…</button><button class="ghost" type="button" id="stop">Stop</button>' : '<button class="btn" type="button" id="report">' + (sample ? 'Draft evidence report with AI' : 'Draft evidence report') + '</button>') + '</div>';
+    return h;
+  }
+
+  function renderReport(b, ex)
+  {
+    if (state.busy) { return '<div aria-live="polite"><p class="hint">AI is drafting the evidence report.</p><div class="thinking"><div class="skel" style="width:40%"></div><div class="skel"></div><div class="skel" style="width:85%"></div></div></div>'; }
+    var r = ex.report;
+    var h = '<div class="out-h"><span>Overall result: <span class="oc ' + r.overall.split(' ')[0] + '">' + esc(r.overall) + '</span></span><span class="hint">' + (ex.reportSource === 'ai' ? 'Report drafted by AI. Check it before sending.' : 'Report built from the standard template.') + '</span></div>';
+    if (state.error) { h += '<div class="callout warn" role="alert"><b>Heads up</b><span>' + esc(state.error) + '</span></div>'; }
+    h += '<div class="paperv"><label class="sr" for="rep">Evidence report text</label><textarea id="rep" spellcheck="true">' + esc(ex.repText != null ? ex.repText : reportText(b, ex)) + '</textarea></div>';
+    h += '<div class="actions"><button class="btn sec sm" type="button" id="copyrep">Copy evidence report</button>' + (ex.saved ? '<span class="st ok">Saved to the evidence register</span>' : '<button class="btn" type="button" id="save">Save to evidence register</button>') + '</div>';
+    if (r.actions.length) { h += '<p class="hint">Saving adds ' + r.actions.length + ' improvement action' + (r.actions.length === 1 ? '' : 's') + ' and sets the branch\'s last tested date to ' + esc(fmt(ex.run.date)) + '.</p>'; }
+    return h;
+  }
+
+  function renderEv()
+  {
+    var list = EXERCISES.filter(function (e) { return !state.onlyBranch || e.bid === state.bid; }).sort(function (a, b) { return a.date < b.date ? 1 : -1; });
+    var h = '<div class="panel-b" role="tabpanel" id="tp" aria-labelledby="tab-ev"><div class="sect">';
+    var overdue = BRANCHES.filter(function (b) { return testStatus(b).k === 'bad'; });
+    if (overdue.length) { h += '<div class="callout bad"><b>' + overdue.length + ' branch plan' + (overdue.length === 1 ? ' has' : 's have') + ' not been tested in 12 months</b><span>' + esc(overdue.map(function (b) { return b.name + ' (last tested ' + fmt(b.lastTest) + ')'; }).join('; ')) + '</span></div>'; }
+    h += '<div class="out-h"><label style="display:inline-flex;gap:8px;align-items:center;font-size:14px"><input type="checkbox" id="onlyb" style="width:auto"' + (state.onlyBranch ? ' checked' : '') + '> Show ' + esc(branch().name) + ' only</label><div class="actions"><button class="btn sec sm" type="button" id="copyev">Copy evidence summary</button></div></div>';
+    h += list.length ? '<div class="tbl-wrap"><table><thead><tr><th>Date</th><th>Branch</th><th>Exercise</th><th>Result</th><th>Facilitator</th></tr></thead><tbody>' + list.map(function (e)
+    {
+      return '<tr><td style="white-space:nowrap">' + esc(fmt(e.date)) + '</td><td>' + esc(branch(e.bid).name) + '</td><td>' + esc(e.title) + '<span class="small">' + esc(SCEN[e.type].label) + ' · ' + e.attendees + ' attendees. ' + esc(e.summary) + '</span></td><td><span class="oc ' + e.outcome.split(' ')[0] + '">' + esc(e.outcome) + '</span></td><td>' + esc(e.facilitator) + '</td></tr>';
+    }).join('') + '</tbody></table></div>' : '<div class="empty"><b>No exercises on file for this branch</b><span>Build and run an exercise, then save the report here.</span></div>';
+    var acts = [];
+    list.forEach(function (e) { e.actions.forEach(function (a) { acts.push({ e: e, a: a }); }); });
+    h += '</div><div class="sect"><h3 class="label" style="margin:0">Improvement actions</h3>';
+    h += acts.length ? '<div class="tbl-wrap"><table><thead><tr><th>Action</th><th>Branch</th><th>Owner</th><th>Due</th><th>Status</th></tr></thead><tbody>' + acts.map(function (x)
+    {
+      var od = x.a.status === 'Open' && daysSince(x.a.due) > 0;
+      return '<tr class="' + (x.a.status === 'Done' ? 'closed' : '') + '"><td>' + esc(x.a.text) + '<span class="small">From ' + esc(x.e.id) + '</span></td><td>' + esc(branch(x.e.bid).name) + '</td><td>' + esc(x.a.owner) + '</td><td style="white-space:nowrap">' + esc(fmt(x.a.due)) + (od ? ' <span class="st bad">Overdue</span>' : '') + '</td><td><label class="sr" for="as-' + x.e.id + '-' + x.a.id + '">Status</label><select id="as-' + x.e.id + '-' + x.a.id + '" data-as="' + x.e.id + '|' + x.a.id + '"><option' + (x.a.status === 'Open' ? ' selected' : '') + '>Open</option><option' + (x.a.status === 'Done' ? ' selected' : '') + '>Done</option></select></td></tr>';
+    }).join('') + '</tbody></table></div>' : '<div class="empty"><b>No improvement actions</b></div>';
+    return h + '</div></div>';
+  }
+
+  function render()
+  {
+    renderSide();
+    $('ws').innerHTML = renderTop() + (state.tab === 'dash' ? renderDash() : state.tab === 'ex' ? renderEx() : renderEv());
+  }
+
+  /* ---------- Events ---------- */
+  function setMobile(m)
+  {
+    $('wrap').setAttribute('data-m', m);
+    $('mt-list').setAttribute('aria-pressed', String(m === 'list'));
+    $('mt-ws').setAttribute('aria-pressed', String(m === 'ws'));
+  }
+  $('mt-list').addEventListener('click', function () { setMobile('list'); });
+  $('mt-ws').addEventListener('click', function () { setMobile('ws'); });
+
+  $('plist').addEventListener('click', function (e)
+  {
+    var t = e.target.closest('[data-bid]');
+    if (!t) { return; }
+    if (state.busy) { toast('Wait for AI to finish, or press Stop'); return; }
+    state.bid = t.dataset.bid; state.error = '';
+    render(); setMobile('ws');
+    var h = $('ws').querySelector('.ttl'); if (h) { h.focus(); }
+  });
+
+  var ws = $('ws');
+  ws.addEventListener('click', function (e)
+  {
+    var t = e.target.closest('button');
+    if (!t) { return; }
+    var b = branch(), ex = exState(b);
+    if (t.dataset.tab) { state.tab = t.dataset.tab; state.error = ''; render(); $('tab-' + state.tab).focus(); return; }
+    if (t.dataset.plan) { if (state.busy) { return; } state.bid = t.dataset.plan; state.tab = 'ex'; state.error = ''; render(); var g = $('gen'); if (g) { g.focus(); } return; }
+    if (t.dataset.step) { ex.step = t.dataset.step; state.error = ''; render(); return; }
+    if (t.id === 'gen') { generate(); return; }
+    if (t.id === 'stop') { if (ctl) { ctl.abort(); } return; }
+    if (t.id === 'torun') { ex.step = 'run'; render(); var d = $('r-date'); if (d) { d.focus(); } return; }
+    if (t.id === 'report') { draftReport(); return; }
+    if (t.id === 'copyact') { copyText(activationText(), 'Activation update copied'); return; }
+    if (t.id === 'copypack') { copyText(packText(b, ex), 'Facilitator pack copied'); return; }
+    if (t.id === 'copyinv') { copyText(inviteText(b, ex), 'Invitation copied'); return; }
+    if (t.id === 'copyrep') { var rp = $('rep'); copyText(rp ? rp.value : reportText(b, ex), 'Evidence report copied'); return; }
+    if (t.id === 'copyev') { copyText(evidenceText(), 'Evidence summary copied'); return; }
+    if (t.id === 'fillsample')
+    {
+      var sampleObs = ['Coordinator confirmed facts in 10 minutes and the manager activated the plan.', 'Workaround started but no one knew where the offline payment forms were kept.', 'Backup contact list was out of date; two numbers did not answer.', 'Recovery checklist followed. Debrief booked for next week.', 'Handled well.'];
+      var oc = ['Met', 'Partly met', 'Not met', 'Met', 'Met'];
+      ex.run.results.forEach(function (x, k) { x.outcome = oc[k % oc.length]; x.obs = sampleObs[k % sampleObs.length]; });
+      if (!ex.run.attendees) { ex.run.attendees = '6 staff: ' + b.people.map(function (p) { return p.role; }).join(', ') + ' and team members'; }
+      state.error = ''; render(); toast('Sample results filled in'); return;
+    }
+    if (t.id === 'save')
+    {
+      var n = EXERCISES.length + 101;
+      EXERCISES.push({ id: 'EX-' + n, bid: b.id, date: ex.run.date, type: ex.cfg.type, title: ex.pack.title, facilitator: ex.run.facilitator, attendees: parseInt(ex.run.attendees, 10) || 1, outcome: ex.report.overall, summary: ex.report.summary,
+        actions: ex.report.actions.map(function (a, i) { return { id: 'A-' + (i + 1), text: a.text, owner: a.owner, due: rel(a.dueInDays), status: 'Open' }; }) });
+      if (!b.lastTest || ex.run.date > b.lastTest) { b.lastTest = ex.run.date; }
+      ex.saved = true; render(); toast('Saved. ' + b.name + ' now shows as tested on ' + fmt(ex.run.date));
+      return;
+    }
+  });
+
+  ws.addEventListener('input', function (e)
+  {
+    var t = e.target, b = branch(), ex = exState(b);
+    if (t.dataset.rs) { state.levelReason[t.dataset.rs] = t.value; return; }
+    if (t.dataset.ob != null && ex.run) { ex.run.results[+t.dataset.ob].obs = t.value; return; }
+    if (t.id === 'r-att') { ex.run.attendees = t.value; return; }
+    if (t.id === 'rep') { ex.repText = t.value; return; }
+  });
+
+  ws.addEventListener('change', function (e)
+  {
+    var t = e.target, b = branch(), ex = exState(b);
+    if (t.dataset.lv)
+    {
+      var tb = branch(t.dataset.lv), from = tb.level, reason = (state.levelReason[tb.id] || '').trim();
+      if (t.value === from) { return; }
+      LOG.unshift({ at: new Date(), bid: tb.id, from: from, to: t.value, reason: noDash(reason) || 'No reason given.', by: tb.people[0].name });
+      tb.level = t.value; state.levelReason[tb.id] = '';
+      render(); toast(tb.name + ' set to ' + t.value);
+      var back = $('lv-' + tb.id); if (back) { back.focus(); }
+      return;
+    }
+    if (t.id === 'c-type') { ex.cfg.type = t.value; return; }
+    if (t.id === 'c-sev') { ex.cfg.sev = t.value; return; }
+    if (t.id === 'c-dur') { ex.cfg.dur = t.value; return; }
+    if (t.dataset.role)
+    {
+      var r = t.dataset.role, i = ex.cfg.roles.indexOf(r);
+      if (t.checked && i < 0) { ex.cfg.roles.push(r); } else if (!t.checked && i > -1) { ex.cfg.roles.splice(i, 1); }
+      return;
+    }
+    if (t.id === 'r-date') { ex.run.date = t.value || iso(today()); return; }
+    if (t.id === 'r-fac') { ex.run.facilitator = t.value; return; }
+    if (t.dataset.oc != null) { ex.run.results[+t.dataset.oc].outcome = t.value; state.error = ''; render(); var o = $('o-' + t.dataset.oc); if (o) { o.focus(); } return; }
+    if (t.id === 'onlyb') { state.onlyBranch = t.checked; render(); $('onlyb').focus(); return; }
+    if (t.dataset.as)
+    {
+      var p = t.dataset.as.split('|'), exx = EXERCISES.find(function (x) { return x.id === p[0]; });
+      var a = exx && exx.actions.find(function (x) { return x.id === p[1]; });
+      if (a) { a.status = t.value; render(); var bk = $(t.id); if (bk) { bk.focus(); } }
+      return;
+    }
+  });
+
+  render();
+  initAi();
+})();
+</script>
+
+<!-- lpx-prod:start -->
+<style id="lpx-prod-css">
+#lpx-prod-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:calc(6px + env(safe-area-inset-top,0px)) 12px 6px;background:#F3F5F8;border-bottom:1px solid #DDE3EA;font:13px/1.3 Arial,Helvetica,sans-serif;color:#566273;position:relative;z-index:50}
+@media (prefers-color-scheme:dark){#lpx-prod-bar{background:#121922;border-color:#2B3546;color:#A3AFBF}}
+#lpx-prod-btn{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 14px;border-radius:999px;border:1px solid #003F75;background:#fff;color:#003F75;font:600 13px/1 Arial,Helvetica,sans-serif;cursor:pointer;white-space:nowrap}
+#lpx-prod-btn:hover{background:#003F75;color:#fff}
+@media (prefers-color-scheme:dark){#lpx-prod-btn{background:#18202C;color:#8EC1EC;border-color:#8EC1EC}#lpx-prod-btn:hover{background:#8EC1EC;color:#06233D}}
+#lpx-prod-btn:focus-visible{outline:2px solid #1F6FBF;outline-offset:2px}
+#lpx-prod-btn svg{width:16px;height:16px;flex:none}
+@media (max-width:480px){#lpx-prod-bar .lpx-q{display:none}}
+#lpx-prod-bar .lpx-right{display:flex;align-items:center;gap:10px;margin-left:auto}
+#lpx-protos-btn{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 14px;border-radius:999px;border:1px solid #003F75;background:#003F75;color:#fff;font:600 13px/1 Arial,Helvetica,sans-serif;text-decoration:none;white-space:nowrap}
+#lpx-protos-btn:hover{filter:brightness(1.15)}
+#lpx-protos-btn:focus-visible{outline:2px solid #1F6FBF;outline-offset:2px}
+#lpx-protos-btn svg{width:16px;height:16px;flex:none}
+@media (prefers-color-scheme:dark){#lpx-protos-btn{background:#8EC1EC;border-color:#8EC1EC;color:#06233D}}
+@media (pointer:coarse){#lpx-protos-btn{min-height:44px}}
+@media (pointer:coarse){#lpx-prod-btn{min-height:44px}}
+#lpx-prod{--bg:#fff;--soft:#F3F5F8;--ink:#1B2430;--muted:#566273;--rule:#DDE3EA;--brand:#003F75;--on:#fff;--az:#0F6CBD;--cl:#B4532A;
+  position:fixed;inset:0;z-index:2147483001;display:none;font:14px/1.5 Arial,Helvetica,sans-serif;color:var(--ink)}
+@media (prefers-color-scheme:dark){#lpx-prod{--bg:#18202C;--soft:#212B3B;--ink:#E7ECF2;--muted:#A3AFBF;--rule:#2B3546;--brand:#8EC1EC;--on:#06233D;--az:#6CB1F0;--cl:#F0A47E}}
+#lpx-prod.open{display:block}
+#lpx-prod .lpx-scrim{position:absolute;inset:0;background:rgba(10,20,35,.45)}
+#lpx-prod .lpx-panel{position:absolute;top:0;right:0;bottom:0;width:min(640px,100vw);background:var(--bg);box-shadow:-8px 0 30px rgba(0,0,0,.2);display:flex;flex-direction:column;outline:none}
+#lpx-prod .lpx-panel.lpx-wide{width:min(1040px,100vw)}
+#lpx-prod header{padding:calc(16px + env(safe-area-inset-top,0px)) 20px 12px;border-bottom:1px solid var(--rule)}
+#lpx-prod .lpx-hrow{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+#lpx-prod h2{margin:0;font-size:19px;color:var(--brand)}
+#lpx-prod .lpx-sub{margin:4px 0 0;color:var(--muted);font-size:13px}
+#lpx-prod .lpx-x{flex:none;width:36px;height:36px;border-radius:8px;border:1px solid var(--rule);background:var(--bg);color:var(--ink);font-size:20px;line-height:1;cursor:pointer}
+#lpx-prod .lpx-seg{display:inline-flex;gap:2px;margin-top:12px;padding:3px;border-radius:8px;background:var(--soft);flex-wrap:wrap}
+#lpx-prod .lpx-seg button{min-height:34px;padding:0 14px;border:0;border-radius:6px;background:none;color:var(--muted);font:600 13px Arial,Helvetica,sans-serif;cursor:pointer}
+#lpx-prod .lpx-seg button[aria-pressed="true"]{background:var(--bg);color:var(--brand);box-shadow:0 1px 2px rgba(0,0,0,.1),inset 0 0 0 1px var(--rule)}
+#lpx-prod .lpx-rec{margin-top:10px;font-size:13px;color:var(--ink);background:var(--soft);border-radius:6px;padding:8px 10px}
+#lpx-prod .lpx-rec b{color:var(--brand)}
+#lpx-prod .lpx-body{flex:1;overflow:auto;padding:16px 20px calc(24px + env(safe-area-inset-bottom,0px))}
+#lpx-prod .lpx-cols{display:grid;gap:16px;grid-template-columns:1fr}
+#lpx-prod .lpx-wide .lpx-cols{grid-template-columns:1fr 1fr}
+@media (max-width:760px){#lpx-prod .lpx-wide .lpx-cols{grid-template-columns:1fr}}
+#lpx-prod section{border:1px solid var(--rule);border-radius:8px;padding:14px 16px;margin-bottom:12px;background:var(--bg)}
+#lpx-prod h3{margin:0 0 8px;font-size:14px;display:flex;align-items:center;gap:8px}
+#lpx-prod .lpx-tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;color:#fff}
+#lpx-prod .lpx-tag.az{background:var(--az)}
+#lpx-prod .lpx-tag.cl{background:var(--cl)}
+#lpx-prod .lpx-tag.kn{background:#5B4237}
+#lpx-prod .lpx-tag.sh{background:#6B4FA0}
+#lpx-prod .lpx-sh{list-style:none;padding:0;margin:0}
+#lpx-prod .lpx-sh li{padding:8px 0;border-top:1px solid var(--rule);margin:0}
+#lpx-prod .lpx-sh li:first-child{border-top:0;padding-top:0}
+#lpx-prod .lpx-sh b{display:block}
+#lpx-prod .lpx-sh .lpx-role{font-size:12px;color:var(--muted)}
+#lpx-prod .lpx-sh .lpx-det{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+#lpx-prod ol,#lpx-prod ul{margin:0;padding-left:20px}
+#lpx-prod li{margin:4px 0}
+#lpx-prod .lpx-foot{color:var(--muted);font-size:12px;margin-top:4px}
+#lpx-prod button:focus-visible{outline:2px solid #1F6FBF;outline-offset:2px}
+@media (pointer:coarse){#lpx-prod .lpx-seg button,#lpx-prod .lpx-x{min-height:44px;min-width:44px}}
+</style>
+<script type="application/json" id="lpx-prod-plan">{"recommend": "azure", "why": "The activation dashboard and evidence register need shared, auditable records across every branch, so an Azure app with a database fits better than a chat tool, with Claude called behind it to write the exercises.", "knowledge": ["Each branch's approved Business Continuity Plan (critical functions, maximum acceptable outage, recovery times, dependencies and workarounds).", "The council's business continuity framework and testing requirements (how often each plan must be tested and what counts as evidence).", "The council's BCP exercise template, facilitator guide and evidence report template.", "Activation levels and escalation rules (Normal, Standby, Activated, Stand-down) and who can change them.", "Lessons learned from past exercises and real events, including open improvement actions.", "The local disaster management arrangements that branch plans link to."], "azure": {"technical": ["Move the prototype into an Azure DevOps repo and rebuild the front end in Vue and Bootstrap, hosted on Azure App Service with council (Entra ID) sign-in.", "Move all AI calls into an Azure Function App, with Claude through Microsoft Foundry or the council's Anthropic agreement (an ICT-DA exception, as it's outside the listed stack). Keys live in Key Vault, never in the page.", "Swap people's names, emails and phone numbers for their role before anything goes to the model, as the prototype does.", "Store branch plans, exercises, results, improvement actions and the activation log in Azure SQL, with an audit trail of who changed what and when.", "Load the approved Business Continuity Plans and the continuity framework into Blob Storage with an Azure AI Search index, so scenarios use each branch's real critical functions and workarounds.", "Read branch plans from the council's document management system through Boomi or Logic Apps, so the tool always uses the approved version.", "Save finished evidence reports to the records system against the branch plan.", "Send activation status changes to the Crisis Management Team through a Teams channel or email using Logic Apps.", "Role-based access: branch coordinators edit their own branch, Crisis and Disaster Management see and change everything.", "Security review against the OWASP Top 10 and the OWASP Top 10 for LLM apps, including prompt injection through typed observations.", "Dev, Test and Prod resource groups, Application Insights logging and cost alerts, and Azure DevOps CI/CD pipelines for each environment."], "business": ["Confirm the business owner (Crisis and Disaster Management Program), the scope and success measures, such as every plan tested within 12 months and improvement actions closed on time, and raise an Azure DevOps card (why and how).", "Agree the activation levels, who can change them and how changes are communicated.", "Name knowledge owners: each branch's BCP coordinator keeps their plan current; Crisis and Disaster Management owns the framework and templates.", "Build a test plan and an AI evaluation set (scenarios checked by experienced facilitators for realism and accuracy against each plan), then run UAT with two or three branches.", "Train BCP coordinators to build, run and record exercises, and set up support: who to ask and how to report a poor scenario.", "Get ICT-DA, CAB, PGG and Business System Owner approval, with a Go Live plan, service transition document and support playbook."]}, "claude": {"technical": ["Set up a Claude Project for Crisis and Disaster Management in the council's enterprise Claude, with the prototype's scenario rules as the project instructions.", "Add the approved Business Continuity Plans, framework and exercise templates as project files, or connect the SharePoint library they live in.", "Build Claude skills for writing a desktop exercise and drafting an evidence report in the council's template.", "Keep the activation log and evidence register in SharePoint lists, and use the Microsoft 365 connector so Claude can read them for summaries and add entries when asked.", "Admin settings checked: data retention, sharing, which connectors are on, and that only role names (not people's details) are pasted in."], "business": ["Confirm the business owner and what it must never do (it writes practice exercises and drafts reports; people decide on real activations).", "Agree the exercise and evidence templates and the standard fields for the SharePoint lists.", "Test it with 10 to 15 scenarios across different branches and have facilitators rate each for realism and accuracy.", "Pilot with the Crisis and Disaster Management team and two branches for one exercise cycle, with a 30-minute walkthrough.", "Enterprise Claude seats for the Crisis and Disaster Management team and BCP coordinators in the pilot.", "A project owner who keeps the instructions, skills and plan files up to date.", "Get the use case approved (ICT-DA and PGG) and confirm privacy settings before rolling it out wider."]}, "stakeholders": [{"role": "Raised the request", "who": "Person 047", "detail": "Ticket 333714: BCP scenario generator and activation dashboard. team not stated, Crisis and Disaster Management Program, Transport Services. Asked for: \"New Idea: BCP Scenario Generator and Activation Dashboard\". Triage: AI-assisted capability."}, {"role": "Business owner (to confirm)", "who": "Crisis and Disaster Management Program manager", "detail": "Owns the process, agrees what good looks like and signs off going live."}, {"role": "Knowledge owners (to confirm)", "who": "Owners of the source documents", "detail": "Keep the documents the tool relies on current and approved."}, {"role": "Delivery", "who": "AI team, Information Technology Services", "detail": "Builds the solution, runs testing and hands over to support."}, {"role": "Approvals", "who": "ICT-DA, CAB, PGG and the Business System Owner", "detail": "Approve the design, the change and going live."}]}</script>
+<script>
+(function(){
+  if (window.__lpxProd) return; window.__lpxProd = true;
+  function boot(){
+    var el = document.getElementById('lpx-prod-plan'); if (!el) return;
+    var P = JSON.parse(el.textContent);
+    function e(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+    function list(items, tag){return '<'+tag+'>'+(items||[]).map(function(x){return '<li>'+e(x)+'</li>';}).join('')+'</'+tag+'>';}
+    var btn = document.createElement('button');
+    btn.id = 'lpx-prod-btn'; btn.type = 'button'; btn.setAttribute('aria-haspopup','dialog');
+    btn.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 13l4-4 2 2 4-5M10 6h3v3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Steps to productionise</span>';
+    var wrap = document.createElement('div'); wrap.id = 'lpx-prod';
+    wrap.innerHTML = '<div class="lpx-scrim"></div><div class="lpx-panel" role="dialog" aria-modal="true" aria-labelledby="lpx-h" tabindex="-1">'+
+      '<header><div class="lpx-hrow"><div><h2 id="lpx-h">Steps to productionise</h2><p class="lpx-sub">How this prototype could become a supported council tool.</p></div>'+
+      '<button type="button" class="lpx-x" aria-label="Close">&times;</button></div>'+
+      '<div class="lpx-seg" role="group" aria-label="Show steps for"><button type="button" data-v="azure">Azure</button><button type="button" data-v="claude">Claude</button><button type="button" data-v="both">Show me both</button></div>'+
+      '<p class="lpx-rec"><b>Suggested route: '+(P.recommend==='claude'?'Claude':'Azure')+'.</b> '+e(P.why)+'</p></header>'+
+      '<div class="lpx-body" id="lpx-body"></div></div>';
+    var bar = document.createElement('div'); bar.id = 'lpx-prod-bar'; bar.innerHTML = '<a id="lpx-protos-btn" href="https://claude.ai/artifact/6PgxpQSDdJs1HjPxfZ7LvQ#ai-prototypes" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="2" width="5" height="5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="2" y="9" width="5" height="5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="9" width="5" height="5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span>All AI prototypes</span></a><div class="lpx-right"><span class="lpx-q">Thinking about going live?</span></div>'; bar.querySelector('.lpx-right').appendChild(btn);
+    document.body.insertBefore(bar, document.body.firstChild); document.body.appendChild(wrap);
+    var panel = wrap.querySelector('.lpx-panel'), body = wrap.querySelector('#lpx-body');
+    var view = P.recommend === 'claude' ? 'claude' : 'azure';
+    function sec(cls, label, title, inner){return '<section><h3><span class="lpx-tag '+cls+'">'+label+'</span>'+e(title)+'</h3>'+inner+'</section>';}
+    function col(k){
+      var az = k === 'azure', R = P[k] || {}, nm = az ? 'Azure' : 'Claude', c = az ? 'az' : 'cl';
+      var tech = R.technical || R.setup || [], bus = R.business || R.steps || [];
+      return '<div>'+
+        sec(c, nm, 'Technical setup ('+nm+')', list(tech,'ol'))+
+        sec(c, nm, 'Business readiness ('+nm+')', list(bus,'ol'))+
+        '</div>';
+    }
+    function people(){
+      var S = P.stakeholders || []; if (!S.length) return '';
+      return sec('sh','People','Stakeholders', '<ul class="lpx-sh">'+S.map(function(x){
+        return '<li><span class="lpx-role">'+e(x.role)+'</span><b>'+e(x.who)+'</b>'+(x.detail?'<span class="lpx-det">'+e(x.detail)+'</span>':'')+'</li>';
+      }).join('')+'</ul>');
+    }
+    function render(){
+      wrap.querySelectorAll('.lpx-seg button').forEach(function(b){b.setAttribute('aria-pressed', String(b.dataset.v===view));});
+      panel.classList.toggle('lpx-wide', view==='both');
+      var kn = sec('kn','Knowledge','What knowledge does it need', list(P.knowledge,'ul'));
+      body.innerHTML = (view==='both' ? '<div class="lpx-cols">'+col('azure')+col('claude')+'</div>' : col(view)) + people() + kn +
+        '<p class="lpx-foot">Draft for discussion. Systems, costs and approvals to be confirmed with ICT. Going live needs ICT-DA, CAB, PGG and Business System Owner approval.</p>';
+    }
+    var last = null;
+    function open(){ last = document.activeElement; wrap.classList.add('open'); render(); panel.focus(); document.addEventListener('keydown', key); }
+    function close(){ wrap.classList.remove('open'); document.removeEventListener('keydown', key); (last||btn).focus(); }
+    function key(ev){
+      if (ev.key === 'Escape') { close(); return; }
+      if (ev.key !== 'Tab') return;
+      var f = panel.querySelectorAll('button,a[href],[tabindex]:not([tabindex="-1"])'); if (!f.length) return;
+      var a = f[0], z = f[f.length-1];
+      if (ev.shiftKey && document.activeElement === a) { z.focus(); ev.preventDefault(); }
+      else if (!ev.shiftKey && document.activeElement === z) { a.focus(); ev.preventDefault(); }
+    }
+    btn.addEventListener('click', open);
+    wrap.querySelector('.lpx-x').addEventListener('click', close);
+    wrap.querySelector('.lpx-scrim').addEventListener('click', close);
+    wrap.querySelectorAll('.lpx-seg button').forEach(function(b){ b.addEventListener('click', function(){ view = b.dataset.v; render(); }); });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+</script>
+<!-- lpx-prod:end -->
+<!-- lpx-outlook:start -->
+<style id="lpx-ol-css">
+a.lpx-ol{display:inline-flex;align-items:center;gap:6px;text-decoration:none;cursor:pointer;white-space:nowrap}
+a.lpx-ol svg{width:14px;height:14px;flex:none}
+a.lpx-ol:focus-visible{outline:2px solid #1F6FBF;outline-offset:2px}
+a.lpx-ol.lpx-ol-plain{min-height:32px;padding:0 12px;border-radius:6px;border:1px solid #0F6CBD;color:#0F6CBD;background:#fff;font:600 13px Arial,Helvetica,sans-serif}
+a.lpx-ol.lpx-ol-plain:hover{background:#0F6CBD;color:#fff}
+#lpx-ol-toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:2147483002;max-width:min(520px,92vw);background:#1B2430;color:#fff;font:14px/1.4 Arial,Helvetica,sans-serif;padding:10px 14px;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.25);display:none}
+@media (pointer:coarse){a.lpx-ol{min-height:44px}}
+</style>
+<script>
+(function(){
+  if (window.__lpxOutlook) return; window.__lpxOutlook = true;
+  var MAX = 1600; // characters of body that fit safely in the Outlook link
+  var BASE = 'https://outlook.office.com/mail/deeplink/compose';
+  var ICON = '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="3.5" width="13" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2 4.5l6 4.5 6-4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+  function toast(msg){
+    var t = document.getElementById('lpx-ol-toast');
+    if (!t){ t = document.createElement('div'); t.id = 'lpx-ol-toast'; t.setAttribute('role','status'); document.body.appendChild(t); }
+    t.textContent = msg; t.style.display = 'block';
+    clearTimeout(t._h); t._h = setTimeout(function(){ t.style.display = 'none'; }, 6000);
+  }
+  function appName(){
+    var t = (document.title || '').split(/\s[|\u2013-]\s/)[0].trim();
+    if (t) return t;
+    var h = document.querySelector('h1'); return h ? (h.firstChild && h.firstChild.textContent || h.textContent).trim() : 'Prototype';
+  }
+  function context(btn){
+    var el = btn;
+    for (var i = 0; i < 8 && el; i++){
+      el = el.parentElement; if (!el) break;
+      var hs = el.querySelectorAll('h2,h3,h4'), pick = null;
+      for (var j = 0; j < hs.length; j++){
+        if (hs[j].compareDocumentPosition(btn) & Node.DOCUMENT_POSITION_FOLLOWING) pick = hs[j];
+      }
+      if (pick){
+        var t = pick.textContent.replace(/\s+/g,' ').trim();
+        if (t && t.length <= 60) return t;
+      }
+    }
+    return '';
+  }
+  function capture(btn){
+    var got = null, clip = navigator.clipboard, real = clip && clip.writeText;
+    if (clip && real){
+      try { clip.writeText = function(t){ got = String(t); return real.call(clip, t).catch(function(){}); }; } catch(e){}
+    }
+    try { btn.click(); } catch(e){}
+    if (clip && real){ try { clip.writeText = real; } catch(e){} }
+    return got;
+  }
+  function build(btn, a){
+    var text = capture(btn), ctx = context(btn), name = appName();
+    var subject = ctx && ctx.toLowerCase() !== name.toLowerCase() ? name + ': ' + ctx : name;
+    var body = '';
+    if (text){
+      body = text.length > MAX ? text.slice(0, MAX) + '\n\n[The full text is on your clipboard. Select everything above and paste with Ctrl+V.]' : text;
+      toast(text.length > MAX ? 'Opening Outlook. The text was long, so the full version is on your clipboard too.' : 'Opening a new email in Outlook. Check it, add who it goes to, then press Send.');
+    } else {
+      toast('Opening a new email in Outlook. Paste the text in with Ctrl+V.');
+    }
+    a.href = BASE + '?subject=' + encodeURIComponent(subject) + (body ? '&body=' + encodeURIComponent(body) : '');
+  }
+  function enhance(){
+    var btns = document.querySelectorAll('button');
+    for (var i = 0; i < btns.length; i++){
+      var b = btns[i];
+      if (b.dataset.lpxOl || b.closest('#lpx-prod') || b.id === 'lpx-prod-btn') continue;
+      var label = (b.textContent || '').replace(/\s+/g,' ').trim();
+      if (!/^Copy\b/i.test(label) || /^Copying/i.test(label)) continue;
+      b.dataset.lpxOl = '1';
+      var a = document.createElement('a');
+      a.href = BASE; a.target = '_blank'; a.rel = 'noopener';
+      a.className = (b.className ? b.className + ' ' : '') + 'lpx-ol' + (b.className ? '' : ' lpx-ol-plain');
+      a.innerHTML = ICON + '<span>Draft in Outlook</span>';
+      a.title = 'Opens a new email in Outlook with this text. Nothing is sent until you press Send.';
+      a.setAttribute('aria-label', 'Draft in Outlook: ' + label.replace(/^Copy\s*/i,'') );
+      (function(btn, link){ link.addEventListener('click', function(){ build(btn, link); }); })(b, a);
+      b.insertAdjacentElement('afterend', a);
+    }
+  }
+  function boot(){
+    enhance();
+    var pending = false;
+    new MutationObserver(function(){ if (pending) return; pending = true; requestAnimationFrame(function(){ pending = false; enhance(); }); })
+      .observe(document.body, {childList: true, subtree: true});
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+</script>
+<!-- lpx-outlook:end -->

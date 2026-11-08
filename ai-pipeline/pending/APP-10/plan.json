@@ -1,0 +1,56 @@
+{
+ "recommend": "azure",
+ "why": "Predictions are only as good as the data behind them, so the real value comes from pulling service history, telematics fault codes and oil sample results together automatically every day, which needs an Azure data pipeline and integrations.",
+ "knowledge": [
+  "Manufacturers' service schedules and intervals for each make and model in the fleet.",
+  "Workshop manuals and fault code guides for the main vehicle and plant types.",
+  "City Fleet's service and repair history, including past breakdowns and what fixed them (export from the council's fleet management system).",
+  "Telematics fault codes, engine hours and odometer readings (export from the council's telematics platform).",
+  "Oil sample results from the council's oil analysis provider.",
+  "Prestart check and defect reports from operators.",
+  "Workshop capacity, labour rates and typical breakdown costs (tow, hire, lost crew time).",
+  "City Fleet's maintenance procedures and Chain of Responsibility rules for taking a vehicle out of service."
+ ],
+ "azure": {
+  "technical": [
+   "Move the prototype into an Azure DevOps repo and rebuild the front end in Vue and Bootstrap, hosted on Azure App Service with council (Entra ID) sign-in.",
+   "Bring service history, work orders and asset details in from the council's fleet management system each night with Data Factory or Boomi, into Azure SQL.",
+   "Bring telematics fault codes, engine hours and odometer readings in from the council's telematics platform with Logic Apps or Boomi, and oil sample results from the provider's export.",
+   "Run the risk scoring and the workshop plan in an Azure Function App (Python), starting with simple rules and moving to a model trained on City Fleet's own breakdown history once there is enough of it.",
+   "Move all AI calls (likely causes, health summaries, plan notes) into the Function App, with Claude through Microsoft Foundry or the council's Anthropic agreement (an ICT-DA exception, as it's outside the listed stack). Keys live in Key Vault, never in the page.",
+   "Remove operator names and contact details from defect reports before anything goes to the model.",
+   "Load workshop manuals and fault code guides into Blob Storage with an Azure AI Search index, so suggested causes and checks can quote their source.",
+   "Write approved work orders back to the council's fleet management system through Boomi or Logic Apps, rather than people retyping them.",
+   "Power BI report on predicted versus actual failures, so the scoring can be tuned and trusted.",
+   "Security review against the OWASP Top 10 and the OWASP Top 10 for LLM apps, including prompt injection from free-text defect reports.",
+   "Dev, Test and Prod resource groups, Application Insights logging and cost alerts, and Azure DevOps CI/CD pipelines for each environment."
+  ],
+  "business": [
+   "Confirm the business owner in City Fleet, the scope and success measures (for example fewer roadside breakdowns, less unplanned downtime, higher first-time fix rate), and raise an Azure DevOps card (why and how).",
+   "Name a process owner for maintenance planning and a knowledge owner for service schedules, manuals and the fault code guide.",
+   "Agree the rules for when a vehicle is tagged out of service, so the tool's safety advice matches City Fleet's procedures and Chain of Responsibility duties.",
+   "Back-test the predictions against the last two years of breakdowns, then build a test plan and an AI evaluation set (30 to 50 past faults with the confirmed cause) and record how often the right cause is in the top three.",
+   "Run UAT with workshop supervisors and mechanics using anonymised history, and a three-month side-by-side trial against the current service schedule.",
+   "Train fleet officers and mechanics, and set up support: who to ask and how to report a wrong prediction.",
+   "Get ICT-DA, CAB, PGG and Business System Owner approval, with a Go Live plan, service transition document and support playbook."
+  ]
+ },
+ "claude": {
+  "technical": [
+   "Set up a Claude Project for City Fleet in the council's enterprise Claude, with the diagnosis rules (quickest checks first, safety first, never invent readings) as the project instructions.",
+   "Add the workshop manuals, fault code guides and service schedules as project files, or connect the SharePoint library they live in.",
+   "Build a Claude skill that turns fault codes and an operator's description into ranked likely causes, checks and a draft work order in City Fleet's format.",
+   "Upload a weekly export from the council's fleet management system and telematics platform so Claude can flag vehicles due or at risk and draft the workshop plan note.",
+   "Admin settings checked: data retention, sharing, connector permissions, and that operator names are left out of uploads."
+  ],
+  "business": [
+   "Confirm the business owner, who will use it and what it must never do (it suggests, a qualified mechanic diagnoses and decides).",
+   "Test it on 30 past faults with known causes and record how often the right cause is in the top three.",
+   "Pilot with one workshop for six weeks, give mechanics a 30-minute walkthrough, and track time to diagnose.",
+   "Enterprise Claude seats for fleet officers, workshop supervisors and mechanics in the pilot.",
+   "A project owner who keeps the manuals, schedules and instructions up to date.",
+   "Weekly exports are manual, so predictions are only as fresh as the last upload.",
+   "Get the use case approved (ICT-DA and PGG) and confirm privacy settings before rolling it out wider."
+  ]
+ }
+}

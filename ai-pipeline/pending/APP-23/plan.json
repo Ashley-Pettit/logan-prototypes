@@ -1,0 +1,52 @@
+{
+ "recommend": "claude",
+ "why": "The request is an assistant over fleet documents that City Fleet already holds, which the council's enterprise Claude can answer from straight away with a project and the SharePoint connector, and the triage already pointed to an existing AI assistant.",
+ "knowledge": [
+  "City Fleet's approved safety procedures (fleet safety, load restraint, fatigue management, reversing and spotters).",
+  "Vehicle and plant pre-start checklists and the defect and red tag process.",
+  "Driver and plant operator onboarding guides and the fleet induction checklist.",
+  "The council's Chain of Responsibility guide, CoR duties by role and how to raise a CoR concern.",
+  "Training, licence and ticket requirements, including verification of competency (VOC) rules.",
+  "Electric vehicle charging guide and fuel card rules.",
+  "The owner, version and review date of each document, so answers show which version they come from."
+ ],
+ "azure": {
+  "technical": [
+   "Move the prototype into an Azure DevOps repo and rebuild the front end in Vue and Bootstrap, hosted on Azure App Service with council (Entra ID) sign-in.",
+   "Move all AI calls into an Azure Function App, with Claude through Microsoft Foundry or the council's Anthropic agreement (an ICT-DA exception, as it's outside the listed stack). Keys live in Key Vault, never in the page.",
+   "Index the approved fleet documents from their SharePoint library into Azure AI Search, split by clause, keeping document owner, version and review date so every answer can cite its source.",
+   "Answer only from retrieved clauses, and say clearly when the library does not cover a question.",
+   "Swap names, phone numbers, email addresses and vehicle registrations for placeholders before a question goes to the model.",
+   "Store flagged gaps, quiz results and feedback in Azure SQL or Cosmos DB, with a weekly gap report to the knowledge owners.",
+   "Send module completions to the council's learning system through Boomi or Logic Apps, so training records stay in one place.",
+   "Security review against the OWASP Top 10 and the OWASP Top 10 for LLM apps, including prompt injection through questions and uploaded documents.",
+   "Dev, Test and Prod resource groups, Application Insights logging and cost alerts, and Azure DevOps CI/CD pipelines for each environment."
+  ],
+  "business": [
+   "Confirm the business owner in City Fleet, the scope and success measures (for example fewer questions to supervisors, induction finished in the first week, and quiz pass rates), and raise an Azure DevOps card (why and how).",
+   "Name a knowledge owner for each document set (safety, onboarding, training, CoR) who keeps it current and answers flagged gaps.",
+   "Have the Fleet Safety Advisor and CoR Officer sign off the answer rules and the quiz questions.",
+   "Build a test plan and an AI evaluation set (40 to 60 real-style questions with the expected answer and clause), including questions the library must refuse, then run UAT with drivers, operators and supervisors.",
+   "Train supervisors to use it for inductions and toolbox talks, and set up support: who to ask and how to report a wrong answer.",
+   "Get ICT-DA, CAB, PGG and Business System Owner approval, with a Go Live plan, service transition document and support playbook."
+  ]
+ },
+ "claude": {
+  "technical": [
+   "Set up a Claude Project for City Fleet in the council's enterprise Claude, with the prototype's answer rules (answer only from the documents, cite the clause, say when it isn't covered) as the project instructions.",
+   "Connect the SharePoint library that holds the approved fleet documents through the Microsoft 365 connector, so answers always use the current version.",
+   "Build Claude skills for the three jobs: answer a fleet question with sources, write a short module quiz, and draft a five minute toolbox talk.",
+   "Admin settings checked: data retention, sharing, which connectors are on, and that only the approved fleet library is connected."
+  ],
+  "business": [
+   "Confirm the business owner, who will use it and what it must never do (it explains procedures, it does not replace supervisor sign-off or training records).",
+   "Name knowledge owners for each document set and agree how flagged gaps reach them.",
+   "Test it with 40 to 60 real-style questions and record how often it gives the right answer and clause, and how often it correctly says it doesn't know.",
+   "Pilot with one depot for four weeks, give supervisors a 30-minute walkthrough, and collect feedback.",
+   "Enterprise Claude seats for supervisors and staff in the pilot (field staff may need shared or mobile access).",
+   "A project owner who keeps the instructions, skills and connected library up to date.",
+   "Keep official training records in the council's learning system; Claude quizzes are practice only.",
+   "Get the use case approved (ICT-DA and PGG) and confirm privacy settings before rolling it out wider."
+  ]
+ }
+}

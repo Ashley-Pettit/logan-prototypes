@@ -1,0 +1,1055 @@
+<title>Chain of Responsibility Risk Check</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: City Planner AI family shell. Navy masthead, prototype notice, role list beside a Coverage matrix / Check a role / Duty list workspace. */
+:root{
+  --navy:#003f75; --navy-ink:#002a4f; --on-navy:#ffffff;
+  --bg:#f3f6f9; --surface:#ffffff; --raised:#f6f9fc; --ink:#1f1f1f; --muted:#5b6670; --line:#dbe2e9; --field:#b9c4cf;
+  --accent:#003f75; --accent-soft:#e3edf6; --on-accent:#ffffff; --link:#003f75; --focus:#f2b705;
+  --hi:#b42318; --hi-bg:#fdecea; --med:#9a5b00; --med-bg:#fff3dc; --low:#1d6b35; --low-bg:#e6f4ea; --info:#5b6670; --info-bg:#f1f4f7;
+  --mark:#fff1b8;
+  --proto:#8a4b00; --proto-bg:#fff6e5; --proto-line:#f2c879;
+  --paper:#ffffff; --paper-ink:#1f1f1f;
+  --f-head:"Figtree","Proxima Nova",Arial,Helvetica,sans-serif;
+  --f-body:"Figtree","Proxima Nova",Arial,Helvetica,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --radius:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --navy:#0b2c4d; --navy-ink:#071f37; --on-navy:#ffffff;
+  --bg:#0e141b; --surface:#151d26; --raised:#1a2430; --ink:#e7edf3; --muted:#9aa8b6; --line:#28323e; --field:#3a4655;
+  --accent:#7fb4e6; --accent-soft:#16304a; --on-accent:#0b1724; --link:#8fc0ee; --focus:#f2b705;
+  --hi:#f2a39b; --hi-bg:#3a1a17; --med:#f0c26b; --med-bg:#33280f; --low:#86d19c; --low-bg:#14301d; --info:#9aa8b6; --info-bg:#1d2733;
+  --mark:#4a3d12;
+  --proto:#f3c77a; --proto-bg:#2c2312; --proto-line:#6b5420;
+  --paper:#1a2430; --paper-ink:#e7edf3; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --navy:#0b2c4d; --navy-ink:#071f37; --on-navy:#ffffff;
+  --bg:#0e141b; --surface:#151d26; --raised:#1a2430; --ink:#e7edf3; --muted:#9aa8b6; --line:#28323e; --field:#3a4655;
+  --accent:#7fb4e6; --accent-soft:#16304a; --on-accent:#0b1724; --link:#8fc0ee; --focus:#f2b705;
+  --hi:#f2a39b; --hi-bg:#3a1a17; --med:#f0c26b; --med-bg:#33280f; --low:#86d19c; --low-bg:#14301d; --info:#9aa8b6; --info-bg:#1d2733;
+  --mark:#4a3d12;
+  --proto:#f3c77a; --proto-bg:#2c2312; --proto-line:#6b5420;
+  --paper:#1a2430; --paper-ink:#e7edf3; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+a{color:var(--link)}
+button{font:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+h1,h2,h3,h4{text-wrap:balance}
+.gut{padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+
+/* masthead */
+.mast{background:var(--navy);color:var(--on-navy)}
+.mast-in{max-width:1360px;margin:0 auto;padding-block:14px;display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.brand .org{font-family:var(--f-head);font-weight:800;font-size:13px;letter-spacing:.14em;text-transform:uppercase;line-height:1.1;padding-right:14px;border-right:1px solid rgba(255,255,255,.35)}
+.brand .org small{display:block;font-weight:600;font-size:10px;letter-spacing:.2em;opacity:.8}
+.brand .app{font-family:var(--f-head);font-weight:700;font-size:19px;line-height:1.15;margin:0}
+.brand .app small{display:block;font-weight:500;font-size:13px;opacity:.82}
+.mast-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.badge{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:#f2b705;color:#1f1f1f}
+.aistat{font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.35);display:inline-flex;align-items:center;gap:6px}
+.aistat i{width:8px;height:8px;border-radius:50%;background:#c9d3dd;display:inline-block}
+.aistat.ok i{background:#7ee2a0}.aistat.off i{background:#f2b705}
+
+/* prototype notice */
+.proto{background:var(--proto-bg);border-bottom:1px solid var(--proto-line);color:var(--ink)}
+.proto-in{max-width:1360px;margin:0 auto;padding-block:10px;font-size:14px;display:flex;gap:10px;align-items:flex-start}
+.proto-in b{color:var(--proto);white-space:nowrap}
+
+.wrap{max-width:1360px;margin:0 auto;padding-block:22px 40px;display:grid;grid-template-columns:300px minmax(0,1fr);gap:18px;align-items:start}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);min-width:0}
+.panel-h{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.panel-h h2{font-family:var(--f-head);font-size:17px;font-weight:700;margin:0;color:var(--navy)}
+:root[data-theme="dark"] .panel-h h2{color:var(--ink)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .panel-h h2{color:var(--ink)}}
+.panel-b{padding:16px}
+.label{font-family:var(--f-head);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.hint{font-size:13px;color:var(--muted);margin:0}
+.side{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}
+
+/* role list */
+.rlist{list-style:none;margin:0;padding:8px;display:grid;gap:4px}
+.rlist button{width:100%;text-align:left;background:transparent;border:1px solid transparent;border-radius:8px;padding:10px 12px;color:var(--ink);display:grid;gap:4px}
+.rlist button:hover{background:var(--accent-soft)}
+.rlist button[aria-current="true"]{background:var(--accent-soft);border-color:var(--accent)}
+.rlist .nm{font-weight:700;font-family:var(--f-head);line-height:1.25}
+.rlist .ad{font-size:13px;color:var(--muted)}
+.rlist .rw{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px}
+.side-foot{padding:4px 16px 16px}
+.mono{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+
+/* pills */
+.st{font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap;background:var(--info-bg);color:var(--info);display:inline-block}
+.st.covered{background:var(--low-bg);color:var(--low)}
+.st.partly{background:var(--med-bg);color:var(--med)}
+.st.gap{background:var(--hi-bg);color:var(--hi)}
+.st.ai{background:var(--accent-soft);color:var(--link)}
+
+/* buttons */
+.btn{background:var(--accent);color:var(--on-accent);border:0;border-radius:999px;padding:10px 18px;font-weight:700;min-height:42px;display:inline-flex;align-items:center;gap:8px;justify-content:center;text-decoration:none}
+.btn:hover{filter:brightness(1.1)}
+.btn:disabled{opacity:.5;cursor:default;filter:none}
+.btn.sec{background:var(--surface);color:var(--accent);border:1.5px solid var(--accent)}
+.btn.sm{min-height:34px;padding:6px 14px;font-size:14px}
+.ghost{background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:8px 14px;min-height:38px}
+.ghost:hover{color:var(--ink);border-color:var(--field)}
+.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+
+/* workspace */
+.ws-top{padding:16px;border-bottom:1px solid var(--line);display:grid;gap:12px}
+.ws-top h2.ttl{color:var(--ink);font-family:var(--f-head);font-size:22px;font-weight:800;margin:0;line-height:1.15}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.facts > div{background:var(--raised);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0}
+.facts > div > span{display:block;font-size:12px;color:var(--muted)}
+.facts b{font-size:14px;overflow-wrap:anywhere}
+.facts b.big{font-size:20px;font-family:var(--f-head);font-variant-numeric:tabular-nums}
+.tabs{display:flex;gap:4px;padding:4px;background:var(--raised);border:1px solid var(--line);border-radius:999px;width:fit-content;max-width:100%;overflow-x:auto}
+.tabs button{border:0;border-radius:999px;background:transparent;color:var(--muted);padding:8px 16px;font-weight:700;font-size:14px;white-space:nowrap}
+.tabs button[aria-selected="true"]{background:var(--accent);color:var(--on-accent)}
+.sect{display:grid;gap:14px;grid-template-columns:minmax(0,1fr)}
+.sect + .sect{border-top:1px solid var(--line);padding-top:16px;margin-top:16px}
+.out-h{display:flex;flex-wrap:wrap;gap:8px 12px;justify-content:space-between;align-items:center}
+.out-h h3{margin:0;font-family:var(--f-head);font-size:18px}
+.callout{border-radius:8px;padding:12px 14px;font-size:14px;display:grid;gap:4px}
+.callout.info{background:var(--accent-soft)}
+.callout.warn{background:var(--med-bg);color:var(--ink)}
+.callout b{font-family:var(--f-head)}
+
+/* matrix */
+.tbl-wrap{border:1px solid var(--line);border-radius:8px;overflow-x:auto;position:relative}
+table.mx{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
+.mx th,.mx td{padding:7px 6px;border-bottom:1px solid var(--line);text-align:center;vertical-align:middle}
+.mx thead th{font-size:11.5px;color:var(--muted);font-weight:700;background:var(--raised);line-height:1.2}
+.mx th[scope="row"]{text-align:left;font-weight:700;font-family:var(--f-head);font-size:13.5px;min-width:170px}
+.mx th[scope="row"] button{background:none;border:0;color:var(--link);padding:0;text-align:left;font:inherit;text-decoration:underline;text-underline-offset:2px}
+.mx th[scope="row"] small{display:block;font-weight:500;color:var(--muted);font-family:var(--f-body);font-size:12px}
+.mx tr:last-child td,.mx tr:last-child th{border-bottom:0}
+.cell{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:8px;font-weight:800;font-size:14px;border:0}
+.cell.covered{background:var(--low-bg);color:var(--low)}
+.cell.partly{background:var(--med-bg);color:var(--med)}
+.cell.gap{background:var(--hi-bg);color:var(--hi)}
+.cell.na{background:transparent;color:var(--field)}
+button.cell:hover{outline:2px solid var(--accent);outline-offset:1px}
+.score{font-variant-numeric:tabular-nums;font-weight:700}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--muted);align-items:center}
+.legend span{display:inline-flex;gap:6px;align-items:center}
+.legend .cell{width:22px;height:22px;font-size:12px;border-radius:6px}
+.paper{background:var(--paper);color:var(--paper-ink);border:1px solid var(--line);border-radius:6px;padding:4px;box-shadow:0 10px 30px -18px rgba(0,30,60,.35)}
+.paper textarea{border:0;background:transparent;color:var(--paper-ink);min-height:280px;padding:16px clamp(12px,3vw,24px);font-size:14px;line-height:1.6}
+
+/* role check */
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:16px;align-items:start}
+.pd{background:var(--paper);color:var(--paper-ink);border:1px solid var(--line);border-radius:6px;padding:16px 18px;font-size:14px;line-height:1.55;display:grid;gap:8px}
+.pd h4{margin:0;font-family:var(--f-head);font-size:15px}
+.pd ul{margin:0;padding-left:18px;display:grid;gap:4px}
+.pd mark{background:var(--mark);color:inherit;border-radius:3px;padding:0 2px}
+.pd .meta{font-size:13px;color:var(--muted)}
+.areas{display:grid;gap:8px}
+.area{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;gap:6px;background:var(--surface)}
+.area.hl{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.area .top{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;justify-content:space-between}
+.area .top b{font-family:var(--f-head)}
+.area q{display:block;font-size:13.5px;color:var(--muted);border-left:3px solid var(--line);padding-left:10px;quotes:none}
+.area .sugg{font-size:14px;background:var(--raised);border-radius:6px;padding:8px 10px}
+.area .why{font-size:13.5px;margin:0}
+.area select{width:auto;font-size:13px;padding:4px 6px}
+.tag{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--hi)}
+
+input,textarea,select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--field);border-radius:8px;padding:9px 11px;min-width:0;width:100%}
+textarea{resize:vertical;line-height:1.45}
+.fld{display:grid;gap:4px;min-width:0}
+.fld label,.fld .lb{font-size:13px;font-weight:600;color:var(--muted)}
+.checks-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px 12px}
+.checks-grid label{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--ink);font-weight:500}
+.checks-grid input{width:18px;height:18px;accent-color:var(--accent)}
+.err{color:var(--hi);font-size:13px;font-weight:600;margin:0}
+.thinking{display:grid;gap:10px;padding:8px 0}
+.skel{height:14px;border-radius:6px;background:linear-gradient(90deg,var(--raised),var(--accent-soft),var(--raised));background-size:200% 100%;animation:sh 1.4s infinite}
+@keyframes sh{0%{background-position:100% 0}100%{background-position:-100% 0}}
+.dl{display:grid;gap:8px}
+.dl div{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;gap:2px}
+.dl b{font-family:var(--f-head)}
+.dl span{font-size:13.5px;color:var(--muted)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--navy-ink);color:#fff;padding:10px 16px;border-radius:999px;font-weight:600;font-size:14px;z-index:20;box-shadow:0 10px 30px -10px rgba(0,0,0,.5);max-width:calc(100vw - 32px)}
+.mtabs{display:none}
+footer.foot{border-top:1px solid var(--line);background:var(--surface)}
+.foot-in{max-width:1360px;margin:0 auto;padding-block:18px 28px;font-size:13px;color:var(--muted);display:grid;gap:8px}
+.foot-in b{color:var(--ink)}
+.foot-in details summary{cursor:pointer;color:var(--link);font-weight:600}
+.foot-in ul{margin:6px 0 0;padding-left:18px;display:grid;gap:3px}
+
+@media (max-width:1100px){.two{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:900px){
+  .gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .brand .org{display:none}
+  .brand .app{font-size:17px}
+  .proto-in{flex-direction:column;gap:2px}
+  .wrap{grid-template-columns:minmax(0,1fr);padding-block:14px 32px;gap:12px}
+  .side{position:static}
+  .mtabs{display:flex;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;gap:4px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:999px;box-shadow:0 6px 16px -10px rgba(0,30,60,.35)}
+  .mtabs button{flex:1;border:0;border-radius:999px;background:transparent;color:var(--muted);padding:9px 6px;font-weight:700;font-size:14px}
+  .mtabs button[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
+  .wrap[data-m="list"] #ws{display:none}
+  .wrap[data-m="ws"] #side{display:none}
+  input,textarea,select{font-size:16px}
+  .tabs{width:100%}
+  .tabs button{flex:1;padding:8px 10px}
+}
+@media (max-width:640px){
+  .facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="mast gut"><div class="mast-in">
+  <div class="brand"><div class="org">Logan<small>AI</small></div><h1 class="app">Chain of Responsibility Risk Check<small>Where CoR duties sit across position descriptions</small></h1></div>
+  <div class="mast-right"><span class="aistat" id="aistat" role="status"><i></i><span>Checking AI</span></span><span class="badge">Prototype</span></div>
+</div></header>
+<aside class="proto gut" aria-label="Prototype notice"><div class="proto-in"><b>Rapid AI prototype</b><span>Sample data only. All position descriptions, roles and contacts are made up. The duty list is a sample summary of the Heavy Vehicle National Law and must be checked before any position description is changed.</span></div></aside>
+
+<main class="wrap gut" id="wrap" data-m="ws">
+  <div class="mtabs" role="group" aria-label="Show" style="grid-column:1/-1">
+    <button type="button" id="mt-list" aria-pressed="false">Roles</button>
+    <button type="button" id="mt-ws" aria-pressed="true">Workspace</button>
+  </div>
+
+  <aside class="panel side" id="side" aria-labelledby="side-h">
+    <div class="panel-h"><h2 id="side-h">Position descriptions</h2><span class="hint">Sample data</span></div>
+    <ul class="rlist" id="rlist"></ul>
+    <div class="side-foot"><button class="ghost" type="button" id="addpd" style="width:100%">Add a position description</button></div>
+  </aside>
+
+  <section class="panel" id="ws" aria-label="Workspace"></section>
+</main>
+
+<footer class="foot gut"><div class="foot-in">
+  <div><b>How it works.</b> Each position description is checked against a sample list of Chain of Responsibility duty areas, using the role's party type (for example scheduler, loader or executive) to decide which duties it should carry. Rules give a first pass straight away; AI reads the whole description, quotes the line that covers each duty and suggests wording for the gaps. You can change any result before copying the gap summary for HR or the manager.</div>
+  <details><summary>Prototype handover notes</summary>
+    <ul>
+      <li>In the LCC stack for production: HTML, CSS and JavaScript front end (move to Vue and Bootstrap) on Azure App Service, an Azure Function App for model calls, SQL for roles, duty mappings and review history, Entra ID sign-in.</li>
+      <li>Needs an ICT-DA exception: Claude (Anthropic) as the AI provider, through the council's enterprise agreement or Microsoft Foundry.</li>
+      <li>Privacy: names, email addresses and phone numbers in a position description are swapped for placeholders before anything goes to AI. Position descriptions describe roles, not people.</li>
+      <li>The duty areas, party types and suggested wording are samples. They must be checked against the Heavy Vehicle National Law, the regulator's guidance and the council's CoR procedure, and agreed with People and Culture before any position description changes.</li>
+      <li>Still needed for production: the approved position description library from the council's HR system, an agreed CoR duty register, a test plan with an AI evaluation set, Dev, Test and Prod environments, and ICT-DA, CAB and business owner approvals.</li>
+    </ul>
+  </details>
+  <div>Based on idea 334123, Chain of Responsibility risk assessment (City Fleet). Rapid AI prototype for discussion, not a council system.</div>
+</div></footer>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(function ()
+{
+  'use strict';
+
+  /* ---------- Sample duty list (a summary for the prototype, to be checked against the HVNL) ---------- */
+  // strong: wording that clearly covers the duty. weak: wording that touches it without naming the CoR obligation.
+  var DUTIES = [
+    { id: 'primary', short: 'Primary duty', label: 'Primary duty and safety of transport activities', high: true,
+      about: 'Every party in the chain must ensure, so far as reasonably practicable, the safety of their heavy vehicle transport activities.',
+      strong: /chain of responsibility|heavy vehicle national law|so far as reasonably practicable/i, weak: /\bsafe(ly|ty)?\b/i,
+      wording: 'Ensure, so far as reasonably practicable, the safety of the council\'s heavy vehicle transport activities you are involved in, in line with the Heavy Vehicle National Law (Chain of Responsibility).' },
+    { id: 'exec', short: 'Due diligence', label: 'Executive due diligence', high: false,
+      about: 'Executive officers must exercise due diligence so the organisation meets its safety duty: knowledge, resources, processes and assurance.',
+      strong: /due diligence/i, weak: /assurance|governance|compliance report/i,
+      wording: 'Exercise due diligence so the branch meets its Chain of Responsibility duties, including keeping up to date with obligations, providing resources and processes, and reviewing regular assurance reports.' },
+    { id: 'speed', short: 'Speed', label: 'Speed', high: true,
+      about: 'Parties must not ask for, or set up arrangements that would encourage, a driver to exceed the speed limit.',
+      strong: /speed/i, weak: /road rules|drive to conditions/i,
+      wording: 'Make sure work arrangements, deadlines and requests never require or encourage a driver to exceed the speed limit.' },
+    { id: 'fatigue', short: 'Fatigue', label: 'Fatigue and work and rest hours', high: true,
+      about: 'Work and rest limits must be met, and nobody may ask a driver to drive while impaired by fatigue.',
+      strong: /fatigue|work and rest|rest (hours|breaks?)|work diary/i, weak: /\bhours\b|roster/i,
+      wording: 'Plan and monitor heavy vehicle work so drivers can meet work and rest limits, and never ask a driver to drive while fatigued.' },
+    { id: 'schedule', short: 'Scheduling', label: 'Scheduling and rostering', high: true,
+      about: 'Schedulers must make sure schedules and rosters do not cause drivers to speed, exceed work hours or drive fatigued.',
+      strong: /realistic (schedules?|timeframes|rosters?)|(schedules?|rosters?) (that|which) (allow|let)/i, weak: /roster|run sheet|schedul/i,
+      wording: 'Prepare schedules and rosters with realistic timeframes that let drivers meet speed limits and work and rest requirements.' },
+    { id: 'mass', short: 'Loading', label: 'Mass, dimension and load restraint', high: true,
+      about: 'Loaders and loading managers must make sure loads do not exceed mass or dimension limits and are properly restrained.',
+      strong: /load restraint|overload|mass limit|weigh|secur(e|ed) (the )?loads?|loads? (are|is) secured/i, weak: /\bload(s|ing|ed)?\b/i,
+      wording: 'Make sure every load is within mass and dimension limits and is restrained using approved equipment before the vehicle leaves.' },
+    { id: 'maint', short: 'Maintenance', label: 'Vehicle standards and maintenance', high: true,
+      about: 'Operators and maintainers must keep heavy vehicles roadworthy and fix defects before use.',
+      strong: /roadworth|defect|preventative maintenance|pre-start/i, weak: /maint|servic/i,
+      wording: 'Keep heavy vehicles roadworthy through scheduled maintenance, and make sure defects are fixed before a vehicle is used.' },
+    { id: 'contracts', short: 'Contracts', label: 'Contracts and procurement', high: false,
+      about: 'Contract terms must not encourage breaches, and transport contractors must be required to meet their own CoR duties.',
+      strong: /(chain of responsibility|cor) (clause|requirement|obligation)s?|contract[^.]*heavy vehicle national law/i, weak: /contract|tender|haulage|supplier/i,
+      wording: 'Include Chain of Responsibility requirements in transport, haulage and plant hire contracts, and check that contract terms and timeframes do not encourage breaches.' },
+    { id: 'records', short: 'Records', label: 'Records, reporting and breaches', high: false,
+      about: 'Keep records that show compliance, and report incidents, near misses and possible breaches.',
+      strong: /\brecords?\b|report (any )?(incidents|breaches|near misses)|breach/i, weak: /\breport/i,
+      wording: 'Keep records that show Chain of Responsibility compliance and report incidents, near misses and possible breaches straight away.' },
+    { id: 'training', short: 'Training', label: 'Training and competency', high: false,
+      about: 'People in the chain need the training and competency to do their part safely.',
+      strong: /training|competenc/i, weak: /licen[cs]e|qualification/i,
+      wording: 'Complete Chain of Responsibility training for this role and keep licences and competencies current.' }
+  ];
+  var DUTY = {};
+  DUTIES.forEach(function (d) { DUTY[d.id] = d; });
+
+  /* ---------- Sample position descriptions (made up) ---------- */
+  var ROLES = [
+    { id: 'PD-101', title: 'Fleet Manager', branch: 'City Fleet (sample)', level: 'Manager', reportsTo: 'Director', party: 'Executive officer, employer, operator',
+      expected: ['primary', 'exec', 'speed', 'fatigue', 'maint', 'contracts', 'records', 'training'],
+      contact: { name: 'Jordan Sample', email: 'jordan.sample@example.com' },
+      purpose: 'Lead the City Fleet branch to deliver a safe, reliable and cost-effective fleet of light, heavy and plant vehicles.',
+      duties: [
+        'Lead the fleet asset management plan and the vehicle replacement program.',
+        'Manage the branch budget, including capital and operating costs.',
+        'Ensure, so far as reasonably practicable, the safety of the council\'s heavy vehicle transport activities in line with the Heavy Vehicle National Law (Chain of Responsibility).',
+        'Exercise due diligence by making sure the branch has the resources, processes and regular assurance reporting it needs to meet its legal obligations.',
+        'Oversee the fleet maintenance program so vehicles are kept roadworthy and serviced on time.',
+        'Lead procurement of vehicles, plant and fleet services in line with the council procurement policy.',
+        'Report on fleet performance, incidents and compliance to the Director.',
+        'Build a capable team and support staff to hold the licences their roles need.'
+      ] },
+    { id: 'PD-114', title: 'Fleet Coordinator', branch: 'City Fleet (sample)', level: 'Officer', reportsTo: 'Fleet Operations Supervisor', party: 'Scheduler',
+      expected: ['primary', 'speed', 'fatigue', 'schedule', 'records'],
+      contact: { name: 'Casey Example', email: 'casey.example@example.com', phone: '07 0000 1114' },
+      purpose: 'Coordinate the daily use of the council\'s heavy vehicle and plant pool so works crews have what they need.',
+      duties: [
+        'Allocate trucks, plant and drivers to council works crews each day.',
+        'Prepare weekly run sheets and rosters for the heavy vehicle pool.',
+        'Make sure jobs are completed on time and report delays to the Works Coordinator.',
+        'Keep booking and usage details up to date in the fleet system.',
+        'Liaise with depots about vehicle availability and breakdowns.'
+      ] },
+    { id: 'PD-122', title: 'Workshop Supervisor', branch: 'City Fleet (sample)', level: 'Supervisor', reportsTo: 'Fleet Maintenance Coordinator', party: 'Operator (maintenance), employer',
+      expected: ['primary', 'maint', 'records', 'training'],
+      contact: { name: 'Riley Placeholder', email: 'riley.placeholder@example.com' },
+      purpose: 'Supervise the main workshop so the council\'s heavy vehicles and plant are safe and available.',
+      duties: [
+        'Supervise mechanics and apprentices at the main workshop.',
+        'Plan and deliver the preventative maintenance and service schedule for heavy vehicles and plant.',
+        'Make sure defects reported in pre-start checks are assessed and repaired before the vehicle returns to service.',
+        'Keep maintenance and repair records complete and up to date.',
+        'Make sure staff hold current licences and trade qualifications.',
+        'Follow workplace health and safety procedures in the workshop.'
+      ] },
+    { id: 'PD-130', title: 'Heavy Vehicle Operator', branch: 'Road Maintenance (sample)', level: 'Operator', reportsTo: 'Crew Leader', party: 'Driver',
+      expected: ['primary', 'speed', 'fatigue', 'mass', 'maint', 'records', 'training'],
+      contact: { name: 'Morgan Demo', email: 'morgan.demo@example.com' },
+      purpose: 'Operate heavy vehicles safely to support road maintenance crews.',
+      duties: [
+        'Operate tipper trucks, water trucks and other heavy vehicles safely to support road maintenance crews.',
+        'Complete pre-start checks each day and report any defects before use.',
+        'Follow the road rules, including speed limits, and drive to conditions.',
+        'Take rest breaks and record work and rest hours as required by the Heavy Vehicle National Law.',
+        'Make sure loads are secured using approved load restraint equipment and the vehicle is not overloaded.',
+        'Report incidents, near misses and breaches to the Crew Leader straight away.',
+        'Hold a current heavy rigid driver licence.'
+      ] },
+    { id: 'PD-141', title: 'Procurement Officer, Plant and Transport', branch: 'Procurement (sample)', level: 'Officer', reportsTo: 'Procurement Team Leader', party: 'Consignor, prime contractor (through contracts)',
+      expected: ['primary', 'contracts', 'records'],
+      contact: { name: 'Alex Trial', email: 'alex.trial@example.com' },
+      purpose: 'Run procurement for plant hire, haulage and transport services.',
+      duties: [
+        'Run quotes and tenders for plant hire, haulage and transport services.',
+        'Draft and manage contracts and purchase orders in line with the procurement policy.',
+        'Check suppliers\' insurances and licences before they are engaged.',
+        'Keep procurement records complete for audit.'
+      ] },
+    { id: 'PD-156', title: 'Depot Yard Hand', branch: 'Depot Operations (sample)', level: 'Operator', reportsTo: 'Depot Supervisor', party: 'Loader, loading manager',
+      expected: ['primary', 'mass', 'records', 'training'],
+      contact: { name: 'Taylor Specimen', email: 'taylor.specimen@example.com' },
+      purpose: 'Keep the depot yard running so crews get the materials they need.',
+      duties: [
+        'Load and unload trucks with gravel, pipes, signs and other materials using a forklift or loader.',
+        'Keep the depot yard clean, tidy and safe.',
+        'Record stock movements in and out of the depot.',
+        'Hold a current forklift licence.'
+      ] },
+    { id: 'PD-163', title: 'Waste Contracts Officer', branch: 'Waste Services (sample)', level: 'Officer', reportsTo: 'Waste Contracts Coordinator', party: 'Consignor, scheduler (through the collection contract)',
+      expected: ['primary', 'contracts', 'schedule', 'records'],
+      contact: { name: 'Drew Mock', email: 'drew.mock@example.com' },
+      purpose: 'Manage the kerbside waste collection contract and the contractor\'s performance.',
+      duties: [
+        'Manage the kerbside waste collection contract, including contractor performance meetings.',
+        'Monitor collection schedules and missed services.',
+        'Investigate complaints about collection vehicles.',
+        'Prepare monthly contract reports.'
+      ] }
+  ];
+
+  var STATUS = { covered: 'Covered', partly: 'Partly covered', gap: 'Gap', na: 'Not needed' };
+  var ICON = { covered: '✓', partly: '~', gap: '✕', na: '·' };
+
+  /* ---------- State ---------- */
+  var state = { rid: 'PD-114', tab: 'matrix', focus: '', results: {}, busy: false, error: '', adding: false, formErr: '' };
+  var sample = null, ctl = null, ownCount = 0;
+
+  /* ---------- Helpers ---------- */
+  function $(id) { return document.getElementById(id); }
+  function esc(s)
+  {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; });
+  }
+  function noDash(s) { return String(s || '').replace(/\s*[—–]\s*/g, ', ').replace(/\s+,/g, ','); }
+  function norm(s) { return String(s || '').toLowerCase().replace(/[‘’]/g, "'").replace(/[^a-z0-9' ]+/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function role() { return ROLES.find(function (r) { return r.id === state.rid; }); }
+  function today() { return new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' }); }
+  var toastT;
+  function toast(msg)
+  {
+    var t = $('toast'); t.textContent = msg; t.hidden = false;
+    clearTimeout(toastT); toastT = setTimeout(function () { t.hidden = true; }, 2600);
+  }
+  function lines(r) { return [r.purpose].concat(r.duties); }
+
+  /* ---------- Rules check (works with AI off) ---------- */
+  // Finds the first line that clearly covers each duty, then a weaker match, and decides the status from the role's party type.
+  function rulesCheck(r)
+  {
+    var areas = {};
+    DUTIES.forEach(function (d)
+    {
+      var L = lines(r), exp = r.expected.indexOf(d.id) > -1;
+      var strong = L.find(function (l) { return d.strong.test(l); });
+      var weak = strong ? null : L.find(function (l) { return d.weak.test(l); });
+      var a = { status: 'na', evidence: '', reason: '', suggestion: '' };
+      if (strong)
+      {
+        a.status = 'covered'; a.evidence = strong; a.reason = 'The description names this duty directly.';
+      }
+      else if (weak && exp)
+      {
+        a.status = 'partly'; a.evidence = weak; a.reason = 'The description touches on this but does not state the Chain of Responsibility duty.'; a.suggestion = d.wording;
+      }
+      else if (exp)
+      {
+        a.status = 'gap'; a.reason = 'This role is expected to carry this duty (party type: ' + r.party.toLowerCase() + '), but the description does not mention it.'; a.suggestion = d.wording;
+      }
+      else
+      {
+        a.reason = 'Not expected for this party type.';
+      }
+      areas[d.id] = a;
+    });
+    return { source: 'rules', areas: areas, summary: '', checked: today() };
+  }
+
+  function statusOf(r, did)
+  {
+    var res = state.results[r.id], a = res && res.areas[did];
+    return a ? (a.override || a.status) : 'na';
+  }
+  function roleScore(r)
+  {
+    var exp = r.expected, cov = 0, part = 0, gaps = 0, high = 0;
+    exp.forEach(function (did)
+    {
+      var s = statusOf(r, did);
+      if (s === 'covered') { cov++; }
+      else if (s === 'partly') { part++; }
+      else if (s === 'gap') { gaps++; if (DUTY[did].high) { high++; } }
+    });
+    return { exp: exp.length, cov: cov, part: part, gaps: gaps, high: high };
+  }
+  function totals()
+  {
+    var t = { exp: 0, cov: 0, part: 0, gaps: 0, high: 0 };
+    ROLES.forEach(function (r) { var s = roleScore(r); Object.keys(t).forEach(function (k) { t[k] += s[k]; }); });
+    return t;
+  }
+
+  /* ---------- AI ---------- */
+  function setAi(mode)
+  {
+    var el = $('aistat');
+    el.className = 'aistat ' + (mode === 'ok' ? 'ok' : mode === 'off' ? 'off' : '');
+    el.querySelector('span').textContent = mode === 'ok' ? 'AI ready' : mode === 'off' ? 'AI off: rules mode' : 'Checking AI';
+  }
+  function initAi()
+  {
+    if (typeof window.claude === 'undefined' || !window.claude || typeof window.claude.use !== 'function')
+    {
+      setAi('off'); render(); return;
+    }
+    window.claude.use('sample').then(function (s) { sample = s || null; setAi(sample ? 'ok' : 'off'); render(); }, function () { setAi('off'); render(); });
+  }
+  function aiErrorCopy(code)
+  {
+    switch (code)
+    {
+      case 'not_granted': return 'AI was not allowed for this page, so the results below come from the rules check.';
+      case 'rate_limited': case 'queue_overflow': return 'AI is busy right now, so the results below come from the rules check. Try again in a minute.';
+      case 'invalid_json': case 'empty_completion': return 'AI sent back something the page could not read, so the results below come from the rules check.';
+      case 'cancelled': return 'You stopped the AI check, so the results below come from the rules check.';
+      default: return 'AI could not check this role just now, so the results below come from the rules check.';
+    }
+  }
+
+  // Swaps names, emails and phone numbers for placeholders so they never reach the model.
+  function redact(r, text)
+  {
+    var t = String(text || '');
+    if (r.contact && r.contact.name) { t = t.split(r.contact.name).join('[CONTACT]'); }
+    return t.replace(/[\w.+-]+@[\w-]+\.[\w.]+/g, '[EMAIL]').replace(/(\+?61|0)[\d ]{8,12}\d/g, '[PHONE]');
+  }
+
+  function aiPrompt(r)
+  {
+    var duties = DUTIES.map(function (d) { return { id: d.id, area: d.label, summary: d.about, expectedForThisRole: r.expected.indexOf(d.id) > -1 }; });
+    return [
+      'You review a Queensland local council position description against a sample summary of Chain of Responsibility (CoR) duty areas under the Heavy Vehicle National Law.',
+      'Party type for this role: ' + r.party + '.',
+      'For EVERY duty area, decide the status:',
+      '- "covered": the description clearly gives this role the duty.',
+      '- "partly": it touches on it but does not state the CoR duty clearly.',
+      '- "gap": expectedForThisRole is true and the description does not cover it.',
+      '- "not_needed": expectedForThisRole is false and nothing in the description covers it.',
+      'Rules:',
+      '- "evidence": copy ONE line from the description word for word that supports covered or partly. Empty string for gap or not_needed. Never invent a quote.',
+      '- "reason": one plain English sentence.',
+      '- "suggestion": for partly or gap only, one or two sentences of wording to add to the description, starting with a verb, written for this role. Empty string otherwise.',
+      '- Australian English, short sentences, no em dashes or en dashes. Keep placeholders like [CONTACT] as written.',
+      '- "summary": two sentences on the biggest CoR risk in this description.',
+      'Return only JSON: {"summary": string, "areas": [{"id": string, "status": "covered"|"partly"|"gap"|"not_needed", "evidence": string, "reason": string, "suggestion": string}]}',
+      '',
+      'Duty areas (JSON):', JSON.stringify(duties),
+      '',
+      'Position description: ' + r.title,
+      '"""',
+      redact(r, lines(r).map(function (l) { return '- ' + l; }).join('\n')),
+      '"""'
+    ].join('\n');
+  }
+
+  // Checks AI output: valid statuses only, and every quote must really be in the description.
+  function cleanAi(r, out)
+  {
+    if (!out || !Array.isArray(out.areas)) { return null; }
+    var base = rulesCheck(r), used = 0, body = norm(lines(r).join(' '));
+    out.areas.forEach(function (x)
+    {
+      if (!x || !DUTY[x.id]) { return; }
+      var st = { covered: 'covered', partly: 'partly', gap: 'gap', not_needed: 'na' }[x.status];
+      if (!st) { return; }
+      var a = { status: st, evidence: noDash(x.evidence || '').trim(), reason: noDash(x.reason || ''), suggestion: noDash(x.suggestion || ''), ai: true };
+      if (a.evidence && body.indexOf(norm(a.evidence)) === -1)
+      {
+        a.reason = (a.reason ? a.reason + ' ' : '') + 'The quote AI gave is not in the description, so check this by hand.';
+        a.evidence = '';
+        if (a.status === 'covered') { a.status = 'partly'; }
+      }
+      if ((a.status === 'gap' || a.status === 'partly') && !a.suggestion) { a.suggestion = DUTY[x.id].wording; }
+      if (a.status === 'na' && r.expected.indexOf(x.id) > -1) { a.status = 'gap'; a.suggestion = a.suggestion || DUTY[x.id].wording; }
+      base.areas[x.id] = a; used++;
+    });
+    if (!used) { return null; }
+    base.source = 'ai';
+    base.summary = noDash(out.summary || '');
+    return base;
+  }
+
+  function runAi()
+  {
+    var r = role();
+    if (!r || state.busy) { return; }
+    state.error = '';
+    if (!sample)
+    {
+      state.results[r.id] = rulesCheck(r);
+      render(); toast('Checked with rules'); return;
+    }
+    state.busy = true; render();
+    ctl = new AbortController();
+    var id = r.id;
+    sample.json(aiPrompt(r), { signal: ctl.signal, modelTier: 'default', cache: false }).then(function (out)
+    {
+      var c = cleanAi(r, out);
+      if (!c) { throw { code: 'invalid_json' }; }
+      state.results[id] = c;
+      toast('AI check ready');
+    }).catch(function (e)
+    {
+      state.results[id] = rulesCheck(r);
+      state.error = aiErrorCopy(e && e.code);
+      if (e && e.code === 'not_granted') { sample = null; setAi('off'); }
+    }).then(function ()
+    {
+      state.busy = false; ctl = null; render();
+      var h = $('res-h'); if (h) { h.focus(); }
+    });
+  }
+
+  /* ---------- Text to copy ---------- */
+  function gapSummary()
+  {
+    var t = totals(), L = ['Chain of Responsibility coverage check (DRAFT, sample data)', 'As at ' + today() + '. ' + ROLES.length + ' position descriptions checked against ' + DUTIES.length + ' sample duty areas.', 'Expected duties covered: ' + t.cov + ' of ' + t.exp + '. Partly covered: ' + t.part + '. Gaps: ' + t.gaps + ' (' + t.high + ' high priority).', ''];
+    var hi = [], other = [];
+    ROLES.forEach(function (r)
+    {
+      r.expected.forEach(function (did)
+      {
+        var s = statusOf(r, did), a = state.results[r.id].areas[did];
+        if (s !== 'gap' && s !== 'partly') { return; }
+        var line = '- ' + r.title + ': ' + DUTY[did].label + ' (' + STATUS[s].toLowerCase() + '). Suggested wording: ' + (a.suggestion || DUTY[did].wording);
+        (s === 'gap' && DUTY[did].high ? hi : other).push(line);
+      });
+    });
+    L.push('HIGH PRIORITY GAPS'); L = L.concat(hi.length ? hi : ['- None.']);
+    L.push('', 'OTHER GAPS AND PARTLY COVERED DUTIES'); L = L.concat(other.length ? other : ['- None.']);
+    L.push('', 'The duty areas are a sample summary. Check them against the Heavy Vehicle National Law and the council\'s CoR procedure, and agree changes with People and Culture, before updating any position description.');
+    return L.join('\n');
+  }
+  function roleWording(r)
+  {
+    var L = ['Suggested Chain of Responsibility wording for: ' + r.title + ' (' + r.id + ', sample)', 'Party type: ' + r.party, ''];
+    var n = 0;
+    r.expected.forEach(function (did)
+    {
+      var s = statusOf(r, did), a = state.results[r.id].areas[did];
+      if (s === 'gap' || s === 'partly') { n++; L.push('- ' + (a.suggestion || DUTY[did].wording) + ' [' + DUTY[did].label + ']'); }
+    });
+    if (!n) { L.push('No wording needed: every expected duty is covered.'); }
+    L.push('', 'Draft only. Check against the Heavy Vehicle National Law before use.');
+    return L.join('\n');
+  }
+  function copyText(text, ok)
+  {
+    if (navigator.clipboard && navigator.clipboard.writeText)
+    {
+      navigator.clipboard.writeText(text).then(function () { toast(ok); }, function () { toast('Could not copy. Select the text and copy it by hand.'); });
+    }
+    else { toast('Could not copy. Select the text and copy it by hand.'); }
+  }
+
+  /* ---------- Rendering ---------- */
+  function renderSide()
+  {
+    $('rlist').innerHTML = ROLES.map(function (r)
+    {
+      var s = roleScore(r);
+      return '<li><button type="button" data-rid="' + esc(r.id) + '" aria-current="' + (r.id === state.rid && state.tab !== 'matrix') + '">' +
+        '<span class="nm">' + esc(r.title) + '</span><span class="ad">' + esc(r.party) + '</span>' +
+        '<span class="rw"><span class="mono">' + esc(r.id) + '</span><span class="st covered">' + s.cov + ' of ' + s.exp + ' covered</span>' +
+        (s.gaps ? '<span class="st gap">' + s.gaps + ' gap' + (s.gaps === 1 ? '' : 's') + '</span>' : '') + '</span></button></li>';
+    }).join('');
+  }
+
+  function renderTop()
+  {
+    var t = totals(), pct = t.exp ? Math.round(t.cov / t.exp * 100) : 0;
+    return '<div class="ws-top"><div><p class="label">City Fleet · Chain of Responsibility</p><h2 class="ttl">Who carries which CoR duty?</h2></div>' +
+      '<div class="facts"><div><span>Position descriptions</span><b class="big">' + ROLES.length + '</b></div>' +
+      '<div><span>Expected duties covered</span><b class="big">' + pct + '%</b></div>' +
+      '<div><span>Gaps</span><b class="big">' + t.gaps + '</b></div>' +
+      '<div><span>High priority gaps</span><b class="big">' + t.high + '</b></div></div>' +
+      '<div class="tabs" role="tablist" aria-label="Workspace">' +
+      [['matrix', 'Coverage matrix'], ['role', 'Check a role'], ['duties', 'Duty list']].map(function (x)
+      {
+        return '<button type="button" role="tab" id="tab-' + x[0] + '" aria-controls="tp" aria-selected="' + (state.tab === x[0]) + '" data-tab="' + x[0] + '">' + x[1] + '</button>';
+      }).join('') + '</div></div>';
+  }
+
+  function legend()
+  {
+    return '<div class="legend" aria-label="Key">' + ['covered', 'partly', 'gap', 'na'].map(function (s) { return '<span><span class="cell ' + s + '" aria-hidden="true">' + ICON[s] + '</span>' + STATUS[s] + '</span>'; }).join('') + '</div>';
+  }
+
+  function renderMatrix()
+  {
+    var h = '<div class="panel-b" role="tabpanel" id="tp" aria-labelledby="tab-matrix"><div class="sect">';
+    h += '<div class="out-h"><h3>Coverage matrix</h3>' + legend() + '</div>';
+    h += '<p class="hint">Each row is a position description; each column is a sample CoR duty area. Select a cell to see the evidence and suggested wording.</p>';
+    h += '<div class="tbl-wrap"><table class="mx"><caption class="sr">Chain of Responsibility duty coverage by role</caption><thead><tr><th scope="col" style="text-align:left">Role</th>' +
+      DUTIES.map(function (d) { return '<th scope="col" title="' + esc(d.label) + '">' + esc(d.short) + '</th>'; }).join('') + '<th scope="col">Covered</th></tr></thead><tbody>';
+    ROLES.forEach(function (r)
+    {
+      var s = roleScore(r);
+      h += '<tr><th scope="row"><button type="button" data-open="' + r.id + '">' + esc(r.title) + '</button><small>' + esc(r.party) + '</small></th>';
+      DUTIES.forEach(function (d)
+      {
+        var st = statusOf(r, d.id);
+        h += '<td>' + (st === 'na' ? '<span class="cell na" title="Not needed">' + ICON.na + '<span class="sr">Not needed</span></span>' :
+          '<button type="button" class="cell ' + st + '" data-open="' + r.id + '" data-duty="' + d.id + '" aria-label="' + esc(r.title + ', ' + d.label + ': ' + STATUS[st]) + '">' + ICON[st] + '</button>') + '</td>';
+      });
+      h += '<td class="score">' + s.cov + '/' + s.exp + '</td></tr>';
+    });
+    h += '</tbody></table></div></div>';
+    h += '<div class="sect"><div class="out-h"><h3>Gap summary for HR and the manager</h3><div class="actions"><button class="btn sm" type="button" id="copysum">Copy gap summary</button></div></div>' +
+      '<div class="paper"><label class="sr" for="sumtxt">Gap summary</label><textarea id="sumtxt" readonly>' + esc(gapSummary()) + '</textarea></div></div>';
+    return h + '</div>';
+  }
+
+  function pdHtml(r, res)
+  {
+    var marks = {};
+    Object.keys(res.areas).forEach(function (did) { var a = res.areas[did]; if (a.evidence) { marks[norm(a.evidence)] = 1; } });
+    function line(l) { return Object.keys(marks).some(function (m) { return norm(l).indexOf(m) > -1; }) ? '<mark>' + esc(l) + '</mark>' : esc(l); }
+    return '<div class="pd"><div><h4>' + esc(r.title) + '</h4><p class="meta">' + esc(r.id) + ' · ' + esc(r.branch) + ' · Reports to ' + esc(r.reportsTo) + '</p></div>' +
+      '<div><p class="label" style="margin:0 0 2px">Purpose</p>' + line(r.purpose) + '</div>' +
+      '<div><p class="label" style="margin:0 0 4px">Key responsibilities</p><ul>' + r.duties.map(function (l) { return '<li>' + line(l) + '</li>'; }).join('') + '</ul></div>' +
+      (r.contact ? '<p class="meta">Position contact: ' + esc(r.contact.name) + (r.contact.email ? ', ' + esc(r.contact.email) : '') + (r.contact.phone ? ', ' + esc(r.contact.phone) : '') + '</p>' : '') + '</div>';
+  }
+
+  function renderRole()
+  {
+    var r = role(), res = state.results[r.id], s = roleScore(r);
+    var h = '<div class="panel-b" role="tabpanel" id="tp" aria-labelledby="tab-role"><div class="sect">';
+    h += '<div class="out-h"><div><p class="label" style="margin:0">' + esc(r.id) + ' · ' + esc(r.party) + '</p><h3 id="res-h" tabindex="-1">' + esc(r.title) + '</h3></div>' +
+      '<span class="st ' + (res.source === 'ai' ? 'ai' : '') + '">' + (res.source === 'ai' ? 'AI check' : 'Rules check') + ' · ' + s.cov + ' of ' + s.exp + ' covered</span></div>';
+    if (state.error) { h += '<div class="callout warn" role="alert"><b>Heads up</b><span>' + esc(state.error) + '</span></div>'; }
+    if (res.summary) { h += '<div class="callout info"><b>AI summary</b><span>' + esc(res.summary) + '</span></div>'; }
+    h += '<div class="actions">' + (state.busy ? '<button class="btn" type="button" disabled>Checking…</button><button class="ghost" type="button" id="stop">Stop</button>' :
+      '<button class="btn" type="button" id="runai">' + (sample ? 'Check with AI' : 'Check with rules') + '</button>') +
+      '<button class="btn sec" type="button" id="copyrole">Copy suggested wording</button>' +
+      '<span class="hint">' + (sample ? 'Names, emails and phone numbers are swapped for placeholders before AI reads the description.' : 'AI is not available here, so the page uses its keyword rules. You can still change any result.') + '</span></div></div>';
+    h += '<div class="sect"><div class="two"><div style="display:grid;gap:8px;min-width:0"><p class="label" style="margin:0">Position description (highlighted lines are used as evidence)</p>' + pdHtml(r, res) + '</div>';
+    if (state.busy)
+    {
+      h += '<div class="thinking" aria-live="polite"><p class="hint">AI is reading the description against ' + DUTIES.length + ' duty areas. This usually takes 10 to 40 seconds.</p><div class="skel" style="width:50%"></div><div class="skel"></div><div class="skel" style="width:85%"></div><div class="skel" style="width:70%"></div></div>';
+    }
+    else
+    {
+      var order = DUTIES.slice().sort(function (a, b)
+      {
+        var rank = { gap: 0, partly: 1, covered: 2, na: 3 };
+        return rank[statusOf(r, a.id)] - rank[statusOf(r, b.id)] || (b.high - a.high);
+      });
+      h += '<div class="areas" style="min-width:0"><p class="label" style="margin:0">Duty areas</p>' + order.map(function (d)
+      {
+        var a = res.areas[d.id], st = a.override || a.status;
+        return '<div class="area' + (state.focus === d.id ? ' hl' : '') + '" id="area-' + d.id + '"><div class="top"><span><b>' + esc(d.label) + '</b>' + (st === 'gap' && d.high ? ' <span class="tag">High priority</span>' : '') + '</span>' +
+          '<span class="actions"><span class="st ' + st + '">' + STATUS[st] + '</span><label class="sr" for="ov-' + d.id + '">Change result for ' + esc(d.label) + '</label><select id="ov-' + d.id + '" data-ov="' + d.id + '">' +
+          ['covered', 'partly', 'gap', 'na'].map(function (k) { return '<option value="' + k + '"' + (k === st ? ' selected' : '') + '>' + STATUS[k] + '</option>'; }).join('') + '</select></span></div>' +
+          (a.evidence ? '<q>' + esc(a.evidence) + '</q>' : '') +
+          (a.reason ? '<p class="why">' + esc(a.reason) + (a.override ? ' You changed this result.' : '') + '</p>' : '') +
+          ((st === 'gap' || st === 'partly') ? '<div class="sugg"><b>Suggested wording:</b> ' + esc(a.suggestion || d.wording) + '</div>' : '') + '</div>';
+      }).join('') + '</div>';
+    }
+    return h + '</div></div></div>';
+  }
+
+  function renderDuties()
+  {
+    return '<div class="panel-b" role="tabpanel" id="tp" aria-labelledby="tab-duties"><div class="sect"><div class="callout warn"><b>Sample duty list</b><span>This is a plain English summary made for the prototype. It is not legal advice and must be checked against the Heavy Vehicle National Law and the regulator\'s guidance before use.</span></div><div class="dl">' +
+      DUTIES.map(function (d) { return '<div><b>' + esc(d.label) + (d.high ? ' <span class="tag">High risk</span>' : '') + '</b><span>' + esc(d.about) + '</span><span>Standard wording: ' + esc(d.wording) + '</span></div>'; }).join('') + '</div></div></div>';
+  }
+
+  function renderAdd()
+  {
+    return '<div class="panel-b"><form class="sect" id="addf" novalidate><div class="out-h"><h3 id="add-h" tabindex="-1">Add a position description</h3><button class="ghost" type="button" id="canceladd">Cancel</button></div>' +
+      '<p class="hint">Paste the key responsibilities, one per line. Remove names and contact details first; the page also swaps any it finds before AI sees them.</p>' +
+      '<div class="fld"><label for="nf-title">Role title</label><input id="nf-title" autocomplete="off"></div>' +
+      '<div class="fld"><label for="nf-text">Responsibilities</label><textarea id="nf-text" rows="8" aria-describedby="nf-err"></textarea></div>' +
+      '<fieldset class="fld" style="border:0;padding:0;margin:0"><legend class="lb" style="padding:0;margin-bottom:6px">Which duties should this role carry?</legend><div class="checks-grid">' +
+      DUTIES.map(function (d) { return '<label><input type="checkbox" value="' + d.id + '"' + (d.id === 'primary' || d.id === 'records' ? ' checked' : '') + '>' + esc(d.label) + '</label>'; }).join('') + '</div></fieldset>' +
+      (state.formErr ? '<p class="err" id="nf-err" role="alert">' + esc(state.formErr) + '</p>' : '<p class="hint" id="nf-err">The rules check runs straight away; use Check with AI for a full read.</p>') +
+      '<div class="actions"><button class="btn" type="submit">Add and check</button></div></form></div>';
+  }
+
+  function render()
+  {
+    renderSide();
+    var body = state.adding ? renderAdd() : state.tab === 'matrix' ? renderMatrix() : state.tab === 'role' ? renderRole() : renderDuties();
+    $('ws').innerHTML = (state.adding ? '' : renderTop()) + body;
+  }
+
+  /* ---------- Events ---------- */
+  function setMobile(m)
+  {
+    $('wrap').setAttribute('data-m', m);
+    $('mt-list').setAttribute('aria-pressed', String(m === 'list'));
+    $('mt-ws').setAttribute('aria-pressed', String(m === 'ws'));
+  }
+  $('mt-list').addEventListener('click', function () { setMobile('list'); });
+  $('mt-ws').addEventListener('click', function () { setMobile('ws'); });
+
+  function openRole(rid, duty)
+  {
+    if (state.busy) { toast('Wait for the check to finish, or press Stop'); return; }
+    state.rid = rid; state.tab = 'role'; state.focus = duty || ''; state.error = ''; state.adding = false;
+    render(); setMobile('ws');
+    var el = duty ? $('area-' + duty) : $('res-h');
+    if (el) { el.scrollIntoView({ block: 'center' }); var f = el.querySelector('select') || el; f.focus({ preventScroll: true }); }
+  }
+
+  $('rlist').addEventListener('click', function (e) { var b = e.target.closest('[data-rid]'); if (b) { openRole(b.getAttribute('data-rid')); } });
+  $('addpd').addEventListener('click', function () { if (state.busy) { return; } state.adding = true; state.formErr = ''; render(); setMobile('ws'); $('nf-title').focus(); });
+
+  var ws = $('ws');
+  ws.addEventListener('click', function (e)
+  {
+    var t = e.target.closest('button');
+    if (!t) { return; }
+    if (t.dataset.tab) { if (state.busy) { return; } state.tab = t.dataset.tab; state.focus = ''; render(); $('tab-' + state.tab).focus(); return; }
+    if (t.dataset.open) { openRole(t.dataset.open, t.dataset.duty); return; }
+    if (t.id === 'runai') { runAi(); return; }
+    if (t.id === 'stop') { if (ctl) { ctl.abort(); } return; }
+    if (t.id === 'copysum') { copyText(gapSummary(), 'Gap summary copied'); return; }
+    if (t.id === 'copyrole') { copyText(roleWording(role()), 'Suggested wording copied'); return; }
+    if (t.id === 'canceladd') { state.adding = false; render(); $('addpd').focus(); return; }
+  });
+
+  ws.addEventListener('change', function (e)
+  {
+    var t = e.target;
+    if (!t.dataset.ov) { return; }
+    var a = state.results[state.rid].areas[t.dataset.ov];
+    a.override = t.value === a.status ? '' : t.value;
+    if ((a.override === 'gap' || a.override === 'partly') && !a.suggestion) { a.suggestion = DUTY[t.dataset.ov].wording; }
+    state.focus = t.dataset.ov;
+    render();
+    var back = $('ov-' + t.dataset.ov); if (back) { back.focus(); }
+    toast('Result changed to ' + STATUS[t.value]);
+  });
+
+  ws.addEventListener('submit', function (e)
+  {
+    if (e.target.id !== 'addf') { return; }
+    e.preventDefault();
+    var title = $('nf-title').value.trim(), text = $('nf-text').value.trim();
+    var exp = Array.prototype.map.call(ws.querySelectorAll('.checks-grid input:checked'), function (c) { return c.value; });
+    if (!title || text.length < 40 || !exp.length)
+    {
+      state.formErr = !title ? 'Add a role title.' : text.length < 40 ? 'Paste at least a few responsibilities (40 characters or more).' : 'Tick at least one duty this role should carry.';
+      var keepT = title, keepX = text;
+      render(); $('nf-title').value = keepT; $('nf-text').value = keepX;
+      ws.querySelectorAll('.checks-grid input').forEach(function (c) { c.checked = exp.indexOf(c.value) > -1; });
+      (!title ? $('nf-title') : $('nf-text')).focus();
+      return;
+    }
+    ownCount++;
+    var L = text.split('\n').map(function (l) { return l.replace(/^[-*•]\s*/, '').trim(); }).filter(Boolean);
+    var r = { id: 'PD-OWN' + ownCount, title: noDash(title), branch: 'Added by you', level: '', reportsTo: 'not stated', party: 'As ticked',
+      expected: exp, contact: null, purpose: L[0], duties: L.slice(1).length ? L.slice(1) : [L[0]] };
+    if (r.duties[0] === r.purpose) { r.purpose = 'Purpose not stated.'; }
+    ROLES.push(r);
+    state.results[r.id] = rulesCheck(r);
+    state.adding = false; state.formErr = '';
+    openRole(r.id);
+    toast('Added and checked with rules');
+  });
+
+  ROLES.forEach(function (r) { state.results[r.id] = rulesCheck(r); });
+  render();
+  initAi();
+})();
+</script>
+
+<!-- lpx-prod:start -->
+<style id="lpx-prod-css">
+#lpx-prod-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:calc(6px + env(safe-area-inset-top,0px)) 12px 6px;background:#F3F5F8;border-bottom:1px solid #DDE3EA;font:13px/1.3 Arial,Helvetica,sans-serif;color:#566273;position:relative;z-index:50}
+@media (prefers-color-scheme:dark){#lpx-prod-bar{background:#121922;border-color:#2B3546;color:#A3AFBF}}
+#lpx-prod-btn{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 14px;border-radius:999px;border:1px solid #003F75;background:#fff;color:#003F75;font:600 13px/1 Arial,Helvetica,sans-serif;cursor:pointer;white-space:nowrap}
+#lpx-prod-btn:hover{background:#003F75;color:#fff}
+@media (prefers-color-scheme:dark){#lpx-prod-btn{background:#18202C;color:#8EC1EC;border-color:#8EC1EC}#lpx-prod-btn:hover{background:#8EC1EC;color:#06233D}}
+#lpx-prod-btn:focus-visible{outline:2px solid #1F6FBF;outline-offset:2px}
+#lpx-prod-btn svg{width:16px;height:16px;flex:none}
+@media (max-width:480px){#lpx-prod-bar .lpx-q{display:none}}
+#lpx-prod-bar .lpx-right{display:flex;align-items:center;gap:10px;margin-left:auto}
+#lpx-protos-btn{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 14px;border-radius:999px;border:1px solid #003F75;background:#003F75;color:#fff;font:600 13px/1 Arial,Helvetica,sans-serif;text-decoration:none;white-space:nowrap}
+#lpx-protos-btn:hover{filter:brightness(1.15)}
+#lpx-protos-btn:focus-visible{outline:2px solid #1F6FBF;outline-offset:2px}
+#lpx-protos-btn svg{width:16px;height:16px;flex:none}
+@media (prefers-color-scheme:dark){#lpx-protos-btn{background:#8EC1EC;border-color:#8EC1EC;color:#06233D}}
+@media (pointer:coarse){#lpx-protos-btn{min-height:44px}}
+@media (pointer:coarse){#lpx-prod-btn{min-height:44px}}
+#lpx-prod{--bg:#fff;--soft:#F3F5F8;--ink:#1B2430;--muted:#566273;--rule:#DDE3EA;--brand:#003F75;--on:#fff;--az:#0F6CBD;--cl:#B4532A;
+  position:fixed;inset:0;z-index:2147483001;display:none;font:14px/1.5 Arial,Helvetica,sans-serif;color:var(--ink)}
+@media (prefers-color-scheme:dark){#lpx-prod{--bg:#18202C;--soft:#212B3B;--ink:#E7ECF2;--muted:#A3AFBF;--rule:#2B3546;--brand:#8EC1EC;--on:#06233D;--az:#6CB1F0;--cl:#F0A47E}}
+#lpx-prod.open{display:block}
+#lpx-prod .lpx-scrim{position:absolute;inset:0;background:rgba(10,20,35,.45)}
+#lpx-prod .lpx-panel{position:absolute;top:0;right:0;bottom:0;width:min(640px,100vw);background:var(--bg);box-shadow:-8px 0 30px rgba(0,0,0,.2);display:flex;flex-direction:column;outline:none}
+#lpx-prod .lpx-panel.lpx-wide{width:min(1040px,100vw)}
+#lpx-prod header{padding:calc(16px + env(safe-area-inset-top,0px)) 20px 12px;border-bottom:1px solid var(--rule)}
+#lpx-prod .lpx-hrow{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+#lpx-prod h2{margin:0;font-size:19px;color:var(--brand)}
+#lpx-prod .lpx-sub{margin:4px 0 0;color:var(--muted);font-size:13px}
+#lpx-prod .lpx-x{flex:none;width:36px;height:36px;border-radius:8px;border:1px solid var(--rule);background:var(--bg);color:var(--ink);font-size:20px;line-height:1;cursor:pointer}
+#lpx-prod .lpx-seg{display:inline-flex;gap:2px;margin-top:12px;padding:3px;border-radius:8px;background:var(--soft);flex-wrap:wrap}
+#lpx-prod .lpx-seg button{min-height:34px;padding:0 14px;border:0;border-radius:6px;background:none;color:var(--muted);font:600 13px Arial,Helvetica,sans-serif;cursor:pointer}
+#lpx-prod .lpx-seg button[aria-pressed="true"]{background:var(--bg);color:var(--brand);box-shadow:0 1px 2px rgba(0,0,0,.1),inset 0 0 0 1px var(--rule)}
+#lpx-prod .lpx-rec{margin-top:10px;font-size:13px;color:var(--ink);background:var(--soft);border-radius:6px;padding:8px 10px}
+#lpx-prod .lpx-rec b{color:var(--brand)}
+#lpx-prod .lpx-body{flex:1;overflow:auto;padding:16px 20px calc(24px + env(safe-area-inset-bottom,0px))}
+#lpx-prod .lpx-cols{display:grid;gap:16px;grid-template-columns:1fr}
+#lpx-prod .lpx-wide .lpx-cols{grid-template-columns:1fr 1fr}
+@media (max-width:760px){#lpx-prod .lpx-wide .lpx-cols{grid-template-columns:1fr}}
+#lpx-prod section{border:1px solid var(--rule);border-radius:8px;padding:14px 16px;margin-bottom:12px;background:var(--bg)}
+#lpx-prod h3{margin:0 0 8px;font-size:14px;display:flex;align-items:center;gap:8px}
+#lpx-prod .lpx-tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;color:#fff}
+#lpx-prod .lpx-tag.az{background:var(--az)}
+#lpx-prod .lpx-tag.cl{background:var(--cl)}
+#lpx-prod .lpx-tag.kn{background:#5B4237}
+#lpx-prod .lpx-tag.sh{background:#6B4FA0}
+#lpx-prod .lpx-sh{list-style:none;padding:0;margin:0}
+#lpx-prod .lpx-sh li{padding:8px 0;border-top:1px solid var(--rule);margin:0}
+#lpx-prod .lpx-sh li:first-child{border-top:0;padding-top:0}
+#lpx-prod .lpx-sh b{display:block}
+#lpx-prod .lpx-sh .lpx-role{font-size:12px;color:var(--muted)}
+#lpx-prod .lpx-sh .lpx-det{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+#lpx-prod ol,#lpx-prod ul{margin:0;padding-left:20px}
+#lpx-prod li{margin:4px 0}
+#lpx-prod .lpx-foot{color:var(--muted);font-size:12px;margin-top:4px}
+#lpx-prod button:focus-visible{outline:2px solid #1F6FBF;outline-offset:2px}
+@media (pointer:coarse){#lpx-prod .lpx-seg button,#lpx-prod .lpx-x{min-height:44px;min-width:44px}}
+</style>
+<script type="application/json" id="lpx-prod-plan">{"recommend": "claude", "why": "This is a periodic review of position descriptions against a fixed duty list, which the council's enterprise Claude can do now from a controlled SharePoint library, with no new system to build or support.", "knowledge": ["The council's position description library (current approved versions) for City Fleet and other branches whose roles touch heavy vehicles.", "The council's Chain of Responsibility procedure and CoR duty register, once agreed.", "The Heavy Vehicle National Law (Queensland) and the regulator's Chain of Responsibility guidance.", "The council's position description template and wording guide from People and Culture.", "The council's organisational chart, so each role can be matched to its party type (scheduler, loader, operator, executive and so on).", "Transport, haulage and plant hire contract templates, to check CoR clauses for roles that manage contracts."], "azure": {"technical": ["Move the prototype into an Azure DevOps repo and rebuild the front end in Vue and Bootstrap, hosted on Azure App Service with council (Entra ID) sign-in.", "Move all AI calls into an Azure Function App, with Claude through Microsoft Foundry or the council's Anthropic agreement (an ICT-DA exception, as it's outside the listed stack). Keys live in Key Vault, never in the page.", "Swap names, email addresses and phone numbers for placeholders before a position description goes to the model.", "Pull approved position descriptions from the council's HR system or its document library through Boomi or Logic Apps (read only), and store the text in Blob Storage.", "Keep the CoR duty register, role to party type mapping, review results and officer overrides in Azure SQL, with an audit trail of who changed what.", "Index the Heavy Vehicle National Law extracts, regulator guidance and the council's CoR procedure in Azure AI Search, so each finding can cite its source.", "Check every AI quote against the position description text (as the prototype does) and log the pass rate in Application Insights.", "Power BI report over the SQL results for the coverage matrix by branch, for the CoR steering group.", "Security review against the OWASP Top 10 and the OWASP Top 10 for LLM apps, including prompt injection from uploaded documents.", "Dev, Test and Prod resource groups, cost alerts, and Azure DevOps CI/CD pipelines for each environment."], "business": ["Confirm the business owner (City Fleet manager or the CoR steering group), the scope (which branches and roles) and success measures, such as percent of high-risk duties covered and time to review a branch.", "Agree the CoR duty register and party type for each role with the CoR lead and Legal Services.", "Name People and Culture as the process owner for any position description changes, and agree the wording guide.", "Build a test plan and an AI evaluation set (30 or so real-style position descriptions, anonymised, with expert-marked coverage), then run UAT with the CoR lead and HR business partners.", "Train the CoR lead and HR business partners, and set up support: who to ask and how to report a wrong result.", "Get ICT-DA, CAB, PGG and Business System Owner approval, with a Go Live plan, service transition document and support playbook."]}, "claude": {"technical": ["Set up a Claude Project for the CoR review in the council's enterprise Claude, with the prototype's rules (quote the exact line, never invent evidence, suggest wording only for gaps) as the project instructions.", "Add the CoR duty register, the council's CoR procedure, the regulator's guidance and the position description template as project files.", "Connect the SharePoint library that holds approved position descriptions with the Microsoft 365 connector, read only.", "Build a Claude skill that checks one position description or a whole branch and returns the coverage matrix, gap summary and suggested wording in the council's format.", "Admin settings checked: data retention, sharing, connector permissions, and that only role documents (not staff files) are in scope."], "business": ["Confirm the business owner, who will use it (CoR lead, HR business partners, branch managers) and what it must never do (it suggests, People and Culture decides).", "Agree the duty register and each role's party type with the CoR lead and Legal Services before the first review.", "Test it on 20 to 30 position descriptions already reviewed by hand and record how often it agrees.", "Pilot with City Fleet for one review cycle, then extend to Road Maintenance, Depot Operations, Procurement and Waste Services.", "Enterprise Claude seats for the CoR lead and HR business partners.", "A project owner who keeps the duty register, instructions and templates current when the law or guidance changes.", "Get the use case approved (ICT-DA and PGG) and confirm privacy settings before rolling it out wider."]}, "stakeholders": [{"role": "Raised the request", "who": "Person 005", "detail": "Ticket 334123: Chain of Responsibility risk assessment. team not stated, City Fleet, Transport Services. Asked for: \"Chain of responsibility risk assessment opportunity\". Triage: AI-assisted capability."}, {"role": "Business owner (to confirm)", "who": "City Fleet manager", "detail": "Owns the process, agrees what good looks like and signs off going live."}, {"role": "Knowledge owners (to confirm)", "who": "Owners of the source documents", "detail": "Keep the documents the tool relies on current and approved."}, {"role": "Delivery", "who": "AI team, Information Technology Services", "detail": "Builds the solution, runs testing and hands over to support."}, {"role": "Approvals", "who": "ICT-DA, CAB, PGG and the Business System Owner", "detail": "Approve the design, the change and going live."}]}</script>
+<script>
+(function(){
+  if (window.__lpxProd) return; window.__lpxProd = true;
+  function boot(){
+    var el = document.getElementById('lpx-prod-plan'); if (!el) return;
+    var P = JSON.parse(el.textContent);
+    function e(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+    function list(items, tag){return '<'+tag+'>'+(items||[]).map(function(x){return '<li>'+e(x)+'</li>';}).join('')+'</'+tag+'>';}
+    var btn = document.createElement('button');
+    btn.id = 'lpx-prod-btn'; btn.type = 'button'; btn.setAttribute('aria-haspopup','dialog');
+    btn.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 13l4-4 2 2 4-5M10 6h3v3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Steps to productionise</span>';
+    var wrap = document.createElement('div'); wrap.id = 'lpx-prod';
+    wrap.innerHTML = '<div class="lpx-scrim"></div><div class="lpx-panel" role="dialog" aria-modal="true" aria-labelledby="lpx-h" tabindex="-1">'+
+      '<header><div class="lpx-hrow"><div><h2 id="lpx-h">Steps to productionise</h2><p class="lpx-sub">How this prototype could become a supported council tool.</p></div>'+
+      '<button type="button" class="lpx-x" aria-label="Close">&times;</button></div>'+
+      '<div class="lpx-seg" role="group" aria-label="Show steps for"><button type="button" data-v="azure">Azure</button><button type="button" data-v="claude">Claude</button><button type="button" data-v="both">Show me both</button></div>'+
+      '<p class="lpx-rec"><b>Suggested route: '+(P.recommend==='claude'?'Claude':'Azure')+'.</b> '+e(P.why)+'</p></header>'+
+      '<div class="lpx-body" id="lpx-body"></div></div>';
+    var bar = document.createElement('div'); bar.id = 'lpx-prod-bar'; bar.innerHTML = '<a id="lpx-protos-btn" href="https://claude.ai/artifact/6PgxpQSDdJs1HjPxfZ7LvQ#ai-prototypes" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="2" width="5" height="5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="2" y="9" width="5" height="5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="9" width="5" height="5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span>All AI prototypes</span></a><div class="lpx-right"><span class="lpx-q">Thinking about going live?</span></div>'; bar.querySelector('.lpx-right').appendChild(btn);
+    document.body.insertBefore(bar, document.body.firstChild); document.body.appendChild(wrap);
+    var panel = wrap.querySelector('.lpx-panel'), body = wrap.querySelector('#lpx-body');
+    var view = P.recommend === 'claude' ? 'claude' : 'azure';
+    function sec(cls, label, title, inner){return '<section><h3><span class="lpx-tag '+cls+'">'+label+'</span>'+e(title)+'</h3>'+inner+'</section>';}
+    function col(k){
+      var az = k === 'azure', R = P[k] || {}, nm = az ? 'Azure' : 'Claude', c = az ? 'az' : 'cl';
+      var tech = R.technical || R.setup || [], bus = R.business || R.steps || [];
+      return '<div>'+
+        sec(c, nm, 'Technical setup ('+nm+')', list(tech,'ol'))+
+        sec(c, nm, 'Business readiness ('+nm+')', list(bus,'ol'))+
+        '</div>';
+    }
+    function people(){
+      var S = P.stakeholders || []; if (!S.length) return '';
+      return sec('sh','People','Stakeholders', '<ul class="lpx-sh">'+S.map(function(x){
+        return '<li><span class="lpx-role">'+e(x.role)+'</span><b>'+e(x.who)+'</b>'+(x.detail?'<span class="lpx-det">'+e(x.detail)+'</span>':'')+'</li>';
+      }).join('')+'</ul>');
+    }
+    function render(){
+      wrap.querySelectorAll('.lpx-seg button').forEach(function(b){b.setAttribute('aria-pressed', String(b.dataset.v===view));});
+      panel.classList.toggle('lpx-wide', view==='both');
+      var kn = sec('kn','Knowledge','What knowledge does it need', list(P.knowledge,'ul'));
+      body.innerHTML = (view==='both' ? '<div class="lpx-cols">'+col('azure')+col('claude')+'</div>' : col(view)) + people() + kn +
+        '<p class="lpx-foot">Draft for discussion. Systems, costs and approvals to be confirmed with ICT. Going live needs ICT-DA, CAB, PGG and Business System Owner approval.</p>';
+    }
+    var last = null;
+    function open(){ last = document.activeElement; wrap.classList.add('open'); render(); panel.focus(); document.addEventListener('keydown', key); }
+    function close(){ wrap.classList.remove('open'); document.removeEventListener('keydown', key); (last||btn).focus(); }
+    function key(ev){
+      if (ev.key === 'Escape') { close(); return; }
+      if (ev.key !== 'Tab') return;
+      var f = panel.querySelectorAll('button,a[href],[tabindex]:not([tabindex="-1"])'); if (!f.length) return;
+      var a = f[0], z = f[f.length-1];
+      if (ev.shiftKey && document.activeElement === a) { z.focus(); ev.preventDefault(); }
+      else if (!ev.shiftKey && document.activeElement === z) { a.focus(); ev.preventDefault(); }
+    }
+    btn.addEventListener('click', open);
+    wrap.querySelector('.lpx-x').addEventListener('click', close);
+    wrap.querySelector('.lpx-scrim').addEventListener('click', close);
+    wrap.querySelectorAll('.lpx-seg button').forEach(function(b){ b.addEventListener('click', function(){ view = b.dataset.v; render(); }); });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+</script>
+<!-- lpx-prod:end -->
+<!-- lpx-outlook:start -->
+<style id="lpx-ol-css">
+a.lpx-ol{display:inline-flex;align-items:center;gap:6px;text-decoration:none;cursor:pointer;white-space:nowrap}
+a.lpx-ol svg{width:14px;height:14px;flex:none}
+a.lpx-ol:focus-visible{outline:2px solid #1F6FBF;outline-offset:2px}
+a.lpx-ol.lpx-ol-plain{min-height:32px;padding:0 12px;border-radius:6px;border:1px solid #0F6CBD;color:#0F6CBD;background:#fff;font:600 13px Arial,Helvetica,sans-serif}
+a.lpx-ol.lpx-ol-plain:hover{background:#0F6CBD;color:#fff}
+#lpx-ol-toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:2147483002;max-width:min(520px,92vw);background:#1B2430;color:#fff;font:14px/1.4 Arial,Helvetica,sans-serif;padding:10px 14px;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.25);display:none}
+@media (pointer:coarse){a.lpx-ol{min-height:44px}}
+</style>
+<script>
+(function(){
+  if (window.__lpxOutlook) return; window.__lpxOutlook = true;
+  var MAX = 1600; // characters of body that fit safely in the Outlook link
+  var BASE = 'https://outlook.office.com/mail/deeplink/compose';
+  var ICON = '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="3.5" width="13" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2 4.5l6 4.5 6-4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+  function toast(msg){
+    var t = document.getElementById('lpx-ol-toast');
+    if (!t){ t = document.createElement('div'); t.id = 'lpx-ol-toast'; t.setAttribute('role','status'); document.body.appendChild(t); }
+    t.textContent = msg; t.style.display = 'block';
+    clearTimeout(t._h); t._h = setTimeout(function(){ t.style.display = 'none'; }, 6000);
+  }
+  function appName(){
+    var t = (document.title || '').split(/\s[|\u2013-]\s/)[0].trim();
+    if (t) return t;
+    var h = document.querySelector('h1'); return h ? (h.firstChild && h.firstChild.textContent || h.textContent).trim() : 'Prototype';
+  }
+  function context(btn){
+    var el = btn;
+    for (var i = 0; i < 8 && el; i++){
+      el = el.parentElement; if (!el) break;
+      var hs = el.querySelectorAll('h2,h3,h4'), pick = null;
+      for (var j = 0; j < hs.length; j++){
+        if (hs[j].compareDocumentPosition(btn) & Node.DOCUMENT_POSITION_FOLLOWING) pick = hs[j];
+      }
+      if (pick){
+        var t = pick.textContent.replace(/\s+/g,' ').trim();
+        if (t && t.length <= 60) return t;
+      }
+    }
+    return '';
+  }
+  function capture(btn){
+    var got = null, clip = navigator.clipboard, real = clip && clip.writeText;
+    if (clip && real){
+      try { clip.writeText = function(t){ got = String(t); return real.call(clip, t).catch(function(){}); }; } catch(e){}
+    }
+    try { btn.click(); } catch(e){}
+    if (clip && real){ try { clip.writeText = real; } catch(e){} }
+    return got;
+  }
+  function build(btn, a){
+    var text = capture(btn), ctx = context(btn), name = appName();
+    var subject = ctx && ctx.toLowerCase() !== name.toLowerCase() ? name + ': ' + ctx : name;
+    var body = '';
+    if (text){
+      body = text.length > MAX ? text.slice(0, MAX) + '\n\n[The full text is on your clipboard. Select everything above and paste with Ctrl+V.]' : text;
+      toast(text.length > MAX ? 'Opening Outlook. The text was long, so the full version is on your clipboard too.' : 'Opening a new email in Outlook. Check it, add who it goes to, then press Send.');
+    } else {
+      toast('Opening a new email in Outlook. Paste the text in with Ctrl+V.');
+    }
+    a.href = BASE + '?subject=' + encodeURIComponent(subject) + (body ? '&body=' + encodeURIComponent(body) : '');
+  }
+  function enhance(){
+    var btns = document.querySelectorAll('button');
+    for (var i = 0; i < btns.length; i++){
+      var b = btns[i];
+      if (b.dataset.lpxOl || b.closest('#lpx-prod') || b.id === 'lpx-prod-btn') continue;
+      var label = (b.textContent || '').replace(/\s+/g,' ').trim();
+      if (!/^Copy\b/i.test(label) || /^Copying/i.test(label)) continue;
+      b.dataset.lpxOl = '1';
+      var a = document.createElement('a');
+      a.href = BASE; a.target = '_blank'; a.rel = 'noopener';
+      a.className = (b.className ? b.className + ' ' : '') + 'lpx-ol' + (b.className ? '' : ' lpx-ol-plain');
+      a.innerHTML = ICON + '<span>Draft in Outlook</span>';
+      a.title = 'Opens a new email in Outlook with this text. Nothing is sent until you press Send.';
+      a.setAttribute('aria-label', 'Draft in Outlook: ' + label.replace(/^Copy\s*/i,'') );
+      (function(btn, link){ link.addEventListener('click', function(){ build(btn, link); }); })(b, a);
+      b.insertAdjacentElement('afterend', a);
+    }
+  }
+  function boot(){
+    enhance();
+    var pending = false;
+    new MutationObserver(function(){ if (pending) return; pending = true; requestAnimationFrame(function(){ pending = false; enhance(); }); })
+      .observe(document.body, {childList: true, subtree: true});
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+</script>
+<!-- lpx-outlook:end -->

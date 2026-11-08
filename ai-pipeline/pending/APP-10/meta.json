@@ -1,0 +1,10 @@
+{
+ "id": "APP-10",
+ "name": "Fleet Maintenance Predictor",
+ "area": "Transport",
+ "desc": "Scores every vehicle and machine from service history, fault codes, oil samples and defect reports, books the riskiest work into the workshop first, and ranks likely causes of a fault with a draft work order.",
+ "notes": "New build with ten sample vehicles and plant (three High, four Medium, three Low risk): sample rules score each part from interval used, fault codes, oil samples and defect reports to predict when it needs work and fill a four-week workshop plan (riskiest first, one visit per vehicle), AI explains asset health, ranks likely fault causes with checks and parts and drafts the work order and a plan note, and tag-out advice is given only for reported brake, steering or hydraulic faults or failed checks; it falls back to a sample fault code library when AI is off, operator names are removed before AI, and intervals, codes, capacity and costs are samples. Steps to productionise and Draft in Outlook added.",
+ "recommend": "azure",
+ "dice": true,
+ "tested": "Smoke at 1280 light and 390 dark (no page errors, no horizontal overflow, health, diagnose and plan in rules mode for 7 assets); dice tests: all tabs, empty-input error, high risk filter, Steps to productionise in Azure, Claude and Show me both views each with all four sections, Escape closes, Draft in Outlook link builds an outlook.office.com compose address containing the work order. Recalibrated: 3 High, 4 Medium, 3 Low; tag-out only on PL-201 (hydraulic leak) and TK-120 (low air), not CR-009; smoke rerun at 1280 light and 390 dark with no errors or overflow."
+}

@@ -1,0 +1,52 @@
+{
+ "recommend": "azure",
+ "why": "The time saving comes from pulling the values straight from the project register and finance system into the council's real Word templates, which needs an Azure integration rather than staff copying data in by hand.",
+ "knowledge": [
+  "The council's approved Word templates for each document type (closure reports, change requests, requests to approach market, works notification letters), with their current version numbers and owners.",
+  "A field list for each template: which placeholder maps to which column in the project register, finance system or contract register.",
+  "The council's procurement policy and purchasing thresholds.",
+  "The council's project management framework (what each document must contain at each stage).",
+  "The council's writing style guide and plain-English rules for letters to residents.",
+  "Project diaries, meeting notes and status reports, as the source for the free-text sections."
+ ],
+ "azure": {
+  "technical": [
+   "Move the prototype into an Azure DevOps repo and rebuild the front end in Vue and Bootstrap, hosted on Azure App Service with council (Entra ID) sign-in.",
+   "Keep the approved Word templates in a controlled SharePoint library or Blob Storage, with content controls for each field, and only offer the current approved version.",
+   "An Azure Function App fills the Word template (Open XML) from the data and returns a .docx in the council's styles, so formatting stays exactly as approved.",
+   "Read project, budget and contract values from the council's project register, finance system and contract register through the Data Warehouse, Boomi or Logic Apps (read only).",
+   "Model calls go through the same Function App, with Claude through Microsoft Foundry or the council's Anthropic agreement (an ICT-DA exception, as it's outside the listed stack). Keys live in Key Vault, never in the page.",
+   "Only the free-text sections go to the model. Names, phone numbers and emails are swapped for placeholders first and put back after, as the prototype does.",
+   "Store each generated document and who checked each drafted section in SQL or Cosmos DB, and save the final document to the records system against the project.",
+   "Security review against the OWASP Top 10 and the OWASP Top 10 for LLM apps, including prompt injection from project notes.",
+   "Dev, Test and Prod resource groups, Application Insights logging and cost alerts, and Azure DevOps CI/CD pipelines for each environment."
+  ],
+  "business": [
+   "Confirm the business owner (likely the Enterprise Portfolio Management Office), the first three templates in scope and the success measures (for example time to produce each document and fewer returned for missing information), and raise an Azure DevOps card (why and how).",
+   "Each template owner signs off the template, its field list and the guidance for each free-text section.",
+   "Name the data owners for the project register, finance system and contract register, and agree which fields can be read.",
+   "Build a test plan and an AI evaluation set (20 to 30 real-style projects, anonymised, with expected outputs for each section), then run UAT with project managers.",
+   "Train project managers and admin officers with a short walkthrough, and set up support: who to ask and how to report a wrong value or draft.",
+   "Get ICT-DA, CAB, PGG and Business System Owner approval, with a Go Live plan, service transition document and support playbook."
+  ]
+ },
+ "claude": {
+  "technical": [
+   "Set up a Claude Project for project documents in the council's enterprise Claude, with the drafting rules (fill fields only from data, draft only the open sections, never invent figures) as the project instructions.",
+   "Add the approved templates and field lists as project files, or connect the SharePoint library they live in so only current versions are used.",
+   "Build a Claude skill for each template that produces a Word document in the council's styles and marks every value that is missing.",
+   "Use the Microsoft 365 connector to read a project's register export or status report from SharePoint, so staff don't retype the data.",
+   "Admin settings checked: data retention, sharing, which connectors are on, and that only project data (not personal information) is added."
+  ],
+  "business": [
+   "Confirm the business owner, who will use it and what it must never do (it drafts, a person checks and signs off).",
+   "Each template owner signs off the template, field list and section guidance.",
+   "Test it with 20 to 30 real-style projects and record how often the fields are right and the drafted sections need only light edits.",
+   "Pilot with one branch's project managers for four weeks, give them a 30-minute walkthrough, and track time saved.",
+   "Enterprise Claude seats for the pilot group.",
+   "A project owner who keeps the instructions, skills and templates current when a template version changes.",
+   "Staff still export or attach the project data themselves unless a connector to the project register is approved.",
+   "Get the use case approved (ICT-DA and PGG) and confirm privacy settings before rolling it out wider."
+  ]
+ }
+}

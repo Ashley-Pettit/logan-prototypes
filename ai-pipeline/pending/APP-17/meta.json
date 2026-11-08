@@ -1,0 +1,10 @@
+{
+ "id": "APP-17",
+ "name": "Template Document Generator",
+ "area": "Corporate",
+ "desc": "Fills approved council templates from project data, drafts only the free-text sections and shows what came from data, what AI wrote and what is missing.",
+ "notes": "New build with four sample approved templates (closure report, change request, request to approach market, works notification letter) and three sample projects: the page fills every field from sample project register, finance and contract exports and shows each value's source, AI drafts only the open sections from the project diary and officer notes with word limits, missing data and unchecked sections block the ready status, and starter wording is used when AI is off; templates, fields and procurement thresholds are samples and names and phone numbers are swapped for placeholders before AI. Steps to productionise and Draft in Outlook added.",
+ "recommend": "azure",
+ "dice": false,
+ "tested": "Template mode end to end at 1280 light and 390 dark: fill, edit and tick open sections, readiness checks, switching template and project, typing a missing field, Steps to productionise panel opens, Draft in Outlook link present, no page errors, no horizontal overflow."
+}
