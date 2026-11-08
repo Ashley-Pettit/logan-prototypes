@@ -117,5 +117,8 @@ def inject(page):
 if __name__ == "__main__":
     if len(sys.argv) != 3:
         sys.exit(__doc__)
-    open(sys.argv[2], "w", encoding="utf-8").write(inject(open(sys.argv[1], encoding="utf-8").read()))
+    page = open(sys.argv[1], encoding="utf-8").read()  # read first, so the same file can be input and output
+    out = inject(page)
+    with open(sys.argv[2], "w", encoding="utf-8") as f:
+        f.write(out)
     print("ok", sys.argv[2])
