@@ -11,7 +11,7 @@
    "name": "Engineering Project Writer",
    "notes": "New build with four sample engineering projects: AI (or template rules when AI is off) turns rough meeting notes, a received email or the project log into minutes, an email to a chosen contact (reply, update, chase actions, ask, confirm a decision) or a monthly status report with a rule-based overall status, lists decisions, risks and actions to add to a log that flags gaps you can fix in place or chase by email, uses a sample 5 by 5 risk rating, swaps names and contact details for placeholders before AI, and has Steps to productionise and Draft in Outlook added.",
    "places": {
-    "github": false,
+    "github": true,
     "list": false,
     "mock": false,
     "polish": false,
