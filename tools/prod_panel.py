@@ -24,7 +24,7 @@ Everything is scoped under #lpx-prod so it can't clash with the app's own styles
 import json, re, sys
 
 CSS = r"""
-#lpx-prod-bar{display:flex;justify-content:flex-end;align-items:center;gap:10px;padding:calc(6px + env(safe-area-inset-top,0px)) 12px 6px;background:#F3F5F8;border-bottom:1px solid #DDE3EA;font:13px/1.3 Arial,Helvetica,sans-serif;color:#566273;position:relative;z-index:50}
+#lpx-prod-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:calc(6px + env(safe-area-inset-top,0px)) 12px 6px;background:#F3F5F8;border-bottom:1px solid #DDE3EA;font:13px/1.3 Arial,Helvetica,sans-serif;color:#566273;position:relative;z-index:50}
 @media (prefers-color-scheme:dark){#lpx-prod-bar{background:#121922;border-color:#2B3546;color:#A3AFBF}}
 #lpx-prod-btn{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 14px;border-radius:999px;border:1px solid #003F75;background:#fff;color:#003F75;font:600 13px/1 Arial,Helvetica,sans-serif;cursor:pointer;white-space:nowrap}
 #lpx-prod-btn:hover{background:#003F75;color:#fff}
@@ -32,6 +32,13 @@ CSS = r"""
 #lpx-prod-btn:focus-visible{outline:2px solid #1F6FBF;outline-offset:2px}
 #lpx-prod-btn svg{width:16px;height:16px;flex:none}
 @media (max-width:480px){#lpx-prod-bar .lpx-q{display:none}}
+#lpx-prod-bar .lpx-right{display:flex;align-items:center;gap:10px;margin-left:auto}
+#lpx-protos-btn{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 14px;border-radius:999px;border:1px solid #003F75;background:#003F75;color:#fff;font:600 13px/1 Arial,Helvetica,sans-serif;text-decoration:none;white-space:nowrap}
+#lpx-protos-btn:hover{filter:brightness(1.15)}
+#lpx-protos-btn:focus-visible{outline:2px solid #1F6FBF;outline-offset:2px}
+#lpx-protos-btn svg{width:16px;height:16px;flex:none}
+@media (prefers-color-scheme:dark){#lpx-protos-btn{background:#8EC1EC;border-color:#8EC1EC;color:#06233D}}
+@media (pointer:coarse){#lpx-protos-btn{min-height:44px}}
 @media (pointer:coarse){#lpx-prod-btn{min-height:44px}}
 #lpx-prod{--bg:#fff;--soft:#F3F5F8;--ink:#1B2430;--muted:#566273;--rule:#DDE3EA;--brand:#003F75;--on:#fff;--az:#0F6CBD;--cl:#B4532A;
   position:fixed;inset:0;z-index:2147483001;display:none;font:14px/1.5 Arial,Helvetica,sans-serif;color:var(--ink)}
@@ -92,7 +99,7 @@ JS = r"""
       '<div class="lpx-seg" role="group" aria-label="Show steps for"><button type="button" data-v="azure">Azure</button><button type="button" data-v="claude">Claude</button><button type="button" data-v="both">Show me both</button></div>'+
       '<p class="lpx-rec"><b>Suggested route: '+(P.recommend==='claude'?'Claude':'Azure')+'.</b> '+e(P.why)+'</p></header>'+
       '<div class="lpx-body" id="lpx-body"></div></div>';
-    var bar = document.createElement('div'); bar.id = 'lpx-prod-bar'; bar.innerHTML = '<span class="lpx-q">Thinking about going live?</span>'; bar.appendChild(btn);
+    var bar = document.createElement('div'); bar.id = 'lpx-prod-bar'; bar.innerHTML = '<a id="lpx-protos-btn" href="https://claude.ai/artifact/6PgxpQSDdJs1HjPxfZ7LvQ#ai-prototypes" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="2" width="5" height="5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="2" y="9" width="5" height="5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="9" width="5" height="5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span>All AI prototypes</span></a><div class="lpx-right"><span class="lpx-q">Thinking about going live?</span></div>'; bar.querySelector('.lpx-right').appendChild(btn);
     document.body.insertBefore(bar, document.body.firstChild); document.body.appendChild(wrap);
     var panel = wrap.querySelector('.lpx-panel'), body = wrap.querySelector('#lpx-body');
     var view = P.recommend === 'claude' ? 'claude' : 'azure';
