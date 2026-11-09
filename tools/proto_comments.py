@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Comments for the AI builder, on each app in the pipeline's "AI prototypes" tab.
 
-People open an app's row in the AI prototypes tab and leave a comment for the AI builder (what to fix,
+Each app row in the AI prototypes list has a Comment button; open comments show straight under the row. People leave a comment for the AI builder (what to fix,
 add or change). Comments are saved in the pipeline artifact's own database (collection "ai_comments"),
 so they work in copies a (Polish) and b (Mock), which declare the db and user capabilities. Copies c and
 d (password locked, GitHub) can't save, so they show the comments box with a link to copy b instead.
@@ -27,101 +27,126 @@ MAIN = "https://claude.ai/artifact/6PgxpQSDdJs1HjPxfZ7LvQ#ai-prototypes"
 
 BLOCK = r"""<!-- lpx-cmt:start -->
 <style id="lpx-cmt-css">
-#proto .lpx-cmt{grid-column:1/-1;border-top:1px solid var(--rule,#DDE3EA);padding-top:10px;margin-top:4px;display:grid;gap:8px}
-#proto .lpx-cmt .lpx-ch{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;justify-content:space-between}
-#proto .lpx-cmt .lpx-cnote{margin:0;font-size:13px;color:var(--muted,#566273)}
-#proto .lpx-cmt ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
-#proto .lpx-cmt li{border:1px solid var(--rule,#DDE3EA);border-left:4px solid #B4532A;border-radius:8px;padding:8px 10px;display:grid;gap:4px;background:var(--card,#fff)}
-#proto .lpx-cmt li.done{border-left-color:#1d6b35;opacity:.92}
-#proto .lpx-cmt .lpx-cm{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;font-size:12px;color:var(--muted,#566273)}
-#proto .lpx-cmt .lpx-cm b{color:var(--ink,#1B2430)}
-#proto .lpx-cmt .lpx-ct{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
-#proto .lpx-cmt .lpx-ca{margin:0;font-size:13px;color:#1d6b35}
+#proto .lpx-cbtn{font:inherit;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:5px;background:var(--card,#fff);color:#003F75;border:1px solid #9fb6cc}
+#proto .lpx-cbtn svg{width:12px;height:12px;flex:none}
+#proto .lpx-cbtn:hover{background:#e3edf6}
+#proto .lpx-cbtn.has{background:#fbe9e1;color:#8a3a17;border-color:#f0c4b0}
+#proto .lpx-cbtn:focus-visible{outline:2px solid #1F6FBF;outline-offset:2px}
+#proto .lpx-cstrip{margin:-2px 4px 10px 80px;display:grid;gap:6px}
+#proto .lpx-cstrip:empty{display:none}
+#proto .lpx-cstrip ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+#proto .lpx-cstrip li{border:1px solid var(--rule,#DDE3EA);border-left:4px solid #B4532A;border-radius:8px;padding:7px 10px;display:grid;gap:3px;background:var(--card,#fff);font-size:14px}
+#proto .lpx-cstrip li.done{border-left-color:#1d6b35}
+#proto .lpx-cstrip .lpx-cm{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;font-size:12px;color:var(--muted,#566273)}
+#proto .lpx-cstrip .lpx-cm b{color:var(--ink,#1B2430)}
+#proto .lpx-cstrip .lpx-cm button{margin-left:auto}
+#proto .lpx-cstrip .lpx-ct{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+#proto .lpx-cstrip .lpx-ca{margin:0;font-size:13px;color:#1d6b35}
+#proto .lpx-cstrip .lpx-cnote{margin:0;font-size:13px;color:var(--muted,#566273)}
 #proto .lpx-cpill{font-size:11px;font-weight:700;padding:1px 8px;border-radius:999px;background:#fbe9e1;color:#8a3a17}
 #proto li.done .lpx-cpill{background:#e6f4ea;color:#1d6b35}
-#proto .lpx-cmt form{display:grid;gap:6px}
-#proto .lpx-cmt label{font-size:13px;font-weight:600}
-#proto .lpx-cmt textarea{font:inherit;font-size:15px;width:100%;min-height:64px;resize:vertical;padding:8px 10px;border:1px solid var(--rule,#DDE3EA);border-radius:8px;background:var(--card,#fff);color:var(--ink,#1B2430)}
-#proto .lpx-cmt .lpx-crow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
-#proto .lpx-cmt .lpx-cmsg{font-size:13px;color:var(--muted,#566273)}
-#proto .lpx-cmt .lpx-cmsg.bad{color:#b42318;font-weight:600}
-#proto .lpx-cmt button{font:inherit;font-size:13px;font-weight:600;min-height:34px;padding:0 14px;border-radius:999px;cursor:pointer;border:1px solid #003F75;background:#003F75;color:#fff}
-#proto .lpx-cmt button.lpx-cg{background:transparent;color:#003F75}
-#proto .lpx-cmt button:disabled{opacity:.55;cursor:default}
-#proto .lpx-cmt button:focus-visible,#proto .lpx-cmt textarea:focus-visible{outline:2px solid #1F6FBF;outline-offset:2px}
-#proto .lpx-cchip{background:#fbe9e1!important;color:#8a3a17!important;border-color:#f0c4b0!important}
-@media (prefers-color-scheme:dark){#proto .lpx-cpill,#proto .lpx-cchip{background:#3a2117!important;color:#f3b79a!important;border-color:#6b3a24!important}#proto li.done .lpx-cpill{background:#14301d;color:#86d19c}#proto .lpx-cmt .lpx-ca{color:#86d19c}#proto .lpx-cmt button{background:#8EC1EC;border-color:#8EC1EC;color:#06233D}#proto .lpx-cmt button.lpx-cg{background:transparent;color:#8EC1EC}}
-@media (pointer:coarse){#proto .lpx-cmt button{min-height:44px}}
+#proto .lpx-cstrip form{display:grid;gap:6px;border:1px solid var(--rule,#DDE3EA);border-radius:8px;padding:10px;background:var(--soft,#F3F5F8)}
+#proto .lpx-cstrip label{font-size:13px;font-weight:600}
+#proto .lpx-cstrip textarea{font:inherit;font-size:15px;width:100%;min-height:60px;resize:vertical;padding:8px 10px;border:1px solid var(--rule,#DDE3EA);border-radius:8px;background:var(--card,#fff);color:var(--ink,#1B2430)}
+#proto .lpx-cstrip .lpx-crow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+#proto .lpx-cstrip .lpx-crow>span:last-child{display:flex;gap:8px}
+#proto .lpx-cstrip .lpx-cmsg{font-size:13px;color:var(--muted,#566273)}
+#proto .lpx-cstrip .lpx-cmsg.bad{color:#b42318;font-weight:600}
+#proto .lpx-cstrip button{font:inherit;font-size:13px;font-weight:600;min-height:32px;padding:0 14px;border-radius:999px;cursor:pointer;border:1px solid #003F75;background:#003F75;color:#fff}
+#proto .lpx-cstrip button.lpx-cg{background:transparent;color:#003F75}
+#proto .lpx-cstrip button.lpx-clink{border:0;background:none;color:#003F75;padding:0;min-height:0;text-decoration:underline;justify-self:start}
+#proto .lpx-cstrip button:disabled{opacity:.55;cursor:default}
+#proto .lpx-cstrip button:focus-visible,#proto .lpx-cstrip textarea:focus-visible{outline:2px solid #1F6FBF;outline-offset:2px}
+#proto .lpx-cstrip .lpx-cm button{min-height:28px;padding:0 10px;font-size:12px}
+@media (max-width:820px){#proto .lpx-cstrip{margin-left:4px}}
+@media (max-width:600px){#proto details.prow>summary{grid-template-columns:minmax(0,1fr)!important}#proto details.prow>summary .pchips{display:flex;flex-wrap:wrap;justify-content:flex-start;gap:6px}}
+@media (prefers-color-scheme:dark){#proto .lpx-cpill,#proto .lpx-cbtn.has{background:#3a2117;color:#f3b79a;border-color:#6b3a24}#proto .lpx-cbtn{color:#8EC1EC;border-color:#465368}#proto li.done .lpx-cpill{background:#14301d;color:#86d19c}#proto .lpx-cstrip .lpx-ca{color:#86d19c}#proto .lpx-cstrip button{background:#8EC1EC;border-color:#8EC1EC;color:#06233D}#proto .lpx-cstrip button.lpx-cg,#proto .lpx-cstrip button.lpx-clink{background:transparent;color:#8EC1EC}}
+@media (pointer:coarse){#proto .lpx-cstrip button,#proto .lpx-cbtn{min-height:44px}}
 </style>
 <script>
-/* Comments for the AI builder: one box per app in the AI prototypes tab, saved in this page's database. */
+/* Comments for the AI builder: a Comment button on every app row in the AI prototypes tab, with the
+   app's comments shown straight under the row. Saved in this page's database. */
 (function ()
 {
   if (window.__lpxCmt) { return; } window.__lpxCmt = true;
   var COL = 'ai_comments', MAIN = '__MAIN__';
   var DB = null, USER = null, ME = null, CANWRITE = false, CANEDIT = false, STATE = 'wait', NAMES = {};
-  var BY = {}, DRAFT = {}, MSG = {};
+  var BY = {}, DRAFT = {}, MSG = {}, OPEN = {}, SHOWDONE = {};
+  var ICON = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 3.5h11v7h-6l-3 2.5v-2.5h-2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>';
   function e(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function day(iso) { var d = new Date(iso); return isNaN(d) ? '' : d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' }); }
   function isClosed(c) { return c.status === 'actioned' || c.status === 'declined'; }
   function openCount(app) { return (BY[app] || []).filter(function (c) { return !isClosed(c); }).length; }
 
-  // The list part of an app's box: existing comments, newest first, with their status.
+  function itemHtml(c)
+  {
+    var done = isClosed(c), dec = c.status === 'declined';
+    var who = c.by && c.by === ME ? 'You' : (c.by && NAMES[c.by]) || 'Someone';
+    return '<li class="' + (done ? 'done' : '') + '"><div class="lpx-cm"><b>' + e(who) + '</b><span>' + e(day(c.at)) + '</span><span class="lpx-cpill">' + (dec ? 'Not changed' : done ? 'Actioned' : 'Open') + '</span>' +
+      (CANEDIT ? '<button type="button" class="lpx-cg" data-cmark="' + e(c.id) + '">' + (done ? 'Reopen' : 'Mark actioned') + '</button>' : '') + '</div>' +
+      '<p class="lpx-ct">' + e(c.text) + '</p>' +
+      (done ? '<p class="lpx-ca">' + (dec ? 'Not changed' : 'Actioned') + (c.actionedVersion ? ' in v' + e(c.actionedVersion) : '') + (c.actionedAt ? ' on ' + e(day(c.actionedAt)) : '') + (c.actionNote ? ': ' + e(c.actionNote) : '') + '</p>' : '') + '</li>';
+  }
+  // Open comments always show under the row; closed ones show when asked for, or while the composer is open.
   function listHtml(app)
   {
-    var L = BY[app] || [];
-    if (STATE === 'wait') { return '<p class="lpx-cnote">Loading comments…</p>'; }
-    if (STATE === 'off') { return '<p class="lpx-cnote">Comments are kept in the AI &amp; Automation Pipeline on claude.ai. <a href="' + MAIN + '" target="_blank" rel="noopener">Open it to read or add comments</a>.</p>'; }
-    if (STATE === 'err') { return '<p class="lpx-cnote">Comments couldn\'t be loaded just now. Reload the page to try again.</p>'; }
-    if (!L.length) { return '<p class="lpx-cnote">No comments yet.</p>'; }
-    return '<ul>' + L.map(function (c)
+    var L = BY[app] || [], open = L.filter(function (c) { return !isClosed(c); }), done = L.filter(isClosed);
+    var h = open.length ? '<ul>' + open.map(itemHtml).join('') + '</ul>' : '';
+    if (done.length)
     {
-      var done = isClosed(c), dec = c.status === 'declined';
-      var who = c.by && c.by === ME ? 'You' : (c.by && NAMES[c.by]) || 'Someone';
-      return '<li class="' + (done ? 'done' : '') + '"><div class="lpx-cm"><b>' + e(who) + '</b><span>' + e(day(c.at)) + '</span><span class="lpx-cpill">' + (dec ? 'Not changed' : done ? 'Actioned' : 'Open') + '</span></div>' +
-        '<p class="lpx-ct">' + e(c.text) + '</p>' +
-        (done ? '<p class="lpx-ca">' + (dec ? 'Not changed' : 'Actioned') + (c.actionedVersion ? ' in v' + e(c.actionedVersion) : '') + (c.actionedAt ? ' on ' + e(day(c.actionedAt)) : '') + (c.actionNote ? ': ' + e(c.actionNote) : '') + '</p>' : '') +
-        (CANEDIT ? '<div><button type="button" class="lpx-cg" data-cmark="' + e(c.id) + '">' + (done ? 'Reopen' : 'Mark actioned') + '</button></div>' : '') + '</li>';
-    }).join('') + '</ul>';
+      if (SHOWDONE[app]) { h += '<ul>' + done.map(itemHtml).join('') + '</ul><button type="button" class="lpx-clink" data-cdone="' + e(app) + '">Hide closed comments</button>'; }
+      else if (OPEN[app] || open.length) { h += '<button type="button" class="lpx-clink" data-cdone="' + e(app) + '">Show ' + done.length + ' closed ' + (done.length === 1 ? 'comment' : 'comments') + '</button>'; }
+    }
+    return h;
   }
   function formHtml(app)
   {
-    if (STATE !== 'ok') { return ''; }
+    if (STATE === 'wait') { return '<p class="lpx-cnote">Loading comments…</p>'; }
+    if (STATE === 'off') { return '<p class="lpx-cnote">Comments are kept in the AI &amp; Automation Pipeline on claude.ai. <a href="' + MAIN + '" target="_blank" rel="noopener">Open it to read or add comments</a>.</p>'; }
+    if (STATE === 'err') { return '<p class="lpx-cnote">Comments couldn\'t be loaded just now. Reload the page to try again.</p>'; }
     if (!CANWRITE) { return '<p class="lpx-cnote">You can read comments here but not add them. Ask Ash for edit access to this page to comment.</p>'; }
     var id = 'lpx-c-' + app;
-    return '<form data-capp="' + e(app) + '" novalidate><label for="' + e(id) + '">Add a comment for the AI builder</label>' +
+    return '<form data-capp="' + e(app) + '" novalidate><label for="' + e(id) + '">Comment for the AI builder on ' + e(app) + '</label>' +
       '<textarea id="' + e(id) + '" maxlength="1000" placeholder="What should change? For example: add a way to print the result, or the wording is too formal."></textarea>' +
-      '<div class="lpx-crow"><span class="lpx-cmsg" role="status"></span><button type="submit">Add comment</button></div></form>';
+      '<div class="lpx-crow"><span class="lpx-cmsg" role="status">The AI builder works on open comments first and marks each one actioned when done.</span><span><button type="button" class="lpx-cg" data-cclose="' + e(app) + '">Cancel</button><button type="submit">Add comment</button></span></div></form>';
   }
-  // Adds the box to one app row, or refreshes it in place so typing isn't lost.
+  // Adds the Comment button to one app row and keeps the strip under it up to date (typing isn't lost).
   function decorate(row)
   {
-    var pid = row.querySelector('.pid'), body = row.querySelector('.pbody');
-    if (!pid || !body) { return; }
-    var app = pid.textContent.trim(), box = body.querySelector('.lpx-cmt');
-    if (!box)
+    var pid = row.querySelector('.pid'), chips = row.querySelector('summary .pchips');
+    if (!pid || !chips) { return; }
+    var app = pid.textContent.trim(), n = openCount(app);
+    var btn = chips.querySelector('.lpx-cbtn');
+    if (!btn) { btn = document.createElement('button'); btn.type = 'button'; btn.className = 'pchip lpx-cbtn'; btn.setAttribute('data-ctoggle', app); chips.insertBefore(btn, chips.firstChild); }
+    btn.classList.toggle('has', n > 0);
+    btn.innerHTML = ICON + (n ? n + (n === 1 ? ' comment' : ' comments') : 'Comment');
+    btn.setAttribute('aria-expanded', OPEN[app] ? 'true' : 'false');
+    btn.setAttribute('aria-label', (n ? n + ' open ' + (n === 1 ? 'comment' : 'comments') + '. ' : '') + (OPEN[app] ? 'Close the comment box for ' : 'Add a comment for the AI builder on ') + app);
+    var strip = row.nextElementSibling;
+    if (!strip || !strip.classList.contains('lpx-cstrip') || strip.getAttribute('data-capp') !== app)
     {
-      box = document.createElement('div'); box.className = 'lpx-cmt'; box.setAttribute('data-capp', app);
-      box.innerHTML = '<div class="lpx-ch"><span class="plbl">Comments for the AI builder</span></div><p class="lpx-cnote">The AI builder works on apps with open comments first, then marks each comment actioned and says what it changed.</p><div class="lpx-cl"></div><div class="lpx-cf"></div>';
-      body.appendChild(box);
+      strip = document.createElement('div'); strip.className = 'lpx-cstrip'; strip.setAttribute('data-capp', app);
+      strip.innerHTML = '<div class="lpx-cl"></div><div class="lpx-cf"></div>';
+      row.parentNode.insertBefore(strip, row.nextSibling);
     }
-    box.querySelector('.lpx-cl').innerHTML = listHtml(app);
-    var cf = box.querySelector('.lpx-cf');
-    if (cf.getAttribute('data-state') !== STATE + CANWRITE)
+    var cl = strip.querySelector('.lpx-cl'), cf = strip.querySelector('.lpx-cf'), lh = listHtml(app);
+    if (cl.innerHTML !== lh) { cl.innerHTML = lh; }
+    var want = OPEN[app] ? STATE + CANWRITE : '';
+    if (cf.getAttribute('data-state') !== want)
     {
-      cf.innerHTML = formHtml(app); cf.setAttribute('data-state', STATE + CANWRITE);
+      cf.innerHTML = OPEN[app] ? formHtml(app) : ''; cf.setAttribute('data-state', want);
       var ta = cf.querySelector('textarea'); if (ta && DRAFT[app]) { ta.value = DRAFT[app]; }
     }
     var m = cf.querySelector('.lpx-cmsg'); if (m && MSG[app]) { m.textContent = MSG[app].t; m.className = 'lpx-cmsg' + (MSG[app].bad ? ' bad' : ''); }
-    // A chip on the row's summary so open comments show without opening the row.
-    var chips = row.querySelector('summary .pchips'), chip = chips && chips.querySelector('.lpx-cchip'), n = openCount(app);
-    if (chips)
-    {
-      if (n && !chip) { chip = document.createElement('span'); chip.className = 'pchip lpx-cchip'; chips.insertBefore(chip, chips.firstChild); }
-      if (chip) { if (n) { chip.textContent = n + (n === 1 ? ' open comment' : ' open comments'); } else { chip.remove(); } }
-    }
+    if (!cl.innerHTML && !cf.innerHTML) { strip.hidden = true; } else { strip.hidden = false; }
   }
-  function decorateAll() { var L = document.getElementById('p-list'); if (L) { L.querySelectorAll('details.prow').forEach(decorate); } }
+  function decorateAll()
+  {
+    var L = document.getElementById('p-list'); if (!L) { return; }
+    // Drop strips left behind by a re-render, then decorate each row.
+    L.querySelectorAll('.lpx-cstrip').forEach(function (s) { var p = s.previousElementSibling; if (!p || !p.matches('details.prow')) { s.remove(); } });
+    L.querySelectorAll('details.prow').forEach(decorate);
+  }
 
   function names()
   {
@@ -169,12 +194,12 @@ BLOCK = r"""<!-- lpx-cmt:start -->
 
   document.addEventListener('input', function (ev)
   {
-    var f = ev.target.closest && ev.target.closest('.lpx-cmt form');
+    var f = ev.target.closest && ev.target.closest('.lpx-cstrip form');
     if (f) { DRAFT[f.getAttribute('data-capp')] = ev.target.value; }
   });
   document.addEventListener('submit', function (ev)
   {
-    var f = ev.target.closest && ev.target.closest('.lpx-cmt form'); if (!f) { return; }
+    var f = ev.target.closest && ev.target.closest('.lpx-cstrip form'); if (!f) { return; }
     ev.preventDefault();
     var app = f.getAttribute('data-capp'), ta = f.querySelector('textarea'), btn = f.querySelector('button'), msg = f.querySelector('.lpx-cmsg');
     var text = ta.value.replace(/\s+$/, '').replace(/^\s+/, '');
@@ -183,7 +208,7 @@ BLOCK = r"""<!-- lpx-cmt:start -->
     DB.collection(COL).add({ app: app, text: text.slice(0, 1000), by: ME || null, at: new Date().toISOString(), status: 'open' }).then(function ()
     {
       DRAFT[app] = ''; ta.value = ''; MSG[app] = { t: 'Comment added. The AI builder will pick it up on its next run.' };
-      msg.textContent = MSG[app].t; btn.disabled = false;
+      msg.textContent = MSG[app].t; msg.className = 'lpx-cmsg'; btn.disabled = false;
     }, function ()
     {
       MSG[app] = { t: 'Your comment wasn\'t saved. You may not have edit access to this page.', bad: true };
@@ -192,6 +217,21 @@ BLOCK = r"""<!-- lpx-cmt:start -->
   });
   document.addEventListener('click', function (ev)
   {
+    var t = ev.target.closest && ev.target.closest('[data-ctoggle],[data-cclose],[data-cdone]');
+    if (t)
+    {
+      // The Comment button sits inside the row's summary: stop it opening or closing the row.
+      ev.preventDefault(); ev.stopPropagation();
+      var ap = t.getAttribute('data-ctoggle') || t.getAttribute('data-cclose') || t.getAttribute('data-cdone');
+      if (t.hasAttribute('data-cdone')) { SHOWDONE[ap] = !SHOWDONE[ap]; decorateAll(); return; }
+      OPEN[ap] = t.hasAttribute('data-ctoggle') ? !OPEN[ap] : false;
+      if (!OPEN[ap]) { MSG[ap] = null; }
+      decorateAll();
+      var s = document.querySelector('.lpx-cstrip[data-capp="' + ap + '"]');
+      if (OPEN[ap] && s) { var ta = s.querySelector('textarea'); if (ta) { ta.focus(); } else { s.scrollIntoView({ block: 'nearest' }); } }
+      else { var bt = document.querySelector('.lpx-cbtn[data-ctoggle="' + ap + '"]'); if (bt) { bt.focus(); } }
+      return;
+    }
     var b = ev.target.closest && ev.target.closest('[data-cmark]'); if (!b || !DB) { return; }
     var id = b.getAttribute('data-cmark'), c = null;
     Object.keys(BY).forEach(function (k) { BY[k].forEach(function (x) { if (x.id === id) { c = x; } }); });
@@ -201,6 +241,13 @@ BLOCK = r"""<!-- lpx-cmt:start -->
     DB.collection(COL).doc(id).update(upd).catch(function () { b.disabled = false; });
   });
 
+  document.addEventListener('keydown', function (ev)
+  {
+    if (ev.key !== 'Escape') { return; }
+    var f = ev.target.closest && ev.target.closest('.lpx-cstrip form'); if (!f) { return; }
+    var ap = f.getAttribute('data-capp'); OPEN[ap] = false; MSG[ap] = null; decorateAll();
+    var bt = document.querySelector('.lpx-cbtn[data-ctoggle="' + ap + '"]'); if (bt) { bt.focus(); }
+  });
   function boot()
   {
     var L = document.getElementById('p-list'); if (!L) { return; }
