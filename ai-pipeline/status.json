@@ -334,16 +334,23 @@
    "version": "4"
   },
   "APP-31": {
+   "area": "Corporate",
+   "desc": "Answers staff questions about how a council process works, step by step, with who does each step and a link to the mapped process. Logs questions no process answers so owners can fill the gaps.",
    "lastUpdated": "2026-11-09",
    "name": "Business Process Q&A",
+   "notes": "New build with eight sample mapped processes in the shape of Nintex Process Manager: AI (or the matching process steps when AI is off) answers questions step by step with who does each step and links to the source step, logs every question without who asked, lets process owners see gaps and drafts a note to them, swaps names and contact details for placeholders before AI, and has Steps to productionise and Draft in Outlook added.",
    "places": {
-    "github": true,
-    "list": true,
-    "mock": true,
-    "polish": true,
-    "preview": true
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
    },
-   "status": "In progress"
+   "runs": 1,
+   "shot": "ai-pipeline/shots/APP-31.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/QAwg8st71VqAQCB9PmP5iF",
+   "version": "1"
   },
   "APP-32": {
    "area": "Corporate",
