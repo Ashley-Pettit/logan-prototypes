@@ -12,7 +12,7 @@ Usage (run from the repo root):
       Records (or updates) an app's result. Every list copy starts as pending. --alt URL (repeatable)
       records other versions of the same app; its card then shows Mockup 1 (--url) and Mockup 2. --shot keeps a small
       448x280 copy of the screenshot at ai-pipeline/shots/<APP id>.jpg so a later run can add the card.
-  python3 tools/proto_status.py done APP-08 list polish mock github preview
+  python3 tools/proto_status.py done APP-08 list polish mock preview
       Marks list copies as updated for that app.
   python3 tools/proto_status.py apply data.json [out.json]
       Copies the tracked fields (status, url, version, lastUpdated, notes, runs) onto the matching
@@ -21,13 +21,15 @@ Usage (run from the repo root):
   python3 tools/proto_status.py pending
       Prints the apps whose list copies are not all updated yet, as JSON.
 
-List copies: list (the list page), polish (copy a), mock (copy b), github (copy d), preview (copy c).
+List copies: list (the list page), polish (copy a), mock (copy b), preview (copy c). The GitHub copy is disconnected.
 """
 import argparse, json, os, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 PATH = os.path.join(HERE, "..", "ai-pipeline", "status.json")
-PLACES = ["list", "polish", "mock", "github", "preview"]
+# The GitHub copy (ai-pipeline/current.html and proposed.html) is disconnected for now: the pipeline
+# lives only in the Claude artifacts, so it is no longer a place to update.
+PLACES = ["list", "polish", "mock", "preview"]
 FIELDS = ["status", "url", "version", "lastUpdated", "notes", "runs"]
 
 
