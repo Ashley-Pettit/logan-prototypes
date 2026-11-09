@@ -303,6 +303,17 @@ thead th{font-weight:700;border-bottom:2px solid var(--line-2)}
 .gcard .q{font-size:.95rem;background:var(--panel);padding:8px 10px;border-radius:4px}
 .gcard .from{font-size:.88rem;color:var(--ink-2)}
 
+/* three types of agents */
+.types{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.types li{border:1px solid var(--line);border-top:6px solid;border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:8px;font-size:.94rem;position:relative}
+.types .t1{border-top-color:var(--good)} .types .t2{border-top-color:var(--warn-line)} .types .t3{border-top-color:var(--bad)}
+.types .tn{width:30px;height:30px;border-radius:50%;background:var(--panel-2);display:grid;place-items:center;font-weight:700}
+.types h3{font-size:1.1rem}
+.types .risk{align-self:flex-start;font-size:.8rem;font-weight:700;padding:2px 10px;border-radius:99px}
+.types .t1 .risk{background:var(--good-soft);color:var(--good)} .types .t2 .risk{background:var(--warn-soft);color:var(--warn)} .types .t3 .risk{background:var(--bad-soft);color:var(--bad)}
+.types p{color:var(--ink-2)}
+.types .who{margin-top:auto;padding-top:8px;border-top:1px solid var(--line);color:var(--ink);font-weight:600}
+
 /* how AI uses your words */
 .pv{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .pv-card{background:var(--panel);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:8px}
@@ -447,7 +458,7 @@ footer.foot{color:var(--muted);font-size:.84rem;padding-block:22px 32px;border-t
   .form{grid-template-columns:1fr}
   .swap{grid-template-columns:minmax(0,1fr)}
   .key{grid-template-columns:minmax(0,1fr)}
-  .pv,.three,.test3,.gallery,.wins,.fails{grid-template-columns:minmax(0,1fr)}
+  .pv,.three,.test3,.gallery,.wins,.fails,.types{grid-template-columns:minmax(0,1fr)}
   .pb{grid-template-columns:110px minmax(0,1fr) 42px}
   .details dd{text-align:left}
   .stage,.fig-frame{padding:10px;min-height:0}
@@ -592,7 +603,7 @@ footer.foot{color:var(--muted);font-size:.84rem;padding-block:22px 32px;border-t
   </div>
 </div>
 
-<footer class="foot gut"><div class="wrap">Version 3.5 · Updated November 2026 for the current Agent Builder in Microsoft 365 Copilot. Prototype training content for Logan City Council AI Champions. Agent Builder screenshots are from <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/agent-builder" target="_blank" rel="noopener">Microsoft Learn</a>, used under CC BY 4.0, and show Microsoft's example agents.</div></footer>
+<footer class="foot gut"><div class="wrap">Version 3.6 · Updated November 2026 for the current Agent Builder in Microsoft 365 Copilot. Prototype training content for Logan City Council AI Champions. Agent Builder screenshots are from <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/agent-builder" target="_blank" rel="noopener">Microsoft Learn</a>, used under CC BY 4.0, and show Microsoft's example agents.</div></footer>
 
 <!-- ================= LESSON CONTENT ================= -->
 <template id="t-how">
@@ -804,8 +815,43 @@ footer.foot{color:var(--muted);font-size:.84rem;padding-block:22px 32px;border-t
   </div>
 
   <div class="block">
+    <h2>Three types of agents</h2>
+    <p>Not all agents are the same. The more an agent can reach and do, the more care it needs. Most agents you build in Agent Builder are the first type.</p>
+  </div>
+  <ol class="types">
+    <li class="t1">
+      <span class="tn">1</span>
+      <h3>Assistant</h3>
+      <span class="risk">Low risk</span>
+      <p><b>What it is:</b> instructions plus a few documents to answer from.</p>
+      <p><b>What it can do:</b> read and answer. It can't change anything.</p>
+      <p><b>Example:</b> a Process Helper that answers questions from your team's procedures.</p>
+      <p class="who">You can build this in Agent Builder.</p>
+    </li>
+    <li class="t2">
+      <span class="tn">2</span>
+      <h3>Connected agent</h3>
+      <span class="risk">Medium risk</span>
+      <p><b>What it is:</b> an agent that reads live information from council systems through connectors.</p>
+      <p><b>What it can do:</b> look things up, like the status of a request. It still doesn't change anything.</p>
+      <p><b>Example:</b> an agent that checks where a work order is up to.</p>
+      <p class="who">Team up with the AI team. Connectors need IT authorisation.</p>
+    </li>
+    <li class="t3">
+      <span class="tn">3</span>
+      <h3>Autonomous agent</h3>
+      <span class="risk">High risk</span>
+      <p><b>What it is:</b> an agent that takes actions on its own.</p>
+      <p><b>What it can do:</b> send emails, trigger flows, or create and update records.</p>
+      <p><b>Example:</b> an agent that logs a request in a council system and emails the person when it's done.</p>
+      <p class="who">An AI team build, with extra safeguards and approval.</p>
+    </li>
+  </ol>
+  <p class="muted small">In Microsoft's terms, an assistant built in Agent Builder is a "declarative agent": instructions and knowledge, with no custom actions.</p>
+
+  <div class="block">
     <h2>Great first agents, and bigger ideas</h2>
-    <p>Most ideas make a great first agent. Some are bigger builds that need council systems, extra safeguards or a different tool. The AI team can work with you on those.</p>
+    <p>Most ideas make a great first agent, as an assistant. Connected and autonomous agents are bigger builds that need council systems, extra safeguards or a different tool. The AI team can work with you on those.</p>
   </div>
   <div class="table-wrap"><table>
     <thead><tr><th>Great first agents</th><th>Bigger ideas the AI team can help with</th></tr></thead>
@@ -1220,10 +1266,10 @@ footer.foot{color:var(--muted);font-size:.84rem;padding-block:22px 32px;border-t
       lede: "Ten minutes here will change how you use AI. It finds information, then predicts an answer one word at a time.",
       goals: ["See what an agent can do for your team", "Bust a few common AI myths", "Understand temperature, tokens and context windows", "Understand why AI goes off track or makes things up"],
       recap: ["Copilot finds relevant information, then writes the answer by predicting likely words", "Finding the right document doesn't guarantee the right answer", "Temperature controls how adventurous AI is. In Agent Builder, you can use the system prompt to make the agent more creative or more exact in a way that has a similar feeling to adjusting temperature", "The context window is limited, so keep chats on topic and knowledge focused", "Some reading between the lines makes AI useful. Too much leads to tangents", "Avoid 'always' and 'must' for things the agent might not have"] },
-    { id: "choose", ms: ["Agent Builder overview", "agent-builder"], title: "Find your first agent", mins: 8, summary: "Spot the questions your team keeps asking, and turn one into an agent idea.", tags: ["Activity", "Quick check"],
+    { id: "choose", ms: ["Agent Builder overview", "agent-builder"], title: "Find your first agent", mins: 10, summary: "Spot the questions your team keeps asking, and turn one into an agent idea.", tags: ["Activity", "Quick check"],
       lede: "Every team has questions that get asked over and over. Those are your best agent ideas.",
-      goals: ["Spot agent ideas in your own team", "Turn an idea into a prompt you can paste into Agent Builder", "Know where the AI team can help with bigger ideas"],
-      recap: ["If people ask it a lot, the answer's written down, and a quick answer saves time, it's a good agent", "Turn your idea into a Describe prompt and paste it into Agent Builder", "For bigger ideas, like ones that use council systems, team up with the AI team", "Templates are a good starting point, but check every field"] },
+      goals: ["Spot agent ideas in your own team", "Know the three types of agents: assistant, connected and autonomous", "Turn an idea into a prompt you can paste into Agent Builder", "Know where the AI team can help with bigger ideas"],
+      recap: ["Three types: assistants read and answer, connected agents look up live data, autonomous agents take actions", "If people ask it a lot, the answer's written down, and a quick answer saves time, it's a good agent", "Turn your idea into a Describe prompt and paste it into Agent Builder", "For bigger ideas, like ones that use council systems, team up with the AI team", "Templates are a good starting point, but check every field"] },
     { id: "build", ms: ["Build agents with Agent Builder", "agent-builder-build-agents"], title: "Build it", mins: 18, summary: "A walkthrough of Agent Builder, and how to write instructions that work.", tags: ["Walkthrough", "Activity"],
       lede: "Follow along with Agent Builder open in another tab, then write the instructions for your own agent.",
       goals: ["Find your way around Agent Builder", "Know when to be purposely vague and when to be precise", "Write instructions, including how creative the agent should be"],
@@ -1359,7 +1405,7 @@ footer.foot{color:var(--muted);font-size:.84rem;padding-block:22px 32px;border-t
       { text: "An agent that answers your team's questions from the team's procedures and FAQ.", answer: 0,
         why: "Answering staff questions from your own documents is exactly what Agent Builder does well." },
       { text: "An agent that updates records in a council system when staff ask it to.", answer: 1,
-        why: "Changing records in other systems needs a different setup and extra safeguards. The AI team can help you get there." },
+        why: "That's an autonomous agent. Changing records in other systems needs a different setup and extra safeguards. The AI team can help you get there." },
       { text: "An agent that helps decide whether someone's request should be approved.", answer: 1,
         why: "It supports decisions about people, so it's worth building together with the AI team." },
       { text: "An agent that helps you draft replies using the team's approved email templates.", answer: 0,
