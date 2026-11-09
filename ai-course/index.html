@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex">
 <meta name="description" content="Hands-on course for Logan AI Champions: build an agent in Microsoft 365 Copilot Agent Builder, give it good knowledge, test it and keep information safe. Rapid prototype for management review, not endorsed.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="AI Champions Training">
+<meta property="og:title" content="Agent Builder Essentials">
 <meta property="og:description" content="Hands-on course for Logan AI Champions: build an agent in Microsoft 365 Copilot Agent Builder, give it good knowledge, test it and keep information safe. Rapid prototype for management review, not endorsed.">
 <meta property="og:url" content="https://ashley-pettit.github.io/logan-prototypes/ai-course/">
 <meta property="og:image" content="https://ashley-pettit.github.io/logan-prototypes/ai-course/og.png">
@@ -14,7 +14,7 @@
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="en_AU">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="AI Champions Training">
+<meta name="twitter:title" content="Agent Builder Essentials">
 <meta name="twitter:image" content="https://ashley-pettit.github.io/logan-prototypes/ai-course/og.png">
 <link rel="apple-touch-icon" href="../roster-builder/apple-touch-icon.png">
 <link rel="icon" href="../roster-builder/apple-touch-icon.png">
@@ -27,7 +27,7 @@ img{max-width:100%}
 .proto-banner b{font-weight:700}
 @media (prefers-color-scheme: dark){.proto-banner{background:#3a2f10;color:#ffe3a1;border-bottom-color:#6b5720}}
 </style>
-<title>AI Champions Training</title>
+<title>Agent Builder Essentials</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&display=swap">
@@ -467,6 +467,7 @@ footer.foot{color:var(--muted);font-size:.84rem;padding-block:22px 32px;border-t
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
+
 </head>
 <body>
 <div class="proto-banner" role="note"><b>Rapid prototype, not an endorsed course.</b> For management review as a concept only. Anything you type stays in your browser.</div>
@@ -491,7 +492,7 @@ footer.foot{color:var(--muted);font-size:.84rem;padding-block:22px 32px;border-t
 
 <header class="topbar">
   <div class="gut"><div class="wrap">
-    <a class="wordmark" href="#home"><span class="org">Logan City Council</span><span class="sep">|</span><span class="prod">AI Champions training</span></a>
+    <a class="wordmark" href="#home"><span class="org">Logan City Council</span><span class="sep">|</span><span class="prod">Agent Builder Essentials</span></a>
     <span class="tb-prog" id="tbText" aria-live="polite">0 of 9 lessons complete</span>
   </div></div>
   <div class="tb-line"><i id="tbFill"></i></div>
@@ -603,7 +604,7 @@ footer.foot{color:var(--muted);font-size:.84rem;padding-block:22px 32px;border-t
   </div>
 </div>
 
-<footer class="foot gut"><div class="wrap">Version 3.6 · Updated November 2026 for the current Agent Builder in Microsoft 365 Copilot. Prototype training content for Logan City Council AI Champions. Agent Builder screenshots are from <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/agent-builder" target="_blank" rel="noopener">Microsoft Learn</a>, used under CC BY 4.0, and show Microsoft's example agents.</div></footer>
+<footer class="foot gut"><div class="wrap">Version 3.7 · Updated November 2026 for the current Agent Builder in Microsoft 365 Copilot. Prototype training content for Logan City Council AI Champions. Agent Builder screenshots are from <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/agent-builder" target="_blank" rel="noopener">Microsoft Learn</a>, used under CC BY 4.0, and show Microsoft's example agents.</div></footer>
 
 <!-- ================= LESSON CONTENT ================= -->
 <template id="t-how">
@@ -1868,8 +1869,8 @@ footer.foot{color:var(--muted);font-size:.84rem;padding-block:22px 32px;border-t
     body.innerHTML =
       '<div class="result"><span class="big">' + score + ' of ' + quizItems.length + '</span><p>Passed. ' + (allDone ? "You've completed the course." : "Mark any skipped lessons complete to finish the course.") + '</p>' +
       '<label class="f" style="width:100%;max-width:420px">Your name for the certificate<input type="text" id="certName" placeholder="First and last name"></label>' +
-      '<div class="cert"><div class="cert-in"><span class="org">Logan City Council AI Champions</span><span class="lbl">Certificate of completion</span>' +
-      '<span class="who" id="certWho">Your name</span><span class="lbl">has completed</span><span class="course">AI Champions: Building agents in Microsoft 365 Copilot</span>' +
+      '<div class="cert"><div class="cert-in"><span class="org">Logan City Council</span><span class="lbl">Certificate of completion</span>' +
+      '<span class="who" id="certWho">Your name</span><span class="lbl">has completed</span><span class="course">Agent Builder Essentials</span>' +
       '<div class="sig"><div><b>' + d.toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" }) + '</b>Date completed</div><div><b>' + score + ' of ' + quizItems.length + '</b>Assessment result</div></div></div></div>' +
       '<p class="muted small">Take a screenshot of your certificate for your records.</p></div>';
     const nm = document.getElementById("certName");
