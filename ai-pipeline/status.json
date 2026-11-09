@@ -340,10 +340,10 @@
    "name": "Business Process Q&A",
    "notes": "New build with eight sample mapped processes in the shape of Nintex Process Manager: AI (or the matching process steps when AI is off) answers questions step by step with who does each step and links to the source step, logs every question without who asked, lets process owners see gaps and drafts a note to them, swaps names and contact details for placeholders before AI, and has Steps to productionise and Draft in Outlook added.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
     "preview": false
    },
    "runs": 1,
