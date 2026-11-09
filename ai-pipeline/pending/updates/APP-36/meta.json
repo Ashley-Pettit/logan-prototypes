@@ -9,5 +9,6 @@
  "desc": "Works through the privacy impact (IIP) assessment backlog: AI drafts a finding for each Queensland privacy principle and a council policy check, quoting the proposal, and works out a risk rating. A privacy officer confirms every finding, then copies the advice memo and questions for the project owner.",
  "area": "Corporate",
  "tested": "Playwright at 1280x800 light and 390x844 dark: opens on a seeded in-review assessment, confirm findings, advice step, Copy advice memo and Copy questions each with a Draft in Outlook link, Mark advice ready then Open next request, rules draft with AI off, new request validation, mobile backlog tab, Steps to productionise panel opens, All AI prototypes button shows, no page or console errors, scrollWidth equals viewport, no em or en dashes in visible text. AI path with a stand-in: prompt has no owner names or emails, AI dashes stripped, bad refs and non-string questions dropped, quote check flags unmatched quotes, Stop shows the cancelled message.",
- "base_version": "1794118181-48c4"
+ "base_version": "1794118181-48c4",
+ "published": "https://claude.ai/artifact/CPvvigNZmPKmr35aoCMmcw 2026-11-09 v4"
 }

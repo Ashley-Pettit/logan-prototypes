@@ -9,5 +9,6 @@
  "desc": "Finds under-used council fleet vehicles, checks which could switch to electric with the depot chargers available, and costs each recurring route with a suggestion to share it or run it electric. A plain-English brief for managers can be copied or drafted in Outlook.",
  "area": "Transport",
  "tested": "Playwright at 1280x800 light and 390x844 dark with AI off and with a stand-in AI: no page or console errors, scrollWidth equals viewport, all five tabs, assumption edit, vehicle peek, Ask with typed question and example chip, Copy brief for managers puts the brief on the clipboard with Draft in Outlook beside it (CSV copy opted out), Steps to productionise opens, All AI prototypes shows, keyboard focus ring visible; AI path confirmed name, email and phone in a question are swapped for placeholders before the prompt and invented vehicle ids in AI output are dropped.",
- "base_version": "1794118235-e43c"
+ "base_version": "1794118235-e43c",
+ "published": "https://claude.ai/artifact/NKZ3Tkw6ymxdqeaovMbQTs 2026-11-09 v4"
 }

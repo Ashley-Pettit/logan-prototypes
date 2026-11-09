@@ -9,5 +9,6 @@
  "desc": "Reads a venue month-end spreadsheet and flags budget variances, unusual months, trends and sheets that do not add up. AI explains each finding in plain English and drafts a summary for the manager and questions for budget owners.",
  "area": "Finance",
  "tested": "Playwright at 1280x800 light and 390x844 dark: all four sample sheets, Findings, Trends filter, status and note marking, Spreadsheet tab with trend sparklines, Summary and Questions with Copy buttons (clipboard checked) and Draft in Outlook links beside them, Mark review complete, own sheet from template, Excel upload with a title row (SheetJS routed locally) and the blocked-reader fallback message, Steps to productionise panel opens, All AI prototypes button shows, no page or console errors, no horizontal scroll, no em or en dashes in visible text or the panel. AI path with a stand-in: prompt has no names, emails, phones or preparer (placeholders kept), bad ids and non-string fields dropped, missing findings fall back to the rule explanation, dashes stripped from AI text.",
- "base_version": "1794118180-be73"
+ "base_version": "1794118180-be73",
+ "published": "https://claude.ai/artifact/SbiFKT5AksVQHpW5E3SX7M 2026-11-09 v4"
 }

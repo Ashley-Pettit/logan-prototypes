@@ -9,5 +9,6 @@
  "desc": "Drafts replies to community venue hire enquiries with an indicative fee, sourced answers to each question and automatic checks. Staff can also ask quick questions about venue procedures, fees and rules and see the source sections.",
  "area": "Community",
  "tested": "Playwright at 1280x800 light and 390x844 dark: no page or console errors, no horizontal scroll, sample draft on load, template redraft, Copy reply with Draft in Outlook beside it, Mark as replied, fee adjust flags a stale draft, Ask suggestions (gap case shows Not covered), document search and empty state, new enquiry validation, sample fill and booking details read from text, Steps to productionise panel opens, All AI prototypes button shows. AI stand-in: reply and Ask prompts contain no names, emails or phone numbers; em dashes and invalid source tags are stripped; placeholders restored.",
- "base_version": "1794118217-efe2"
+ "base_version": "1794118217-efe2",
+ "published": "https://claude.ai/artifact/1VrEX4FPY2ph4tGY2kNNz3 2026-11-09 v5"
 }

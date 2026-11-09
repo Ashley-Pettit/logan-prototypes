@@ -9,5 +9,6 @@
  "desc": "Checks a document against the checklist it must meet before submission and lists the blockers and gaps, with a quote as evidence and a suggested fix for each. Opens on a worked example of a council report that is not ready yet.",
  "area": "Corporate",
  "tested": "Playwright at 1280x800 light and 390x844 dark: opens on the worked example, fix list with mark fixed and accept risk with reason, quick check on the grant sample, checklist change clears the old review, Paste your own with the too-short error, Copy review with Draft in Outlook beside it, Steps to productionise panel, All AI prototypes button, no page or console errors and no horizontal scroll. AI path with a stand-in: prompt keeps the ABN but has no name, email or phone, bad statuses and non-text fields fall back safely, dashes are removed, Download works and Stop shows the stopped message.",
- "base_version": "1794118216-1d3c"
+ "base_version": "1794118216-1d3c",
+ "published": "https://claude.ai/artifact/2NNBgbeCdonBHuAVEkgFen 2026-11-09 v5"
 }

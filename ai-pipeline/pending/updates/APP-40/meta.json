@@ -9,5 +9,6 @@
  "desc": "Turns approved procedures into a quick guide, checklist and quiz, each point tagged to the procedure step it came from. Checks every step is covered and no new numbers crept in before the owner approves.",
  "area": "Community",
  "tested": "Playwright at 1280x800 light and 390x844 dark: sample draft review, checklist ticks, quiz marking, step peek, check and share, Copy plus Draft in Outlook, send for approval, second procedure in template mode, paste own with Turn notes into steps, Steps to productionise panel and All AI prototypes button; no page or console errors and no horizontal scroll. AI stand-in: notes to steps and pack drafting, prompts had no names, emails or phone numbers, placeholders restored, bad quiz items dropped; rate-limited AI fell back to template with a plain message.",
- "base_version": "1794118218-e20c"
+ "base_version": "1794118218-e20c",
+ "published": "https://claude.ai/artifact/KuStTsVTdKAw8Da3QVmYt9 2026-11-09 v5"
 }

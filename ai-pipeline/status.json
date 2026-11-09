@@ -1,6 +1,101 @@
 {
  "about": "Background tracker for the AI prototype list. See tools/proto_status.py.",
  "apps": {
+  "APP-01": {
+   "area": "Transport",
+   "desc": "Ranks road segments and road safety issues across a sample network from crash, speed, pedestrian and layout data. AI explains each segment's risk, suggests treatments and drafts briefings.",
+   "lastUpdated": "2026-11-09",
+   "name": "Road Safety Assessor",
+   "notes": "Scores and ranks 12 made-up road segments on crash history, speed, pedestrian exposure and layout with adjustable weights, now also ranks road safety issues across the network (such as pedestrians struck, intersection and night crashes) by severity, and AI explains each segment, suggests treatments and writes briefings with data-built wording when AI is off; assumes the sample severity points stand in for the council's adopted method. Reviewed for the brief and manager ready.",
+   "places": {
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "runs": 2,
+   "shot": "ai-pipeline/shots/APP-01.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/4gpWDVtLvpyBCuJeBg3VfK",
+   "version": "4"
+  },
+  "APP-02": {
+   "area": "Transport",
+   "desc": "Calibrates pavement deterioration curves to each road segment's condition surveys, reads defect and environmental data to suggest the likely cause, and times treatments with costs. Includes design traffic and pavement thickness calculations, network patterns and plain English AI explanations.",
+   "lastUpdated": "2026-11-09",
+   "name": "Pavement Modelling Assistant",
+   "notes": "Models deterioration on eight sample road segments with calibration to each segment's surveys, what if settings, treatment timing and costs, a defect check that reads cracking, rutting and potholes with drainage, flooding and heavy vehicles to suggest the likely cause, network patterns (now including flooding) and forward works, design traffic and granular pavement thickness calculations, and AI explanations and Q&A with personal details swapped for placeholders; model, rules and rates are illustrative, not the council's adopted ones. Reviewed for the brief and manager ready.",
+   "places": {
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "runs": 2,
+   "shot": "ai-pipeline/shots/APP-02.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/HJT5SnbtP2RUVTXyh5rzXM",
+   "version": "4"
+  },
+  "APP-04": {
+   "area": "Procurement",
+   "desc": "Compares supplier submissions against weighted tender criteria in a scoring matrix the panel can adjust, then drafts evaluation comments, a recommendation summary and clarification requests. It also drafts specification outlines for new RFQs.",
+   "lastUpdated": "2026-11-09",
+   "name": "Tender and Procurement Assistant",
+   "notes": "Scores four sample supplier submissions against weighted criteria on open, lets the panel adjust scores in a live comparison matrix, and drafts evaluation comments, a recommendation summary, supplier clarification requests and specification outlines, with AI where available and rules otherwise (assumes an RFQ-style lump-sum evaluation; operator and mechanic assessments are not covered). Reviewed for the brief and manager ready.",
+   "places": {
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "runs": 2,
+   "shot": "ai-pipeline/shots/APP-04.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/EsKXAsj9Spt5Ymr5D67dFr",
+   "version": "6"
+  },
+  "APP-05": {
+   "area": "Transport",
+   "desc": "Finds under-used council fleet vehicles, checks which could switch to electric with the depot chargers available, and costs each recurring route with a suggestion to share it or run it electric. A plain-English brief for managers can be copied or drafted in Outlook.",
+   "lastUpdated": "2026-11-09",
+   "name": "Fleet EV and Route Optimiser",
+   "notes": "Rules flag under-used vehicles to pool, electric swaps, charger installs and shared runs for 16 sample vehicles across three sample depots, a new Routes view costs every recurring run with a suggested change, and a copyable brief for managers works with or without AI, which rewrites it and answers questions naming the vehicles used; EV models, prices and emission factors are rounded sample figures. Reviewed for the brief and manager ready.",
+   "places": {
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "runs": 2,
+   "shot": "ai-pipeline/shots/APP-05.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/NKZ3Tkw6ymxdqeaovMbQTs",
+   "version": "4"
+  },
+  "APP-07": {
+   "area": "Transport",
+   "desc": "Turns a site brief into three concept options for paths, car parks, street lighting or kerbs, each with a plan sketch, cost range and design checks. Compare them, mark a preferred option and copy a concept note to send.",
+   "lastUpdated": "2026-11-09",
+   "name": "Infrastructure Concept Designer",
+   "notes": "Pick or write a site brief for a pathway, car park, street lighting or kerb job and get three concept options with a drawn plan sketch, rough quantities, a cost range from made-up unit rates, sample design rule checks and a side by side comparison; AI picks settings from fixed lists and template options are used when AI is off, and a short concept note can be copied or drafted in Outlook. Reviewed for the brief and manager ready.",
+   "places": {
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "runs": 2,
+   "shot": "ai-pipeline/shots/APP-07.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/4jAHhYVppvybERBF2kKtei",
+   "version": "4"
+  },
   "APP-08": {
    "alts": [
     "https://claude.ai/artifact/ToUaxmdQU6zQD8pNoBgYzW"
@@ -41,6 +136,63 @@
    "status": "Built",
    "url": "https://claude.ai/artifact/R2GZ6BifSEDxF48tFqN6eH",
    "version": "1"
+  },
+  "APP-12": {
+   "area": "Transport",
+   "desc": "Mechanics pick a job or ask a question and get a short answer built only from workshop manuals and procedures, with numbered sources, checked specs and fault code first checks. Gaps in the library go on a list to send to the knowledge owner.",
+   "lastUpdated": "2026-11-09",
+   "name": "Mechanic Knowledge Assistant",
+   "notes": "Job queue with a worked example answer, grounded Q&A with clickable sources and spec checks, fault code finder (now covering EV codes in the library), searchable sample library and a gap list that copies to the knowledge owner; names and contact details are swapped for placeholders before AI, and without AI it gives fault meanings, first checks, safety lines and key values from the library. Reviewed for the brief and manager ready.",
+   "places": {
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "runs": 2,
+   "shot": "ai-pipeline/shots/APP-12.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/QzNgaHfmJywhNiQFHYUqdB",
+   "version": "7"
+  },
+  "APP-14": {
+   "area": "Transport",
+   "desc": "Ask a road standards question in plain English and get an answer drawn only from the matching clauses. Look up a road to see how it measures up to the current standards, and compare versions to see what changed.",
+   "lastUpdated": "2026-11-09",
+   "name": "Road Standards Search",
+   "notes": "Searches a made-up library of road policies, standards and specifications with plain-English AI answers that cite clauses, compares versions word by word with an AI explanation, and now looks up roads in a sample asset register and checks them against the current clauses (assumes the real asset register can be read in production). Reviewed for the brief and manager ready.",
+   "places": {
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "runs": 2,
+   "shot": "ai-pipeline/shots/APP-14.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/1EsibMe2dK5F8CSmf9hT72",
+   "version": "6"
+  },
+  "APP-15": {
+   "area": "Safety",
+   "desc": "Ask what to do now during a disaster or business disruption and get short numbered steps for your role and activation level, each linked to the plan section it came from. Also gives a tickable checklist for the current level and a searchable library of sample plan excerpts.",
+   "lastUpdated": "2026-11-09",
+   "name": "Disaster and Continuity Guide",
+   "notes": "Answers LDCC and crisis staff's 'what do I do now' questions from sample BCP and disaster plan excerpts for their role and activation level, with cited sources, a tickable checklist and a plan browser, and falls back to quoting the plans word for word when AI is off; the plan excerpts are made up. Reviewed for the brief and manager ready.",
+   "places": {
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "runs": 2,
+   "shot": "ai-pipeline/shots/APP-15.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/Pef4TWor6u3ghBqonEAQY7",
+   "version": "6"
   },
   "APP-17": {
    "area": "Corporate",
@@ -102,6 +254,44 @@
    "url": "https://claude.ai/artifact/Aw2XZC4d3We6wHipn9qyLY",
    "version": "1"
   },
+  "APP-25": {
+   "area": "IT",
+   "desc": "Ask a plain-English question about the IT standards and get a Yes, No or conditions answer with links to the exact clauses, or check a proposed tool or project against the standards. Wrong answers and gaps turn into a ready-to-send note for the standard's owner.",
+   "lastUpdated": "2026-11-09",
+   "name": "IT Standards Q&A",
+   "notes": "Answers plain-English questions about a made-up sample IT Standards Portal of 12 standards with Yes, No or conditions verdicts tuned to the asker's role and links to each source clause, checks a proposed tool or project against the standards, and now opens with a worked example answer and proposal check, drafts a note to the standard owner when an answer is wrong or a gap is found, and swaps names, emails and phone numbers for placeholders before AI; assumes the real portal content and owner contacts replace the sample. Reviewed for the brief and manager ready.",
+   "places": {
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "runs": 3,
+   "shot": "ai-pipeline/shots/APP-25.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/86XUYquSnmaSKzWzm2gZLp",
+   "version": "5"
+  },
+  "APP-26": {
+   "area": "Transport",
+   "desc": "Builds next week's road maintenance programme from a job backlog, budget and crews, and checks contractor survey data and drain grate photos before they reach the backlog. AI explains the order, reads messy contractor returns and rates grate photos; rules do the job when AI is off.",
+   "lastUpdated": "2026-11-09",
+   "name": "Road Maintenance Scheduler",
+   "notes": "Ranks a made-up backlog of 20 road jobs within a weekly budget (very high risk jobs always kept), sequences crews by zone on a schematic map with a copyable daily run sheet, checks a sample contractor defect survey return against assumed contract data rules (flags missing fields and repeats, drafts a query to the contractor, adds clean records to the backlog), and rates drain grate photos with AI or by hand. Reviewed for the brief and manager ready.",
+   "places": {
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "runs": 2,
+   "shot": "ai-pipeline/shots/APP-26.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/VpwqKrtmJFdVAHhCmfFFJi",
+   "version": "4"
+  },
   "APP-27": {
    "alts": [
     "https://claude.ai/artifact/98ThRTNq57fbpgY7U9KYE4"
@@ -123,6 +313,253 @@
    "status": "Built",
    "url": "https://claude.ai/artifact/XAHF4YzoE5pJfx17r9khD6",
    "version": "1"
+  },
+  "APP-28": {
+   "area": "IT",
+   "desc": "Tells IT staff whether a change needs CAB, Emergency CAB or no CAB, with the rule behind each reason, the approvals and the next CAB date. It flags risks hidden in the description and drafts the CAB paper and an email to the change owner.",
+   "lastUpdated": "2026-11-09",
+   "name": "CAB Check Agent",
+   "notes": "Checks sample IT change requests against a sample CAB rule book (no CAB, CAB or Emergency CAB, with risk, rule-cited reasons, approvals, blockers and the next CAB date), now flags risks in the description that the form missed with a word check even when AI is off, and AI adds a closer read, a plain summary, a CAB paper and an email to the change owner; assumes the rule book, CAB day and freeze dates are samples to be replaced by the change manager. Reviewed for the brief and manager ready.",
+   "places": {
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "runs": 2,
+   "shot": "ai-pipeline/shots/APP-28.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/86yxARB1jhFpFzRDVFbFFx",
+   "version": "4"
+  },
+  "APP-32": {
+   "area": "Corporate",
+   "desc": "Checks a document against the checklist it must meet before submission and lists the blockers and gaps, with a quote as evidence and a suggested fix for each. Opens on a worked example of a council report that is not ready yet.",
+   "lastUpdated": "2026-11-09",
+   "name": "Document Readiness Reviewer",
+   "notes": "Checks a sample council report, grant application, approval conditions statement or policy against its checklist, marking each item met, partly met or missing with a verified quote, a readiness verdict, a fix list with accepted risks and a review to copy, email or download; it opens on a worked AI example, swaps names, emails and phone numbers for placeholders before AI and runs a keyword check when AI is off. Reviewed for the brief and manager ready.",
+   "places": {
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "runs": 3,
+   "shot": "ai-pipeline/shots/APP-32.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/2NNBgbeCdonBHuAVEkgFen",
+   "version": "5"
+  },
+  "APP-34": {
+   "area": "Finance",
+   "desc": "Reads a venue month-end spreadsheet and flags budget variances, unusual months, trends and sheets that do not add up. AI explains each finding in plain English and drafts a summary for the manager and questions for budget owners.",
+   "lastUpdated": "2026-11-09",
+   "name": "Financial Spreadsheet Reviewer",
+   "notes": "Checks four sample venue month-end spreadsheets or your own Excel or CSV file for budget variances, unusual or missing months, steady month-on-month trends, possible double postings, big changes on last year and sheets that do not add up, then AI explains each finding with likely causes, a question for the budget owner and a manager summary (rule explanations when AI is off); only account names and numbers go to AI and the thresholds are samples. Reviewed for the brief and manager ready.",
+   "places": {
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "runs": 2,
+   "shot": "ai-pipeline/shots/APP-34.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/SbiFKT5AksVQHpW5E3SX7M",
+   "version": "4"
+  },
+  "APP-36": {
+   "area": "Corporate",
+   "desc": "Works through the privacy impact (IIP) assessment backlog: AI drafts a finding for each Queensland privacy principle and a council policy check, quoting the proposal, and works out a risk rating. A privacy officer confirms every finding, then copies the advice memo and questions for the project owner.",
+   "lastUpdated": "2026-11-09",
+   "name": "Privacy Impact Assessor",
+   "notes": "Works an IIP assessment backlog (six made-up requests, sorted by due date, one in review and one finished) by drafting a finding for each of 11 sample privacy principle summaries plus a sample council policy check, with AI quoting the proposal and rules used when AI is off, then the privacy officer confirms every finding before copying the advice memo and owner questions; principle and policy wording are samples to be checked against the Information Privacy Act 2009 (Qld). Reviewed for the brief and manager ready.",
+   "places": {
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "runs": 2,
+   "shot": "ai-pipeline/shots/APP-36.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/CPvvigNZmPKmr35aoCMmcw",
+   "version": "4"
+  },
+  "APP-38": {
+   "area": "Community",
+   "desc": "Drafts replies to community venue hire enquiries with an indicative fee, sourced answers to each question and automatic checks. Staff can also ask quick questions about venue procedures, fees and rules and see the source sections.",
+   "lastUpdated": "2026-11-09",
+   "name": "Community Venues Knowledge Assistant",
+   "notes": "Drafts replies to venue hire enquiries and answers staff questions from sample venue documents with numbered sources, with a fee estimator, a pre-made sample draft so it opens in a working state, per-question source matching, and a pasted new enquiry now has its venue, times and extras read by rules for staff to check; names, emails and phone numbers are swapped for placeholders before AI (including on the Ask tab), it falls back to template replies or document search without AI, and all venues, fees and rules are made-up samples. Reviewed for the brief and manager ready.",
+   "places": {
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "runs": 3,
+   "shot": "ai-pipeline/shots/APP-38.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/1VrEX4FPY2ph4tGY2kNNz3",
+   "version": "5"
+  },
+  "APP-40": {
+   "area": "Community",
+   "desc": "Turns approved procedures into a quick guide, checklist and quiz, each point tagged to the procedure step it came from. Checks every step is covered and no new numbers crept in before the owner approves.",
+   "lastUpdated": "2026-11-09",
+   "name": "Procedure to Training Builder",
+   "notes": "Turns five made-up Venues and Events procedures, or your own pasted procedure or rough notes, into an editable quick guide, checklist and quiz tagged to source steps, with coverage, number and reading-level checks before the pack goes to the owner for approval; opens on a sample draft, names, emails and phone numbers are swapped for placeholders before AI and put back after, and template drafts are used when AI is off. Reviewed for the brief and manager ready.",
+   "places": {
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "runs": 3,
+   "shot": "ai-pipeline/shots/APP-40.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/KuStTsVTdKAw8Da3QVmYt9",
+   "version": "5"
+  },
+  "APP-41": {
+   "area": "Community",
+   "desc": "Pulls obligations, due dates and risks out of contracts and leases, answers questions with the clauses they come from, and drafts reminders to suppliers and hirers about what they owe. Shows the key dates across every contract in one list.",
+   "lastUpdated": "2026-11-09",
+   "name": "Contract Review and Knowledge Assistant",
+   "notes": "Reviews five sample Venues and Events contracts and leases (or a pasted one with optional start and end dates) for obligations with owners and due dates, checklist risks, key dates across all contracts and clause-cited Q&A, and now drafts a reminder email to the other party, copyable key dates summaries and copyable answers; without AI it shows prepared sample reviews, a quick scan and clause or date search, and it assumes contract managers check every item against the clause. Reviewed for the brief and manager ready.",
+   "places": {
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "runs": 3,
+   "shot": "ai-pipeline/shots/APP-41.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/Qa2U39TSJymF2CBTMnVND5",
+   "version": "4"
+  },
+  "APP-43": {
+   "area": "Corporate",
+   "desc": "Track land acquisition parcels by stage, record progress and see who can approve each amount. Ask past acquisition files for precedents and draft status reports for a project manager, executive or councillor.",
+   "lastUpdated": "2026-11-09",
+   "name": "Property Acquisition Assistant",
+   "notes": "Tracks three sample acquisition projects and twelve parcels, now lets officers record progress on a parcel (stage, offer, agreed amount, next action, due date, file note) that flows straight into the Red, Amber or Green status and the project manager, executive or councillor report, answers questions from a sample library of past files with checked citations or search when AI is off, and shows who can approve each amount under the sample delegations; assumes progress updates live in the page only until a parcel register exists. Reviewed for the brief and manager ready.",
+   "places": {
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "runs": 2,
+   "shot": "ai-pipeline/shots/APP-43.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/EwraKzQuTsm9nwcFbiWi7s",
+   "version": "4"
+  },
+  "APP-45": {
+   "area": "Community",
+   "desc": "Turns an event booking brief into a draft event plan, run sheet and risk register, using a hazard library and lessons from similar past events. It also lists the permits still to come and drafts the email to the organiser.",
+   "lastUpdated": "2026-11-09",
+   "name": "Event Plan and Risk Drafter",
+   "notes": "Drafts an event management plan, run sheet and risk register (5 by 5 matrix) from a booking brief using a sample hazard library and lessons from similar past events, works out permits, runs checks and drafts the organiser email, with template drafts when AI is off and organiser contact details swapped for placeholders before AI; assumes the risk matrix, hazard library and permit rules are samples to be replaced by the council's approved versions. Reviewed for the brief and manager ready.",
+   "places": {
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "runs": 2,
+   "shot": "ai-pipeline/shots/APP-45.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/9xoseNHnuGb57om9nh4doS",
+   "version": "4"
+  },
+  "APP-47": {
+   "area": "Environmental Health",
+   "desc": "Turns food safety inspection findings into a draft Food Act improvement notice with plain-English actions, dates to comply and automatic checks. The officer edits, confirms and copies or downloads the draft.",
+   "lastUpdated": "2026-11-09",
+   "name": "Improvement Notice Drafter",
+   "notes": "Officers pick a sample inspection, choose findings and get an AI or template draft Food Act improvement notice to edit, check, copy, draft in Outlook or download; legislative references now always come from the page's sample library, not AI, and must be confirmed against the approved LCC template. Reviewed for the brief and manager ready.",
+   "places": {
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "runs": 3,
+   "shot": "ai-pipeline/shots/APP-47.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/MXJQcN1GprmvhPY8Eiz6hp",
+   "version": "9"
+  },
+  "APP-48": {
+   "area": "Waste",
+   "desc": "Matches surplus council and business materials with community groups, schools, makers and businesses that can reuse them. AI writes the listing and ranks likely takers, a waste officer confirms safety, and the page tracks offers, collections and tonnes kept from landfill.",
+   "lastUpdated": "2026-11-09",
+   "name": "Resource Recovery Marketplace",
+   "notes": "Lists surplus materials with an AI or template listing and a required safety tick, matches each listing to a 12-group sample reuse register (AI or keyword), drafts the offer email and records collections and tonnes kept from landfill; the register can now be viewed and added to, with consent, and shows which open listings suit each group, assuming groups sign up through council rather than directly. Reviewed for the brief and manager ready.",
+   "places": {
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "runs": 2,
+   "shot": "ai-pipeline/shots/APP-48.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/FUDzdTGyp7fnF4Minc72mZ",
+   "version": "4"
+  },
+  "APP-49": {
+   "area": "Community",
+   "desc": "Type what a caller asked or pick a common scenario to get the likely local-law provision, what it means in plain words and the right next step and team. It also drafts questions to ask, a phone script, an email reply and a CRM note.",
+   "lastUpdated": "2026-11-09",
+   "name": "Local Laws Assistant",
+   "notes": "Answers a resident's local-law question or situation with the likely sample provision, a plain-words meaning, the recommended next step and team, questions to ask, a phone script, an email reply and a CRM note, opening on a worked barking-dog example and using AI where available with keyword templates otherwise (the provisions, section references and CRM types are made up). Reviewed for the brief and manager ready.",
+   "places": {
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "runs": 2,
+   "shot": "ai-pipeline/shots/APP-49.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/H3H1dzoLeiJNFw1D4QcEkX",
+   "version": "6"
+  },
+  "APP-53": {
+   "area": "Finance",
+   "desc": "Turns the month's budget variances into draft commentary for a financial analyst to finish. Set materiality thresholds, add known reasons, draft with AI or templates, then check every figure against the table before copying.",
+   "lastUpdated": "2026-11-09",
+   "name": "End-of-Month Commentary Drafter",
+   "notes": "Opens on a worked Parks October draft built from sample year-to-date variances, lets the analyst set materiality thresholds and add known reasons, then drafts executive summary, material variance and full-year outlook commentary with AI (checked JSON reply) or templates, checks every figure against the table and copies, prints or drafts it in Outlook; it assumes commentary is year to date against the phased budget. Reviewed for the brief and manager ready.",
+   "places": {
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "runs": 2,
+   "shot": "ai-pipeline/shots/APP-53.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/DCoxXqGQUcVoikYvXPeBTh",
+   "version": "6"
   }
  }
 }

@@ -13,5 +13,6 @@
   "downloads": {}
  },
  "tested": "Playwright at 1280x800 light and 390x844 dark, with AI off and with a stand-in AI: settings, backlog pin, defer and filters, day tabs and Copy run sheet, AI programme review with Apply, contractor data rules check, AI check, add one and add all, Copy query to contractor, no-header error, grate photo AI and manual rating with Add to backlog, productionise panel, All AI prototypes button and Draft in Outlook links beside each Copy button; no page or console errors, no horizontal scroll, no names, phone numbers, emails or house numbers in any AI prompt, no em or en dashes in visible text.",
- "base_version": "1794118215-0b98"
+ "base_version": "1794118215-0b98",
+ "published": "https://claude.ai/artifact/VpwqKrtmJFdVAHhCmfFFJi 2026-11-09 v4"
 }

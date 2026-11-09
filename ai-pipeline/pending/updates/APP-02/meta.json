@@ -9,5 +9,6 @@
  "desc": "Calibrates pavement deterioration curves to each road segment's condition surveys, reads defect and environmental data to suggest the likely cause, and times treatments with costs. Includes design traffic and pavement thickness calculations, network patterns and plain English AI explanations.",
  "area": "Transport",
  "tested": "Playwright at 1280x800 light and 390x844 dark: segment model, what if, add survey (with validation), defect check, treatment warning, pavement design calcs (with invalid input), Ask, network patterns, forward works, Copy explanation and Copy forward works summary each with Draft in Outlook beside, CSV export, productionise panel opens, All AI prototypes button shows, keyboard focus visible; no page or console errors, no horizontal page scroll, no em or en dashes on screen or in the panel; AI path with a stand-in (explain and ask) checked invalid refs dropped, dashes stripped and names, address, phone and email kept out of the prompt.",
- "base_version": "1794118233-6357"
+ "base_version": "1794118233-6357",
+ "published": "https://claude.ai/artifact/HJT5SnbtP2RUVTXyh5rzXM 2026-11-09 v4"
 }

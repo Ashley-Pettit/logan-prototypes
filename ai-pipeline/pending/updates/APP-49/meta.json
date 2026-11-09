@@ -9,5 +9,6 @@
  "desc": "Type what a caller asked or pick a common scenario to get the likely local-law provision, what it means in plain words and the right next step and team. It also drafts questions to ask, a phone script, an email reply and a CRM note.",
  "area": "Community",
  "tested": "Playwright at 1280x800 light and 390x844 dark: opens on a worked barking-dog answer; dog attack scenario flagged urgent, question tick updates the CRM note, Copy email copies to the clipboard, clear form empty state, short-text validation, no-match answer, question-style inputs (chickens, karaoke, A-frame, boat, burning off), library search, no-results and Show all, Steps to productionise opens, All AI prototypes shows, every Copy button (script, email, CRM note) has Draft in Outlook beside it, keyboard focus ring visible. No page or console errors, scrollWidth equals viewport width, no en or em dashes on the page or in the panel. AI stand-in: names (including ones not in the sample list and 'neighbour Gary'), phone, email and street addresses replaced by placeholders in the prompt, placeholders restored in the answer, made-up provision IDs dropped, dashes and markdown cleaned, null, wrong-shaped and thrown replies all fall back to the template with a working Try again.",
- "base_version": "1794118220-13ec"
+ "base_version": "1794118220-13ec",
+ "published": "https://claude.ai/artifact/H3H1dzoLeiJNFw1D4QcEkX 2026-11-09 v6"
 }
