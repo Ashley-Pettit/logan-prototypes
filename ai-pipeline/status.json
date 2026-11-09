@@ -344,7 +344,7 @@
     "list": true,
     "mock": true,
     "polish": true,
-    "preview": false
+    "preview": true
    },
    "runs": 1,
    "shot": "ai-pipeline/shots/APP-31.jpg",
