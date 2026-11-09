@@ -333,6 +333,18 @@
    "url": "https://claude.ai/artifact/86yxARB1jhFpFzRDVFbFFx",
    "version": "4"
   },
+  "APP-31": {
+   "lastUpdated": "2026-11-09",
+   "name": "Business Process Q&A",
+   "places": {
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
+   },
+   "status": "In progress"
+  },
   "APP-32": {
    "area": "Corporate",
    "desc": "Checks a document against the checklist it must meet before submission and lists the blockers and gaps, with a quote as evidence and a suggested fix for each. Opens on a worked example of a council report that is not ready yet.",
