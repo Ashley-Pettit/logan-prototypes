@@ -7,8 +7,9 @@ so they work in copies a (Polish) and b (Mock), which declare the db and user ca
 d (password locked, GitHub) can't save, so they show the comments box with a link to copy b instead.
 
 Each comment document: {app: "APP-31", text, by (viewer id or null), at (ISO time), status: "open" |
-"actioned", actionedAt, actionNote, actionedVersion}. The AI builder marks a comment actioned with
-ArtifactData "update" once it has done what the comment asks (or decided not to, saying why in actionNote).
+"actioned" | "declined", actionedAt, actionNote, actionedVersion}. The AI builder marks a comment "actioned"
+with ArtifactData "update" once it has done what the comment asks, or "declined" with the reason in actionNote
+when it can't (outside the guardrails, unclear, or not about the app). Both count as closed.
 
 Usage (run from the repo root):
   python3 tools/proto_comments.py inject <page.html> <out.html> [--password PW]
@@ -62,7 +63,8 @@ BLOCK = r"""<!-- lpx-cmt:start -->
   var BY = {}, DRAFT = {}, MSG = {};
   function e(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function day(iso) { var d = new Date(iso); return isNaN(d) ? '' : d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' }); }
-  function openCount(app) { return (BY[app] || []).filter(function (c) { return c.status !== 'actioned'; }).length; }
+  function isClosed(c) { return c.status === 'actioned' || c.status === 'declined'; }
+  function openCount(app) { return (BY[app] || []).filter(function (c) { return !isClosed(c); }).length; }
 
   // The list part of an app's box: existing comments, newest first, with their status.
   function listHtml(app)
@@ -74,11 +76,11 @@ BLOCK = r"""<!-- lpx-cmt:start -->
     if (!L.length) { return '<p class="lpx-cnote">No comments yet.</p>'; }
     return '<ul>' + L.map(function (c)
     {
-      var done = c.status === 'actioned';
+      var done = isClosed(c), dec = c.status === 'declined';
       var who = c.by && c.by === ME ? 'You' : (c.by && NAMES[c.by]) || 'Someone';
-      return '<li class="' + (done ? 'done' : '') + '"><div class="lpx-cm"><b>' + e(who) + '</b><span>' + e(day(c.at)) + '</span><span class="lpx-cpill">' + (done ? 'Actioned' : 'Open') + '</span></div>' +
+      return '<li class="' + (done ? 'done' : '') + '"><div class="lpx-cm"><b>' + e(who) + '</b><span>' + e(day(c.at)) + '</span><span class="lpx-cpill">' + (dec ? 'Not changed' : done ? 'Actioned' : 'Open') + '</span></div>' +
         '<p class="lpx-ct">' + e(c.text) + '</p>' +
-        (done ? '<p class="lpx-ca">Actioned' + (c.actionedVersion ? ' in v' + e(c.actionedVersion) : '') + (c.actionedAt ? ' on ' + e(day(c.actionedAt)) : '') + (c.actionNote ? ': ' + e(c.actionNote) : '') + '</p>' : '') +
+        (done ? '<p class="lpx-ca">' + (dec ? 'Not changed' : 'Actioned') + (c.actionedVersion ? ' in v' + e(c.actionedVersion) : '') + (c.actionedAt ? ' on ' + e(day(c.actionedAt)) : '') + (c.actionNote ? ': ' + e(c.actionNote) : '') + '</p>' : '') +
         (CANEDIT ? '<div><button type="button" class="lpx-cg" data-cmark="' + e(c.id) + '">' + (done ? 'Reopen' : 'Mark actioned') + '</button></div>' : '') + '</li>';
     }).join('') + '</ul>';
   }
@@ -156,7 +158,7 @@ BLOCK = r"""<!-- lpx-cmt:start -->
           {
             var c = d.data() || {};
             if (typeof c.app !== 'string' || typeof c.text !== 'string') { return; }
-            (BY[c.app] = BY[c.app] || []).push({ id: d.id, app: c.app, text: c.text.slice(0, 1000), by: typeof c.by === 'string' ? c.by : null, at: c.at, status: c.status === 'actioned' ? 'actioned' : 'open', actionedAt: c.actionedAt, actionNote: typeof c.actionNote === 'string' ? c.actionNote.slice(0, 600) : '', actionedVersion: c.actionedVersion });
+            (BY[c.app] = BY[c.app] || []).push({ id: d.id, app: c.app, text: c.text.slice(0, 1000), by: typeof c.by === 'string' ? c.by : null, at: c.at, status: c.status === 'actioned' || c.status === 'declined' ? c.status : 'open', actionedAt: c.actionedAt, actionNote: typeof c.actionNote === 'string' ? c.actionNote.slice(0, 600) : '', actionedVersion: c.actionedVersion });
           });
           Object.keys(BY).forEach(function (k) { BY[k].sort(function (a, b) { return String(b.at).localeCompare(String(a.at)); }); });
           decorateAll(); names();
@@ -195,7 +197,7 @@ BLOCK = r"""<!-- lpx-cmt:start -->
     Object.keys(BY).forEach(function (k) { BY[k].forEach(function (x) { if (x.id === id) { c = x; } }); });
     if (!c) { return; }
     b.disabled = true;
-    var upd = c.status === 'actioned' ? { status: 'open' } : { status: 'actioned', actionedAt: new Date().toISOString(), actionNote: 'Marked actioned by an editor.' };
+    var upd = isClosed(c) ? { status: 'open' } : { status: 'actioned', actionedAt: new Date().toISOString(), actionNote: 'Marked actioned by an editor.' };
     DB.collection(COL).doc(id).update(upd).catch(function () { b.disabled = false; });
   });
 
@@ -252,7 +254,7 @@ def cmd_summary(a):
             except Exception:
                 continue
             c = doc.get("data", doc) if isinstance(doc, dict) else {}
-            if not isinstance(c, dict) or c.get("status") == "actioned":
+            if not isinstance(c, dict) or c.get("status") in ("actioned", "declined"):
                 continue
             if not isinstance(c.get("app"), str) or not isinstance(c.get("text"), str):
                 continue
