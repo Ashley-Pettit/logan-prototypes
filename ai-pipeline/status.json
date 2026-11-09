@@ -8,11 +8,11 @@
    "name": "Road Safety Assessor",
    "notes": "Scores and ranks 12 made-up road segments on crash history, speed, pedestrian exposure and layout with adjustable weights, now also ranks road safety issues across the network (such as pedestrians struck, intersection and night crashes) by severity, and AI explains each segment, suggests treatments and writes briefings with data-built wording when AI is off; assumes the sample severity points stand in for the council's adopted method. Reviewed for the brief and manager ready.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 2,
    "shot": "ai-pipeline/shots/APP-01.jpg",
@@ -27,11 +27,11 @@
    "name": "Pavement Modelling Assistant",
    "notes": "Models deterioration on eight sample road segments with calibration to each segment's surveys, what if settings, treatment timing and costs, a defect check that reads cracking, rutting and potholes with drainage, flooding and heavy vehicles to suggest the likely cause, network patterns (now including flooding) and forward works, design traffic and granular pavement thickness calculations, and AI explanations and Q&A with personal details swapped for placeholders; model, rules and rates are illustrative, not the council's adopted ones. Reviewed for the brief and manager ready.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 2,
    "shot": "ai-pipeline/shots/APP-02.jpg",
@@ -46,11 +46,11 @@
    "name": "Tender and Procurement Assistant",
    "notes": "Scores four sample supplier submissions against weighted criteria on open, lets the panel adjust scores in a live comparison matrix, and drafts evaluation comments, a recommendation summary, supplier clarification requests and specification outlines, with AI where available and rules otherwise (assumes an RFQ-style lump-sum evaluation; operator and mechanic assessments are not covered). Reviewed for the brief and manager ready.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 2,
    "shot": "ai-pipeline/shots/APP-04.jpg",
@@ -65,11 +65,11 @@
    "name": "Fleet EV and Route Optimiser",
    "notes": "Rules flag under-used vehicles to pool, electric swaps, charger installs and shared runs for 16 sample vehicles across three sample depots, a new Routes view costs every recurring run with a suggested change, and a copyable brief for managers works with or without AI, which rewrites it and answers questions naming the vehicles used; EV models, prices and emission factors are rounded sample figures. Reviewed for the brief and manager ready.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 2,
    "shot": "ai-pipeline/shots/APP-05.jpg",
@@ -84,11 +84,11 @@
    "name": "Infrastructure Concept Designer",
    "notes": "Pick or write a site brief for a pathway, car park, street lighting or kerb job and get three concept options with a drawn plan sketch, rough quantities, a cost range from made-up unit rates, sample design rule checks and a side by side comparison; AI picks settings from fixed lists and template options are used when AI is off, and a short concept note can be copied or drafted in Outlook. Reviewed for the brief and manager ready.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 2,
    "shot": "ai-pipeline/shots/APP-07.jpg",
@@ -106,11 +106,11 @@
    "name": "Engineering Project Writer",
    "notes": "New build with four sample engineering projects: AI (or template rules when AI is off) turns rough meeting notes, a received email or the project log into minutes, an email to a chosen contact (reply, update, chase actions, ask, confirm a decision) or a monthly status report with a rule-based overall status, lists decisions, risks and actions to add to a log (spotting ones already logged by topic and offering to update them) that flags gaps you can fix in place or chase by email, uses a sample 5 by 5 risk rating, swaps names and contact details for placeholders before AI, and has Steps to productionise and Draft in Outlook added.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 1,
    "shot": "ai-pipeline/shots/APP-08.jpg",
@@ -125,11 +125,11 @@
    "name": "Fleet Maintenance Predictor",
    "notes": "Ten made-up vehicles and plant (three High, four Medium, three Low risk) are scored by sample rules from interval used, fault codes, oil samples, defect reports and breakdowns in the last year to predict when each part needs work and fill a four-week workshop plan (tag-outs and high risk first, one visit per vehicle with nearby work bundled), while AI explains asset health, ranks likely fault causes using the repair history, drafts the work order and plan note, and the repair can be booked into the plan; tag-out is given only for reported brake, steering or hydraulic faults (PL-201 and TK-120, not CR-009), it falls back to a sample fault code library when AI is off, operator names are removed before AI, intervals, codes, history, capacity and costs are samples, and Steps to productionise and Draft in Outlook were added.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 1,
    "shot": "ai-pipeline/shots/APP-10.jpg",
@@ -144,11 +144,11 @@
    "name": "Mechanic Knowledge Assistant",
    "notes": "Job queue with a worked example answer, grounded Q&A with clickable sources and spec checks, fault code finder (now covering EV codes in the library), searchable sample library and a gap list that copies to the knowledge owner; names and contact details are swapped for placeholders before AI, and without AI it gives fault meanings, first checks, safety lines and key values from the library. Reviewed for the brief and manager ready.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 2,
    "shot": "ai-pipeline/shots/APP-12.jpg",
@@ -163,11 +163,11 @@
    "name": "Road Standards Search",
    "notes": "Searches a made-up library of road policies, standards and specifications with plain-English AI answers that cite clauses, compares versions word by word with an AI explanation, and now looks up roads in a sample asset register and checks them against the current clauses (assumes the real asset register can be read in production). Reviewed for the brief and manager ready.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 2,
    "shot": "ai-pipeline/shots/APP-14.jpg",
@@ -182,11 +182,11 @@
    "name": "Disaster and Continuity Guide",
    "notes": "Answers LDCC and crisis staff's 'what do I do now' questions from sample BCP and disaster plan excerpts for their role and activation level, with cited sources, a tickable checklist and a plan browser, and falls back to quoting the plans word for word when AI is off; the plan excerpts are made up. Reviewed for the brief and manager ready.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 2,
    "shot": "ai-pipeline/shots/APP-15.jpg",
@@ -201,11 +201,11 @@
    "name": "Template Document Generator",
    "notes": "Fills four sample approved templates (closure report, change request, request to approach market, works notification letter) from three sample projects or project data pasted from an export, shows each value's source, has AI draft only the open sections from the project diary (keeping sections already ticked as checked), blocks the ready status until missing data and unchecked sections are fixed, and downloads the result as a plain-layout Word file; starter wording is used when AI is off, templates, fields and thresholds are samples, names, phone numbers and emails are swapped for placeholders before AI, and Steps to productionise and Draft in Outlook were added.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 1,
    "shot": "ai-pipeline/shots/APP-17.jpg",
@@ -220,11 +220,11 @@
    "name": "Chain of Responsibility Risk Check",
    "notes": "Seven made-up City Fleet and related position descriptions are checked against ten sample Chain of Responsibility duty areas by party type: keyword rules fill a coverage matrix and a High, Medium or Low risk rating per role straight away, AI can read one role or the whole set (quotes checked against the text, hand changes kept), new roles can be added with a party type that pre-ticks their duties, and the gap summary and role wording can be copied; it assumes the sample duty list is checked against the Heavy Vehicle National Law and that names and contact details are swapped for placeholders before AI, and Steps to productionise and Draft in Outlook were added.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 1,
    "shot": "ai-pipeline/shots/APP-19.jpg",
@@ -242,11 +242,11 @@
    "name": "Fleet Knowledge and Learning Assistant",
    "notes": "New build with a sample fleet library of 8 procedures and 34 clauses: AI answers questions for the asker's role from the whole library citing only real clauses (ranked library search when AI is off), links each answer to its learning module and flags gaps for the knowledge owner, a Learn tab shows sample crew progress by role pathway with key points, sample or AI quizzes and a copyable completion summary, and a Toolbox talk tab drafts a five minute talk; all procedures, limits and people are made-up samples, names, phone numbers and registrations are swapped for placeholders before AI, and Steps to productionise and Draft in Outlook were added.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 1,
    "shot": "ai-pipeline/shots/APP-23.jpg",
@@ -261,11 +261,11 @@
    "name": "IT Standards Q&A",
    "notes": "Answers plain-English questions about a made-up sample IT Standards Portal of 12 standards with Yes, No or conditions verdicts tuned to the asker's role and links to each source clause, checks a proposed tool or project against the standards, and now opens with a worked example answer and proposal check, drafts a note to the standard owner when an answer is wrong or a gap is found, and swaps names, emails and phone numbers for placeholders before AI; assumes the real portal content and owner contacts replace the sample. Reviewed for the brief and manager ready.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 3,
    "shot": "ai-pipeline/shots/APP-25.jpg",
@@ -280,11 +280,11 @@
    "name": "Road Maintenance Scheduler",
    "notes": "Ranks a made-up backlog of 20 road jobs within a weekly budget (very high risk jobs always kept), sequences crews by zone on a schematic map with a copyable daily run sheet, checks a sample contractor defect survey return against assumed contract data rules (flags missing fields and repeats, drafts a query to the contractor, adds clean records to the backlog), and rates drain grate photos with AI or by hand. Reviewed for the brief and manager ready.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 2,
    "shot": "ai-pipeline/shots/APP-26.jpg",
@@ -302,11 +302,11 @@
    "name": "BCP Scenario Generator",
    "notes": "New build with six sample branch plans: an activation dashboard where status changes need a reason and are logged, an activated plan shows time left before its most urgent function passes its outage limit with the plan's workaround, AI writes desktop exercises with timed injects tied to each branch's critical functions, and results are recorded into an AI evidence report that saves to an evidence register and updates the last tested date, with template scenarios and reports when AI is off; the 12 month testing cycle, outage times and plans are samples, names are swapped for roles before AI, and Steps to productionise and Draft in Outlook were added.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 1,
    "shot": "ai-pipeline/shots/APP-27.jpg",
@@ -321,11 +321,11 @@
    "name": "CAB Check Agent",
    "notes": "Checks sample IT change requests against a sample CAB rule book (no CAB, CAB or Emergency CAB, with risk, rule-cited reasons, approvals, blockers and the next CAB date), now flags risks in the description that the form missed with a word check even when AI is off, and AI adds a closer read, a plain summary, a CAB paper and an email to the change owner; assumes the rule book, CAB day and freeze dates are samples to be replaced by the change manager. Reviewed for the brief and manager ready.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 2,
    "shot": "ai-pipeline/shots/APP-28.jpg",
@@ -340,11 +340,11 @@
    "name": "Document Readiness Reviewer",
    "notes": "Checks a sample council report, grant application, approval conditions statement or policy against its checklist, marking each item met, partly met or missing with a verified quote, a readiness verdict, a fix list with accepted risks and a review to copy, email or download; it opens on a worked AI example, swaps names, emails and phone numbers for placeholders before AI and runs a keyword check when AI is off. Reviewed for the brief and manager ready.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 3,
    "shot": "ai-pipeline/shots/APP-32.jpg",
@@ -359,11 +359,11 @@
    "name": "Financial Spreadsheet Reviewer",
    "notes": "Checks four sample venue month-end spreadsheets or your own Excel or CSV file for budget variances, unusual or missing months, steady month-on-month trends, possible double postings, big changes on last year and sheets that do not add up, then AI explains each finding with likely causes, a question for the budget owner and a manager summary (rule explanations when AI is off); only account names and numbers go to AI and the thresholds are samples. Reviewed for the brief and manager ready.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 2,
    "shot": "ai-pipeline/shots/APP-34.jpg",
@@ -378,11 +378,11 @@
    "name": "Privacy Impact Assessor",
    "notes": "Works an IIP assessment backlog (six made-up requests, sorted by due date, one in review and one finished) by drafting a finding for each of 11 sample privacy principle summaries plus a sample council policy check, with AI quoting the proposal and rules used when AI is off, then the privacy officer confirms every finding before copying the advice memo and owner questions; principle and policy wording are samples to be checked against the Information Privacy Act 2009 (Qld). Reviewed for the brief and manager ready.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 2,
    "shot": "ai-pipeline/shots/APP-36.jpg",
@@ -397,11 +397,11 @@
    "name": "Community Venues Knowledge Assistant",
    "notes": "Drafts replies to venue hire enquiries and answers staff questions from sample venue documents with numbered sources, with a fee estimator, a pre-made sample draft so it opens in a working state, per-question source matching, and a pasted new enquiry now has its venue, times and extras read by rules for staff to check; names, emails and phone numbers are swapped for placeholders before AI (including on the Ask tab), it falls back to template replies or document search without AI, and all venues, fees and rules are made-up samples. Reviewed for the brief and manager ready.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 3,
    "shot": "ai-pipeline/shots/APP-38.jpg",
@@ -416,11 +416,11 @@
    "name": "Procedure to Training Builder",
    "notes": "Turns five made-up Venues and Events procedures, or your own pasted procedure or rough notes, into an editable quick guide, checklist and quiz tagged to source steps, with coverage, number and reading-level checks before the pack goes to the owner for approval; opens on a sample draft, names, emails and phone numbers are swapped for placeholders before AI and put back after, and template drafts are used when AI is off. Reviewed for the brief and manager ready.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 3,
    "shot": "ai-pipeline/shots/APP-40.jpg",
@@ -435,11 +435,11 @@
    "name": "Contract Review and Knowledge Assistant",
    "notes": "Reviews five sample Venues and Events contracts and leases (or a pasted one with optional start and end dates) for obligations with owners and due dates, checklist risks, key dates across all contracts and clause-cited Q&A, and now drafts a reminder email to the other party, copyable key dates summaries and copyable answers; without AI it shows prepared sample reviews, a quick scan and clause or date search, and it assumes contract managers check every item against the clause. Reviewed for the brief and manager ready.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 3,
    "shot": "ai-pipeline/shots/APP-41.jpg",
@@ -454,11 +454,11 @@
    "name": "Property Acquisition Assistant",
    "notes": "Tracks three sample acquisition projects and twelve parcels, now lets officers record progress on a parcel (stage, offer, agreed amount, next action, due date, file note) that flows straight into the Red, Amber or Green status and the project manager, executive or councillor report, answers questions from a sample library of past files with checked citations or search when AI is off, and shows who can approve each amount under the sample delegations; assumes progress updates live in the page only until a parcel register exists. Reviewed for the brief and manager ready.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 2,
    "shot": "ai-pipeline/shots/APP-43.jpg",
@@ -473,11 +473,11 @@
    "name": "Event Plan and Risk Drafter",
    "notes": "Drafts an event management plan, run sheet and risk register (5 by 5 matrix) from a booking brief using a sample hazard library and lessons from similar past events, works out permits, runs checks and drafts the organiser email, with template drafts when AI is off and organiser contact details swapped for placeholders before AI; assumes the risk matrix, hazard library and permit rules are samples to be replaced by the council's approved versions. Reviewed for the brief and manager ready.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 2,
    "shot": "ai-pipeline/shots/APP-45.jpg",
@@ -492,11 +492,11 @@
    "name": "Improvement Notice Drafter",
    "notes": "Officers pick a sample inspection, choose findings and get an AI or template draft Food Act improvement notice to edit, check, copy, draft in Outlook or download; legislative references now always come from the page's sample library, not AI, and must be confirmed against the approved LCC template. Reviewed for the brief and manager ready.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 3,
    "shot": "ai-pipeline/shots/APP-47.jpg",
@@ -511,11 +511,11 @@
    "name": "Resource Recovery Marketplace",
    "notes": "Lists surplus materials with an AI or template listing and a required safety tick, matches each listing to a 12-group sample reuse register (AI or keyword), drafts the offer email and records collections and tonnes kept from landfill; the register can now be viewed and added to, with consent, and shows which open listings suit each group, assuming groups sign up through council rather than directly. Reviewed for the brief and manager ready.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 2,
    "shot": "ai-pipeline/shots/APP-48.jpg",
@@ -530,11 +530,11 @@
    "name": "Local Laws Assistant",
    "notes": "Answers a resident's local-law question or situation with the likely sample provision, a plain-words meaning, the recommended next step and team, questions to ask, a phone script, an email reply and a CRM note, opening on a worked barking-dog example and using AI where available with keyword templates otherwise (the provisions, section references and CRM types are made up). Reviewed for the brief and manager ready.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 2,
    "shot": "ai-pipeline/shots/APP-49.jpg",
@@ -549,11 +549,11 @@
    "name": "End-of-Month Commentary Drafter",
    "notes": "Opens on a worked Parks October draft built from sample year-to-date variances, lets the analyst set materiality thresholds and add known reasons, then drafts executive summary, material variance and full-year outlook commentary with AI (checked JSON reply) or templates, checks every figure against the table and copies, prints or drafts it in Outlook; it assumes commentary is year to date against the phased budget. Reviewed for the brief and manager ready.",
    "places": {
-    "github": false,
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "github": true,
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 2,
    "shot": "ai-pipeline/shots/APP-53.jpg",
