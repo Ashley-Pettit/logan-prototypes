@@ -7,11 +7,11 @@
    ],
    "area": "Transport",
    "desc": "Drafts meeting minutes, stakeholder emails and monthly status reports from rough notes, and keeps each project's decision, risk and action log up to date, flagging gaps and overdue actions to fix or chase.",
-   "lastUpdated": "2026-11-08",
+   "lastUpdated": "2026-11-09",
    "name": "Engineering Project Writer",
-   "notes": "New build with four sample engineering projects: AI (or template rules when AI is off) turns rough meeting notes, a received email or the project log into minutes, an email to a chosen contact (reply, update, chase actions, ask, confirm a decision) or a monthly status report with a rule-based overall status, lists decisions, risks and actions to add to a log that flags gaps you can fix in place or chase by email, uses a sample 5 by 5 risk rating, swaps names and contact details for placeholders before AI, and has Steps to productionise and Draft in Outlook added.",
+   "notes": "New build with four sample engineering projects: AI (or template rules when AI is off) turns rough meeting notes, a received email or the project log into minutes, an email to a chosen contact (reply, update, chase actions, ask, confirm a decision) or a monthly status report with a rule-based overall status, lists decisions, risks and actions to add to a log (spotting ones already logged by topic and offering to update them) that flags gaps you can fix in place or chase by email, uses a sample 5 by 5 risk rating, swaps names and contact details for placeholders before AI, and has Steps to productionise and Draft in Outlook added.",
    "places": {
-    "github": true,
+    "github": false,
     "list": false,
     "mock": false,
     "polish": false,
@@ -21,68 +21,108 @@
    "shot": "ai-pipeline/shots/APP-08.jpg",
    "status": "Built",
    "url": "https://claude.ai/artifact/Ns9D2SRfRpVFBWBGLSA2Z2",
-   "version": "1"
+   "version": "2"
   },
   "APP-10": {
-   "lastUpdated": "2026-11-08",
+   "area": "Transport",
+   "desc": "Scores every vehicle and machine from service intervals, fault codes, oil samples, defect reports and past breakdowns, books the riskiest work and tag-outs into the workshop first, and ranks likely causes of a fault with a draft work order you can book straight into the plan.",
+   "lastUpdated": "2026-11-09",
+   "name": "Fleet Maintenance Predictor",
+   "notes": "Ten made-up vehicles and plant (three High, four Medium, three Low risk) are scored by sample rules from interval used, fault codes, oil samples, defect reports and breakdowns in the last year to predict when each part needs work and fill a four-week workshop plan (tag-outs and high risk first, one visit per vehicle with nearby work bundled), while AI explains asset health, ranks likely fault causes using the repair history, drafts the work order and plan note, and the repair can be booked into the plan; tag-out is given only for reported brake, steering or hydraulic faults (PL-201 and TK-120, not CR-009), it falls back to a sample fault code library when AI is off, operator names are removed before AI, intervals, codes, history, capacity and costs are samples, and Steps to productionise and Draft in Outlook were added.",
    "places": {
-    "github": true,
-    "list": true,
-    "mock": true,
-    "polish": true,
-    "preview": true
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
    },
-   "status": "In progress"
+   "runs": 1,
+   "shot": "ai-pipeline/shots/APP-10.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/R2GZ6BifSEDxF48tFqN6eH",
+   "version": "1"
   },
   "APP-17": {
-   "lastUpdated": "2026-11-08",
+   "area": "Corporate",
+   "desc": "Fills approved council templates from project data, or data you paste from an export, has AI draft only the free-text sections, and lets you copy the result or download it as a Word file.",
+   "lastUpdated": "2026-11-09",
+   "name": "Template Document Generator",
+   "notes": "Fills four sample approved templates (closure report, change request, request to approach market, works notification letter) from three sample projects or project data pasted from an export, shows each value's source, has AI draft only the open sections from the project diary (keeping sections already ticked as checked), blocks the ready status until missing data and unchecked sections are fixed, and downloads the result as a plain-layout Word file; starter wording is used when AI is off, templates, fields and thresholds are samples, names, phone numbers and emails are swapped for placeholders before AI, and Steps to productionise and Draft in Outlook were added.",
    "places": {
-    "github": true,
-    "list": true,
-    "mock": true,
-    "polish": true,
-    "preview": true
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
    },
-   "status": "In progress"
+   "runs": 1,
+   "shot": "ai-pipeline/shots/APP-17.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/6XQ2HHpnXS2pkRqP8xAkLz",
+   "version": "1"
   },
   "APP-19": {
-   "lastUpdated": "2026-11-08",
+   "area": "Safety",
+   "desc": "Checks position descriptions against Chain of Responsibility duty areas, shows who carries each duty in a coverage matrix and rates each role High, Medium or Low risk. AI reads every description, quotes the evidence and suggests wording to close the gaps.",
+   "lastUpdated": "2026-11-09",
+   "name": "Chain of Responsibility Risk Check",
+   "notes": "Seven made-up City Fleet and related position descriptions are checked against ten sample Chain of Responsibility duty areas by party type: keyword rules fill a coverage matrix and a High, Medium or Low risk rating per role straight away, AI can read one role or the whole set (quotes checked against the text, hand changes kept), new roles can be added with a party type that pre-ticks their duties, and the gap summary and role wording can be copied; it assumes the sample duty list is checked against the Heavy Vehicle National Law and that names and contact details are swapped for placeholders before AI, and Steps to productionise and Draft in Outlook were added.",
    "places": {
-    "github": true,
-    "list": true,
-    "mock": true,
-    "polish": true,
-    "preview": true
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
    },
-   "status": "In progress"
+   "runs": 1,
+   "shot": "ai-pipeline/shots/APP-19.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/Hd4xhqCySbw4kb46xJHQXk",
+   "version": "1"
   },
   "APP-23": {
    "alts": [
     "https://claude.ai/artifact/DY8rH8CavvpVDmxVC8Kw4F"
    ],
-   "lastUpdated": "2026-11-08",
+   "area": "Transport",
+   "desc": "Answers fleet staff questions on safety, pre-starts, fatigue, load restraint and Chain of Responsibility with numbered sources tailored to their role, links each answer to a learning module, tracks each crew member's pathway with quizzes, and drafts toolbox talks.",
+   "lastUpdated": "2026-11-09",
+   "name": "Fleet Knowledge and Learning Assistant",
+   "notes": "New build with a sample fleet library of 8 procedures and 34 clauses: AI answers questions for the asker's role from the whole library citing only real clauses (ranked library search when AI is off), links each answer to its learning module and flags gaps for the knowledge owner, a Learn tab shows sample crew progress by role pathway with key points, sample or AI quizzes and a copyable completion summary, and a Toolbox talk tab drafts a five minute talk; all procedures, limits and people are made-up samples, names, phone numbers and registrations are swapped for placeholders before AI, and Steps to productionise and Draft in Outlook were added.",
    "places": {
-    "github": true,
-    "list": true,
-    "mock": true,
-    "polish": true,
-    "preview": true
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
    },
-   "status": "In progress"
+   "runs": 1,
+   "shot": "ai-pipeline/shots/APP-23.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/Aw2XZC4d3We6wHipn9qyLY",
+   "version": "1"
   },
   "APP-27": {
    "alts": [
     "https://claude.ai/artifact/98ThRTNq57fbpgY7U9KYE4"
    ],
-   "lastUpdated": "2026-11-08",
+   "area": "Safety",
+   "desc": "Shows each branch's continuity plan status on an activation dashboard with time left against outage limits, writes branch-specific desktop exercises, and records the results as evidence of testing.",
+   "lastUpdated": "2026-11-09",
+   "name": "BCP Scenario Generator",
+   "notes": "New build with six sample branch plans: an activation dashboard where status changes need a reason and are logged, an activated plan shows time left before its most urgent function passes its outage limit with the plan's workaround, AI writes desktop exercises with timed injects tied to each branch's critical functions, and results are recorded into an AI evidence report that saves to an evidence register and updates the last tested date, with template scenarios and reports when AI is off; the 12 month testing cycle, outage times and plans are samples, names are swapped for roles before AI, and Steps to productionise and Draft in Outlook were added.",
    "places": {
-    "github": true,
-    "list": true,
-    "mock": true,
-    "polish": true,
-    "preview": true
+    "github": false,
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
    },
-   "status": "In progress"
+   "runs": 1,
+   "shot": "ai-pipeline/shots/APP-27.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/XAHF4YzoE5pJfx17r9khD6",
+   "version": "1"
   }
  }
 }

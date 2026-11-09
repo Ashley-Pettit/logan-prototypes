@@ -9,5 +9,6 @@
  "tested": "Template, mocked AI and failing AI at 1280 light and 390 dark: status change blocked without a reason then logged, exercise built, report blocked until an outcome is recorded, sample results, evidence report, save to register with saved report viewable and copyable, a second exercise can be saved, no page errors, no horizontal overflow, productionise panel opens, Draft in Outlook links present on copy buttons.",
  "alts": [
   "https://claude.ai/artifact/98ThRTNq57fbpgY7U9KYE4"
- ]
+ ],
+ "published": "https://claude.ai/artifact/XAHF4YzoE5pJfx17r9khD6 2026-11-09"
 }

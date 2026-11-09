@@ -9,5 +9,6 @@
  "tested": "Playwright smoke test at 1280 light and 390 dark in AI-off mode, plus 1280 with a mocked AI: ask flow with sources and citation jump, role change re-ranking, placeholders sent to AI, bad citations and dashes stripped, uncovered question and gap flag, answer to module link, crew progress and quiz score, AI quiz, toolbox talk draft, no page errors, no horizontal overflow, Steps to productionise panel opens, Draft in Outlook links on Copy answer, Copy gap list, Copy completion summary and Copy toolbox talk.",
  "alts": [
   "https://claude.ai/artifact/DY8rH8CavvpVDmxVC8Kw4F"
- ]
+ ],
+ "published": "https://claude.ai/artifact/Aw2XZC4d3We6wHipn9qyLY 2026-11-09"
 }
