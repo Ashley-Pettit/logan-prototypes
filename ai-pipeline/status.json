@@ -434,10 +434,10 @@
    "name": "Venue Customer Assistant",
    "notes": "First build: a customer chat that answers venue questions only from sample public venue information with numbered sources, passes own bookings, payments, complaints and unanswered questions to the venues team, plus Insights (topics, handoffs, gaps with Write an answer), AI feedback replies and an editable venue information library; names, emails, phones, addresses and booking numbers are swapped for placeholders before AI, it falls back to library answers or standard wording without AI, and it uses the quick model tier as it is customer facing.",
    "places": {
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 1,
    "shot": "ai-pipeline/shots/APP-39.jpg",
