@@ -527,10 +527,10 @@
    "name": "Booking Correspondence Drafter",
    "notes": "First build with nine sample venue bookings: an email queue works out which email each booking needs next from its stage and dates (enquiry reply, tentative hold and quote, confirmation, documents and payment reminders, pre-event information, change, cancellation, thank you with bond refund), AI drafts it from the team's editable standard wording with a tone and officer note, live checks flag missing details, and a pasted hirer email gets a reply from the booking and hire conditions; names, emails, phones and addresses are swapped for placeholders before AI, it falls back to standard wording without AI, nothing is sent from the page, and the timings, fees and hire conditions are assumed samples.",
    "places": {
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 1,
    "shot": "ai-pipeline/shots/APP-44.jpg",
