@@ -23,21 +23,20 @@
   "APP-02": {
    "area": "Transport",
    "desc": "Calibrates pavement deterioration curves to each road segment's condition surveys, reads defect and environmental data to suggest the likely cause, and times treatments with costs. Includes design traffic and pavement thickness calculations, network patterns and plain English AI explanations.",
-   "lastUpdated": "2026-11-09",
+   "lastUpdated": "2026-11-10",
    "name": "Pavement Modelling Assistant",
-   "notes": "Models deterioration on eight sample road segments with calibration to each segment's surveys, what if settings, treatment timing and costs, a defect check that reads cracking, rutting and potholes with drainage, flooding and heavy vehicles to suggest the likely cause, network patterns (now including flooding) and forward works, design traffic and granular pavement thickness calculations, and AI explanations and Q&A with personal details swapped for placeholders; model, rules and rates are illustrative, not the council's adopted ones. Reviewed for the brief and manager ready.",
+   "notes": "Actioned the comment asking for a graph title and axis labels: the condition chart now has a title, a y axis (Condition, PCI 0 to 100) and x axis title and stays readable on phones, and the five year spend and network pattern charts also gained titles and axis labels; AI output now also has markdown stripped and is length capped. Model, rules and rates remain illustrative, not the council's adopted ones.",
    "places": {
-    "github": true,
-    "list": true,
-    "mock": true,
-    "polish": true,
-    "preview": true
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
    },
-   "runs": 2,
+   "runs": 3,
    "shot": "ai-pipeline/shots/APP-02.jpg",
    "status": "Built",
    "url": "https://claude.ai/artifact/HJT5SnbtP2RUVTXyh5rzXM",
-   "version": "4"
+   "version": "5"
   },
   "APP-04": {
    "area": "Procurement",
