@@ -427,6 +427,24 @@
    "url": "https://claude.ai/artifact/1VrEX4FPY2ph4tGY2kNNz3",
    "version": "5"
   },
+  "APP-39": {
+   "area": "Community",
+   "desc": "A chat box for venue web pages that answers customer questions from public venue information with sources, and passes personal or unanswered questions to the venues team. Staff also get insights on what customers ask and draft replies to feedback.",
+   "lastUpdated": "2026-11-10",
+   "name": "Venue Customer Assistant",
+   "notes": "First build: a customer chat that answers venue questions only from sample public venue information with numbered sources, passes own bookings, payments, complaints and unanswered questions to the venues team, plus Insights (topics, handoffs, gaps with Write an answer), AI feedback replies and an editable venue information library; names, emails, phones, addresses and booking numbers are swapped for placeholders before AI, it falls back to library answers or standard wording without AI, and it uses the quick model tier as it is customer facing.",
+   "places": {
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "runs": 1,
+   "shot": "ai-pipeline/shots/APP-39.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/5P2puzkVMny8Mw9FKYUaHF",
+   "version": "1"
+  },
   "APP-40": {
    "area": "Community",
    "desc": "Turns approved procedures into a quick guide, checklist and quiz, each point tagged to the procedure step it came from. Checks every step is covered and no new numbers crept in before the owner approves.",
