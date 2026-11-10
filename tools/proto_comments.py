@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Comments for the AI builder, on each app in the pipeline's "AI prototypes" tab.
 
-Each app row in the AI prototypes list has a Comment button; open comments show straight under the row. People leave a comment for the AI builder (what to fix,
+Each app row in the AI prototypes list has a Comment button; its comments show straight under the row
+(open ones first, then closed ones marked Actioned or Not changed with what was done). People leave a comment for the AI builder (what to fix,
 add or change). Comments are saved in the pipeline artifact's own database (collection "ai_comments"),
 so they work in copies a (Polish) and b (Mock), which declare the db and user capabilities. Copies c and
 d (password locked, GitHub) can't save, so they show the comments box with a link to copy b instead.
@@ -87,17 +88,13 @@ BLOCK = r"""<!-- lpx-cmt:start -->
       '<p class="lpx-ct">' + e(c.text) + '</p>' +
       (done ? '<p class="lpx-ca">' + (dec ? 'Not changed' : 'Actioned') + (c.actionedVersion ? ' in v' + e(c.actionedVersion) : '') + (c.actionedAt ? ' on ' + e(day(c.actionedAt)) : '') + (c.actionNote ? ': ' + e(c.actionNote) : '') + '</p>' : '') + '</li>';
   }
-  // Open comments always show under the row; closed ones show when asked for, or while the composer is open.
+  // Every comment shows under the row: open ones first, then closed ones marked Actioned (or Not changed)
+  // with what was done, so a comment never seems to disappear once the AI builder deals with it.
   function listHtml(app)
   {
     var L = BY[app] || [], open = L.filter(function (c) { return !isClosed(c); }), done = L.filter(isClosed);
-    var h = open.length ? '<ul>' + open.map(itemHtml).join('') + '</ul>' : '';
-    if (done.length)
-    {
-      if (SHOWDONE[app]) { h += '<ul>' + done.map(itemHtml).join('') + '</ul><button type="button" class="lpx-clink" data-cdone="' + e(app) + '">Hide closed comments</button>'; }
-      else if (OPEN[app] || open.length) { h += '<button type="button" class="lpx-clink" data-cdone="' + e(app) + '">Show ' + done.length + ' closed ' + (done.length === 1 ? 'comment' : 'comments') + '</button>'; }
-    }
-    return h;
+    var all = open.concat(done);
+    return all.length ? '<ul>' + all.map(itemHtml).join('') + '</ul>' : '';
   }
   function formHtml(app)
   {
