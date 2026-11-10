@@ -520,6 +520,24 @@
    "url": "https://claude.ai/artifact/EwraKzQuTsm9nwcFbiWi7s",
    "version": "4"
   },
+  "APP-44": {
+   "area": "Community",
+   "desc": "Works out which email each venue booking needs next, from enquiry reply to bond refund, and drafts it from the team's standard wording ready to check, copy and send. Also drafts replies to hirer emails from the booking details and hire conditions.",
+   "lastUpdated": "2026-11-11",
+   "name": "Booking Correspondence Drafter",
+   "notes": "First build with nine sample venue bookings: an email queue works out which email each booking needs next from its stage and dates (enquiry reply, tentative hold and quote, confirmation, documents and payment reminders, pre-event information, change, cancellation, thank you with bond refund), AI drafts it from the team's editable standard wording with a tone and officer note, live checks flag missing details, and a pasted hirer email gets a reply from the booking and hire conditions; names, emails, phones and addresses are swapped for placeholders before AI, it falls back to standard wording without AI, nothing is sent from the page, and the timings, fees and hire conditions are assumed samples.",
+   "places": {
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "runs": 1,
+   "shot": "ai-pipeline/shots/APP-44.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/MoekUYpGbrzbMgc8A3AZmx",
+   "version": "1"
+  },
   "APP-45": {
    "area": "Community",
    "desc": "Turns an event booking brief into a draft event plan, run sheet and risk register, using a hazard library and lessons from similar past events. It also lists the permits still to come and drafts the email to the organiser.",
