@@ -490,10 +490,10 @@
    "name": "Venue Management Report Writer",
    "notes": "First build: drafts a monthly management report, briefing note or executive summary for a chosen month, venues and audience from sample figures for four made-up venues plus the manager's rough notes, with a page-built key figures table, a figures check that flags any number not in the data or notes, Edit, Copy report and Copy short summary; names, emails and phones in notes are swapped for placeholders before AI, template wording is used when AI is off or stopped, and a Venue figures tab shows the month by venue with a revenue chart and lets you paste your own CSV figures. Assumed four sample venues matching the Venue Customer Assistant, and the plan recommends a Claude pilot compared with M365 Copilot as the triage noted Copilot may already do this.",
    "places": {
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 1,
    "shot": "ai-pipeline/shots/APP-42.jpg",
