@@ -27,10 +27,10 @@
    "name": "Pavement Modelling Assistant",
    "notes": "Actioned the comment asking for a graph title and axis labels: the condition chart now has a title, a y axis (Condition, PCI 0 to 100) and x axis title and stays readable on phones, and the five year spend and network pattern charts also gained titles and axis labels; AI output now also has markdown stripped and is length capped. Model, rules and rates remain illustrative, not the council's adopted ones.",
    "places": {
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 3,
    "shot": "ai-pipeline/shots/APP-02.jpg",
