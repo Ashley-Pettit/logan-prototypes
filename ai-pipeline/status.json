@@ -357,6 +357,16 @@
    "url": "https://claude.ai/artifact/DhJwUqzhbMpjPjp4d6jKW1",
    "version": "1"
   },
+  "APP-21": {
+   "name": "Pavement Treatment Planner",
+   "places": {
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "status": "In progress"
+  },
   "APP-23": {
    "alts": [
     "https://claude.ai/artifact/DY8rH8CavvpVDmxVC8Kw4F"
