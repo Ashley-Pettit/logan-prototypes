@@ -191,14 +191,22 @@
    "version": "1"
   },
   "APP-11": {
+   "area": "Transport",
+   "desc": "Reads road survey images to find potholes, cracking and edge breaks, then maps each defect and splits the roads into analysis sections rated Good, Fair or Poor. Drafts a note on which sections to inspect first.",
+   "lastUpdated": "2026-11-11",
    "name": "Road Defect Detector",
+   "notes": "First build with a sample survey run of 18 made-up road image frames across three roads: AI reads each image for potholes, crocodile cracking, edge breaks, ravelling and cracks with a box, severity and confidence for each (stored sample readings when AI is off, and you can add your own photo or add defects by hand), every defect gets a chainage, offset and sample score, and the roads are split into analysis sections by joining neighbouring 100 m lengths in the same condition band with a smallest section length you choose, shown on a map with a score chart; AI explains each section and drafts the summary note, with standard wording when AI is off; assumes one frame stands for each 100 m and the sample weights and bands stand in for the council's adopted condition method.",
    "places": {
     "list": false,
     "mock": false,
     "polish": false,
     "preview": false
    },
-   "status": "In progress"
+   "runs": 1,
+   "shot": "ai-pipeline/shots/APP-11.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/AB56EdV2TDB3ACUzSKjdru",
+   "version": "1"
   },
   "APP-12": {
    "area": "Transport",
