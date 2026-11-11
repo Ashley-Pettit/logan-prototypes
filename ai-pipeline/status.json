@@ -302,6 +302,16 @@
    "url": "https://claude.ai/artifact/6XQ2HHpnXS2pkRqP8xAkLz",
    "version": "1"
   },
+  "APP-18": {
+   "name": "Disaster Intelligence Hub",
+   "places": {
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "status": "In progress"
+  },
   "APP-19": {
    "area": "Safety",
    "desc": "Checks position descriptions against Chain of Responsibility duty areas, shows who carries each duty in a coverage matrix and rates each role High, Medium or Low risk. AI reads every description, quotes the evidence and suggests wording to close the gaps.",
