@@ -550,6 +550,16 @@
    "url": "https://claude.ai/artifact/2NNBgbeCdonBHuAVEkgFen",
    "version": "5"
   },
+  "APP-33": {
+   "name": "Venue Predictive Maintenance",
+   "places": {
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "status": "In progress"
+  },
   "APP-34": {
    "area": "Finance",
    "desc": "Reads a venue month-end spreadsheet and flags budget variances, unusual months, trends and sheets that do not add up. AI explains each finding in plain English and drafts a summary for the manager and questions for budget owners.",
