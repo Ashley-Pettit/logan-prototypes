@@ -564,10 +564,10 @@
    "name": "Venue Booking Compliance Check",
    "notes": "First build with eight sample venue bookings: each is checked against the sample hire requirements that apply to it (signed form, room capacity, finish time, payment, public liability insurance, risk plan, alcohol approval or liquor permit, security, food licence, blue cards, amusement devices), a rules check reads amounts, dates, names and sections from the documents straight away, AI gives a closer read with quotes checked against the documents and the stricter result is shown, an officer can accept an item with a reason or paste in a new document, and it drafts the email asking the hirer for what is missing plus a review summary; names, emails, phones and addresses are swapped for placeholders before AI, it falls back to the rules check and standard wording without AI, documents are pasted as text (no PDF reading yet), and the requirements and thresholds are assumed samples.",
    "places": {
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 1,
    "shot": "ai-pipeline/shots/APP-46.jpg",
