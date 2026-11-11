@@ -234,10 +234,10 @@
    "name": "Invoice and Fuel Matcher",
    "notes": "First build with a sample October of 14 fuel card transactions, four purchase orders and 16 invoices and fuel receipts: it reads each document (by rules on open, or with AI when you paste one, with every AI value checked against the text), runs checks for ABN, GST, duplicates, purchase order and tolerance, the right fuel and tank size, matches receipts to the fuel card statement and invoices to purchase orders, flags fills with no receipt, double charges, weekend fills and odometers that go backwards, drafts the query to the supplier or driver and a reminder for missing receipts, lets an officer approve, query or accept with a reason, and gives finance a summary and a CSV of cleared documents; names, emails, phones and addresses are swapped for placeholders before AI, it works by rules without AI, documents are pasted as text (no photo or PDF reading yet), and the suppliers, vehicles, prices, 2% tolerance and rules are assumed samples as the request only said to automate invoice, receipt and fuel transaction processing.",
    "places": {
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 1,
    "shot": "ai-pipeline/shots/APP-13.jpg",
