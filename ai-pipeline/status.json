@@ -495,14 +495,22 @@
    "version": "4"
   },
   "APP-30": {
+   "area": "Transport",
+   "desc": "Compares bridge inspection pictures from two dates and marks what changed, such as new cracks, rust or surface loss. An engineer confirms each change and gets a drafted screening note.",
+   "lastUpdated": "2026-11-11",
    "name": "Bridge Change Detector",
+   "notes": "New build with three sample bridges and six picture pairs drawn by the page (no photos): it evens out lighting, finds and measures changed areas by pixel rules, names each change (crack, surface loss, rust, vegetation, patch, shadow), lets an engineer confirm or dismiss it, and drafts a screening note and bridge report (AI from the change list only, or rules when AI is off). Assumed text-only AI; a vision model is in the go-live plan.",
    "places": {
     "list": false,
     "mock": false,
     "polish": false,
     "preview": false
    },
-   "status": "In progress"
+   "runs": 1,
+   "shot": "ai-pipeline/shots/APP-30.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/UUuosyR672dXpqDrBEFEHF",
+   "version": "1"
   },
   "APP-31": {
    "area": "Corporate",
