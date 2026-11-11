@@ -794,10 +794,10 @@
    "name": "OneCouncil Help Finder",
    "notes": "New build on made-up sample data (40 work instructions, 14 approved FAQs): answers from an approved FAQ word for word, otherwise links the best work instruction and shows which keywords or potential question matched, and below the confidence threshold gives no answer and drafts an IT Service Desk request; rules matching works with no AI, and AI can only choose between the approved records. Assumed the module list, the sample FAQ answers and that the service desk is reached through the council's IT service portal.",
    "places": {
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 1,
    "shot": "ai-pipeline/shots/APP-54.jpg",
