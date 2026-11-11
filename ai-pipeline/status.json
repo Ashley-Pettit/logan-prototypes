@@ -101,10 +101,10 @@
    "name": "Asset Specification Builder",
    "notes": "First build with four sample fleet asset types (utility, tipper truck, ride-on mower, backhoe), each with three past specifications: it lines up what past specs asked for, checks them against a sample standards list, drafts a standard specification by rules (settled where specs agree, a suggestion to decide where they differ, mandatory where a standard applies) or with AI wording and reasons checked against the past values, reads a pasted specification into the comparison (AI with quotes checked against the text, or keyword rules), and copies the specification and a summary for procurement; names, emails, phones and addresses are swapped for placeholders before AI and put back after, it works by rules without AI, specs are pasted as text (no Word or PDF reading yet), and the asset types, requirements, figures and standards are assumed samples as the request only said to automate and standardise specification development.",
    "places": {
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 1,
    "shot": "ai-pipeline/shots/APP-06.jpg",
