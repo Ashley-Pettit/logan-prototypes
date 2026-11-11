@@ -340,14 +340,22 @@
    "version": "1"
   },
   "APP-20": {
+   "area": "Safety",
+   "desc": "Suggests what a disaster event is likely to cause next, who should own it and what to do. Keeps a consequence register and drafts a brief for each disaster group.",
+   "lastUpdated": "2026-11-11",
    "name": "Consequence Management Advisor",
+   "notes": "New build on a sample storm and flood event: suggests flow-on consequences and actions from the recorded impacts (AI, or a rules library when AI is off), each checked and accepted by a person into a register with a risk matrix, owners (LDMG, LDCC, CMT, LRG) and statuses, plus a copyable brief for each group. Assumed the four groups' roles and a 3 by 3 risk matrix.",
    "places": {
     "list": false,
     "mock": false,
     "polish": false,
     "preview": false
    },
-   "status": "In progress"
+   "runs": 1,
+   "shot": "ai-pipeline/shots/APP-20.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/DhJwUqzhbMpjPjp4d6jKW1",
+   "version": "1"
   },
   "APP-23": {
    "alts": [
