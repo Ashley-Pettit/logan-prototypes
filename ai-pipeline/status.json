@@ -494,6 +494,16 @@
    "url": "https://claude.ai/artifact/86yxARB1jhFpFzRDVFbFFx",
    "version": "4"
   },
+  "APP-30": {
+   "name": "Bridge Change Detector",
+   "places": {
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "status": "In progress"
+  },
   "APP-31": {
    "area": "Corporate",
    "desc": "Answers staff questions about how a council process works, step by step, with who does each step and a link to the mapped process. Logs questions no process answers so owners can fill the gaps.",
