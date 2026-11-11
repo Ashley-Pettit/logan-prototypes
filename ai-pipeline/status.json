@@ -284,14 +284,22 @@
    "version": "6"
   },
   "APP-16": {
+   "area": "IT",
+   "desc": "Type what you need help with and it suggests who to ask, ranked from system ownership and project records, with the reasons, who is away and an intro message to send. Also shows where a system depends on too few people.",
+   "lastUpdated": "2026-11-11",
    "name": "SME Finder",
+   "notes": "First build with a sample directory of 16 made-up people, 13 systems, 10 processes and 11 projects: AI (or keyword matching when AI is off) works out which systems, processes and projects a question is about, then the page ranks people from the ownership and project records with the records behind each suggestion, the kind of help wanted, who is away and their backup, and an intro message to copy or draft in Outlook; a Who owns what view shows the records, and a Knowledge risks view flags systems that depend on too few people and collects wrong-person feedback for the records owner. AI only sees the question and the catalogue, never staff details, and names, emails, phones and addresses are swapped for placeholders first; systems are named by kind, and the roles, scoring weights and records are assumed samples as the request only said SME Finder.",
    "places": {
     "list": false,
     "mock": false,
     "polish": false,
     "preview": false
    },
-   "status": "In progress"
+   "runs": 1,
+   "shot": "ai-pipeline/shots/APP-16.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/XhjnGQCULxnBVpiVxPAH9k",
+   "version": "1"
   },
   "APP-17": {
    "area": "Corporate",
