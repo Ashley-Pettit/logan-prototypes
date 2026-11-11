@@ -361,6 +361,16 @@
    "url": "https://claude.ai/artifact/Aw2XZC4d3We6wHipn9qyLY",
    "version": "1"
   },
+  "APP-24": {
+   "name": "Performance Report Builder",
+   "places": {
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "status": "In progress"
+  },
   "APP-25": {
    "area": "IT",
    "desc": "Ask a plain-English question about the IT standards and get a Yes, No or conditions answer with links to the exact clauses, or check a proposed tool or project against the standards. Wrong answers and gaps turn into a ready-to-send note for the standard's owner.",
