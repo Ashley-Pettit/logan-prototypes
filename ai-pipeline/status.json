@@ -160,10 +160,10 @@
    "name": "Road Asset Extractor",
    "notes": "First build with a sample survey run of five made-up road image frames: AI reads each image for signs and line marking with a box and confidence for each (stored sample readings when AI is off, and you can add your own photo or add assets by hand), every asset becomes a record with a position worked out from the frame, and six sample data rules (required attributes, allowed values, position, sizes, reading confidence, already in the register) hold back anything that fails with a suggested fix; AI explains held records, only records that pass go into the CSV load file, and a note to the asset data team or survey contractor can be copied or drafted in Outlook. Names, emails, phones and addresses in notes are swapped for placeholders before AI; the rules, sign codes, coordinates and register are assumed samples in the style of ADAC (not the adopted schema, and the load file is CSV not ADAC XML) as the request only said extraction and validation, and photos must have no faces or number plates as images are not blurred in the prototype.",
    "places": {
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 1,
    "shot": "ai-pipeline/shots/APP-09.jpg",
