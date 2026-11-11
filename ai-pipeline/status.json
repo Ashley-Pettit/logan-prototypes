@@ -362,14 +362,22 @@
    "version": "1"
   },
   "APP-24": {
+   "area": "Corporate",
+   "desc": "Builds templated branch, executive and project status reports from portfolio data, with drafted commentary. Answers ad hoc questions about projects, budgets and measures.",
+   "lastUpdated": "2026-11-11",
    "name": "Performance Report Builder",
+   "notes": "New build on sample portfolio data: three report templates (monthly branch report, executive one page summary, project status report) with commentary by AI or by rules, every AI figure checked against the data, a portfolio data view with CSV download, and ad hoc questions answered only from the data. Assumed four sample branches and October 2026 figures.",
    "places": {
     "list": false,
     "mock": false,
     "polish": false,
     "preview": false
    },
-   "status": "In progress"
+   "runs": 1,
+   "shot": "ai-pipeline/shots/APP-24.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/K6CqfLtrrkno3iFwrwdSVJ",
+   "version": "1"
   },
   "APP-25": {
    "area": "IT",
