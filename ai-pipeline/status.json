@@ -551,14 +551,22 @@
    "version": "5"
   },
   "APP-33": {
+   "area": "Community",
+   "desc": "Ranks venue equipment by how likely it is to fail, using maintenance records. Drafts a work request and a plan to fix it in a quiet time before it breaks.",
+   "lastUpdated": "2026-11-11",
    "name": "Venue Predictive Maintenance",
+   "notes": "New build on 12 sample items across three venues: ranks equipment by failure risk from maintenance records, estimates the next likely failure, likely cause and what to do, suggests a quiet time before the next big booking, drafts a work request (AI explanation optional, figures checked) and an 8 week plan, and takes new records. Assumed simple scoring rules, not a tested model.",
    "places": {
     "list": false,
     "mock": false,
     "polish": false,
     "preview": false
    },
-   "status": "In progress"
+   "runs": 1,
+   "shot": "ai-pipeline/shots/APP-33.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/LhmvzGicphCfNZNswdvak2",
+   "version": "1"
   },
   "APP-34": {
    "area": "Finance",
