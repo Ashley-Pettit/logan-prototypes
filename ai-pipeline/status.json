@@ -557,6 +557,24 @@
    "url": "https://claude.ai/artifact/9xoseNHnuGb57om9nh4doS",
    "version": "4"
   },
+  "APP-46": {
+   "area": "Community",
+   "desc": "Checks each venue booking's documents against the hire requirements, such as insurance, risk plan, liquor permit and security, and flags what is missing or wrong with the words it relied on. Drafts the email asking the hirer for what is needed.",
+   "lastUpdated": "2026-11-11",
+   "name": "Venue Booking Compliance Check",
+   "notes": "First build with eight sample venue bookings: each is checked against the sample hire requirements that apply to it (signed form, room capacity, finish time, payment, public liability insurance, risk plan, alcohol approval or liquor permit, security, food licence, blue cards, amusement devices), a rules check reads amounts, dates, names and sections from the documents straight away, AI gives a closer read with quotes checked against the documents and the stricter result is shown, an officer can accept an item with a reason or paste in a new document, and it drafts the email asking the hirer for what is missing plus a review summary; names, emails, phones and addresses are swapped for placeholders before AI, it falls back to the rules check and standard wording without AI, documents are pasted as text (no PDF reading yet), and the requirements and thresholds are assumed samples.",
+   "places": {
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "runs": 1,
+   "shot": "ai-pipeline/shots/APP-46.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/KD44hBdLrJJri78L9fza5W",
+   "version": "1"
+  },
   "APP-47": {
    "area": "Environmental Health",
    "desc": "Turns food safety inspection findings into a draft Food Act improvement notice with plain-English actions, dates to comply and automatic checks. The officer edits, confirms and copies or downloads the draft.",
