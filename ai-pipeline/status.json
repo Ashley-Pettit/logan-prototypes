@@ -346,10 +346,10 @@
    "name": "Consequence Management Advisor",
    "notes": "New build on a sample storm and flood event: suggests flow-on consequences and actions from the recorded impacts (AI, or a rules library when AI is off), each checked and accepted by a person into a register with a risk matrix, owners (LDMG, LDCC, CMT, LRG) and statuses, plus a copyable brief for each group. Assumed the four groups' roles and a 3 by 3 risk matrix.",
    "places": {
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 1,
    "shot": "ai-pipeline/shots/APP-20.jpg",
