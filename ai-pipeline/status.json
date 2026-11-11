@@ -393,6 +393,15 @@
    "url": "https://claude.ai/artifact/YaiTDHPEpnb8t6k2Rgmx48",
    "version": "1"
   },
+  "APP-22": {
+   "places": {
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "status": "In progress"
+  },
   "APP-23": {
    "alts": [
     "https://claude.ai/artifact/DY8rH8CavvpVDmxVC8Kw4F"
