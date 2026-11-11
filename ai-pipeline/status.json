@@ -501,10 +501,10 @@
    "name": "Bridge Change Detector",
    "notes": "New build with three sample bridges and six picture pairs drawn by the page (no photos): it evens out lighting, finds and measures changed areas by pixel rules, names each change (crack, surface loss, rust, vegetation, patch, shadow), lets an engineer confirm or dismiss it, and drafts a screening note and bridge report (AI from the change list only, or rules when AI is off). Assumed text-only AI; a vision model is in the go-live plan.",
    "places": {
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 1,
    "shot": "ai-pipeline/shots/APP-30.jpg",
