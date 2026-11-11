@@ -8,4 +8,5 @@ Early concepts built quickly with AI. Not endorsed tools. Synthetic data only.
 
 - [Roster Builder](https://ashley-pettit.github.io/logan-prototypes/roster-builder/): rapid prototype, not an endorsed tool. Builds and checks a team roster, then hands it over as an Excel file that becomes the source of truth. Synthetic data only.
 - [Agent Builder Essentials](https://ashley-pettit.github.io/logan-prototypes/ai-course/): rapid prototype, not an endorsed course. For management review. A hands-on Agent Builder course for Logan staff: building agents, knowledge, testing and keeping information safe.
+- [My Desk](https://ashley-pettit.github.io/logan-prototypes/desk/): a simple to-do list and quick links page with two tabs. Saved in your own browser only; nothing is sent anywhere. Not a council system. A copy set up for Anna is at [desk/anna](https://ashley-pettit.github.io/logan-prototypes/desk/anna/).
 - [AI & Automation Pipeline](https://ashley-pettit.github.io/logan-prototypes/ai-pipeline/): rapid prototype, not an endorsed tool. Password protected. Every AI and automation request in one place, comparing the current and a proposed request process. Invented data only.
