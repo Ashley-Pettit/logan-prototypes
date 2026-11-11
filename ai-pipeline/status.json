@@ -613,10 +613,10 @@
    "name": "Driver Safety Insights",
    "notes": "New build: 183 made-up dashcam and telematics alerts across six driver groups are scored for every 1,000 km and checked by sample rules for clusters by time, day, place, spread across the crew and fortnight trend, while AI explains the patterns and rewrites a toolbox talk for each group and a fleet safety summary; drivers are codes only, names, emails, phones and addresses are swapped for placeholders before AI, it falls back to the rules when AI is off, pasted alert lines can be added, and Steps to productionise and Draft in Outlook were added. Assumed driver groups are crews by work area, since the idea did not define them.",
    "places": {
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 1,
    "shot": "ai-pipeline/shots/APP-37.jpg",
