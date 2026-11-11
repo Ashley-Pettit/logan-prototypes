@@ -848,6 +848,16 @@
    "url": "https://claude.ai/artifact/H3H1dzoLeiJNFw1D4QcEkX",
    "version": "6"
   },
+  "APP-51": {
+   "name": "Network Assurance (AIOps)",
+   "places": {
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "status": "In progress"
+  },
   "APP-53": {
    "area": "Finance",
    "desc": "Turns the month's budget variances into draft commentary for a financial analyst to finish. Set materiality thresholds, add known reasons, draft with AI or templates, then check every figure against the table before copying.",
