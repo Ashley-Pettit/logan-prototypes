@@ -339,6 +339,16 @@
    "url": "https://claude.ai/artifact/Hd4xhqCySbw4kb46xJHQXk",
    "version": "1"
   },
+  "APP-20": {
+   "name": "Consequence Management Advisor",
+   "places": {
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "status": "In progress"
+  },
   "APP-23": {
    "alts": [
     "https://claude.ai/artifact/DY8rH8CavvpVDmxVC8Kw4F"
