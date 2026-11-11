@@ -758,6 +758,16 @@
    "status": "Built",
    "url": "https://claude.ai/artifact/DCoxXqGQUcVoikYvXPeBTh",
    "version": "6"
+  },
+  "APP-54": {
+   "name": "OneCouncil Help Finder",
+   "places": {
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "status": "In progress"
   }
  }
 }
