@@ -394,13 +394,22 @@
    "version": "1"
   },
   "APP-22": {
+   "area": "Transport",
+   "desc": "Checks bulk compaction test results for soft spots, failed and unlikely values, repeats and wet lots, and rates each 100 m of road for water risk from borehole, drainage and rainfall data. AI explains each finding and drafts the summary note.",
+   "lastUpdated": "2026-11-11",
+   "name": "Construction Data Checker",
+   "notes": "First build with a sample road rehabilitation job of 96 compaction tests across 12 lots, seven boreholes and test pits, drainage and rainfall: rules flag soft spots (failed tests in a row), single failed tests, unlikely high results, repeated values, wet or dry of optimum lots, uneven lots, data problems and a gauge that reads differently, and score each 100 m section for water risk from groundwater, subgrade strength, drainage, the road profile, wet results and rain; a long section chart shows results against the minimum with water risk underneath, AI explains each finding, looks for patterns across lots and drafts the summary note (standard explanations and wording when AI is off), an engineer records a retest request or accepts with a reason, and you can paste your own results or change the limits. Tester names, emails, phones and addresses are swapped for placeholders before AI and every test and lot number AI mentions is checked against the data; the limits, water risk scoring and all data are assumed samples as the request only said construction and subsurface data analysis, and results are pasted as text (no Excel or PDF reading yet).",
    "places": {
     "list": false,
     "mock": false,
     "polish": false,
     "preview": false
    },
-   "status": "In progress"
+   "runs": 1,
+   "shot": "ai-pipeline/shots/APP-22.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/TCMrkNqMpQt6YTMkyNLuep",
+   "version": "1"
   },
   "APP-23": {
    "alts": [
