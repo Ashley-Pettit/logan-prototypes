@@ -190,6 +190,16 @@
    "url": "https://claude.ai/artifact/R2GZ6BifSEDxF48tFqN6eH",
    "version": "1"
   },
+  "APP-11": {
+   "name": "Road Defect Detector",
+   "places": {
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "status": "In progress"
+  },
   "APP-12": {
    "area": "Transport",
    "desc": "Mechanics pick a job or ask a question and get a short answer built only from workshop manuals and procedures, with numbered sources, checked specs and fault code first checks. Gaps in the library go on a list to send to the knowledge owner.",
