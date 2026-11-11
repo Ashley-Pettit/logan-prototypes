@@ -283,6 +283,16 @@
    "url": "https://claude.ai/artifact/Pef4TWor6u3ghBqonEAQY7",
    "version": "6"
   },
+  "APP-16": {
+   "name": "SME Finder",
+   "places": {
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "status": "In progress"
+  },
   "APP-17": {
    "area": "Corporate",
    "desc": "Fills approved council templates from project data, or data you paste from an export, has AI draft only the free-text sections, and lets you copy the result or download it as a Word file.",
