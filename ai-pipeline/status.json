@@ -598,6 +598,16 @@
    "url": "https://claude.ai/artifact/CPvvigNZmPKmr35aoCMmcw",
    "version": "4"
   },
+  "APP-37": {
+   "name": "Driver Safety Insights",
+   "places": {
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "status": "In progress"
+  },
   "APP-38": {
    "area": "Community",
    "desc": "Drafts replies to community venue hire enquiries with an indicative fee, sourced answers to each question and automatic checks. Staff can also ask quick questions about venue procedures, fees and rules and see the source sections.",
