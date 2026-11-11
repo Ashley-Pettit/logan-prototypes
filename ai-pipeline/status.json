@@ -557,10 +557,10 @@
    "name": "Venue Predictive Maintenance",
    "notes": "New build on 12 sample items across three venues: ranks equipment by failure risk from maintenance records, estimates the next likely failure, likely cause and what to do, suggests a quiet time before the next big booking, drafts a work request (AI explanation optional, figures checked) and an 8 week plan, and takes new records. Assumed simple scoring rules, not a tested model.",
    "places": {
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 1,
    "shot": "ai-pipeline/shots/APP-33.jpg",
