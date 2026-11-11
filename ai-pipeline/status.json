@@ -303,14 +303,22 @@
    "version": "1"
   },
   "APP-18": {
+   "area": "Safety",
+   "desc": "Gives councillors and executives one place for the current disaster picture. Writes short decision-ready briefings and answers questions using only the event data.",
+   "lastUpdated": "2026-11-11",
    "name": "Disaster Intelligence Hub",
+   "notes": "New build on a sample flood event: executive and councillor briefings (AI, or rules when AI is off) with figures checked against the event data and decisions worked out by rules, a situation picture by division, questions answered only from the event data, and an updates log. Assumed a flood scenario and made-up division groupings.",
    "places": {
     "list": false,
     "mock": false,
     "polish": false,
     "preview": false
    },
-   "status": "In progress"
+   "runs": 1,
+   "shot": "ai-pipeline/shots/APP-18.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/2auDekxhsWLQDa5Mh4L5dD",
+   "version": "1"
   },
   "APP-19": {
    "area": "Safety",
