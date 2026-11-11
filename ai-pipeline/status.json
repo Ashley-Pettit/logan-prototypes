@@ -153,6 +153,16 @@
    "url": "https://claude.ai/artifact/Ns9D2SRfRpVFBWBGLSA2Z2",
    "version": "2"
   },
+  "APP-09": {
+   "name": "Road Asset Extractor",
+   "places": {
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "status": "In progress"
+  },
   "APP-10": {
    "area": "Transport",
    "desc": "Scores every vehicle and machine from service intervals, fault codes, oil samples, defect reports and past breakdowns, books the riskiest work and tag-outs into the workshop first, and ranks likely causes of a fault with a draft work order you can book straight into the plan.",
