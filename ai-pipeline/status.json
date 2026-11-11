@@ -358,14 +358,22 @@
    "version": "1"
   },
   "APP-21": {
+   "area": "Transport",
+   "desc": "Suggests preliminary treatment options for each sealed road segment from condition data, with costs and reasons for a designer to check. Fits the ranked work into a three year programme.",
+   "lastUpdated": "2026-11-11",
    "name": "Pavement Treatment Planner",
+   "notes": "New build on 12 sample sealed road segments: rules suggest a first option and an alternative per segment from roughness, rutting, cracking, deflection and surface age, with costs, reasons and checks; a designer accepts, swaps or holds each for a site check; a 3 year programme fits the ranked work to a yearly budget; AI (or rules when AI is off) explains the options and writes the programme overview with figures checked. Treatment rules, limits and unit rates are assumed, not the council's adopted ones.",
    "places": {
     "list": false,
     "mock": false,
     "polish": false,
     "preview": false
    },
-   "status": "In progress"
+   "runs": 1,
+   "shot": "ai-pipeline/shots/APP-21.jpg",
+   "status": "Built",
+   "url": "https://claude.ai/artifact/YaiTDHPEpnb8t6k2Rgmx48",
+   "version": "1"
   },
   "APP-23": {
    "alts": [
