@@ -45,10 +45,10 @@
    "name": "Insurance Renewal Assistant",
    "notes": "First build with eight sample branch data requests across the main policy classes: it drafts the data request, reminder and follow-up emails (AI or standard wording), reads a pasted return with a rules check against last year's figures and a closer AI read with quotes checked against the return, shows the stricter result, lets an officer accept a figure with a reason, and builds the renewal pack with a declared figures schedule, what is holding it up, a CSV export and a summary for the broker; names, emails, phones and addresses are swapped for placeholders before AI, it falls back to the rules check and standard wording without AI, returns are pasted as text (no Excel or PDF reading yet), and the policy classes, questions, figures, 15% change threshold and dates are assumed samples as the request only said the entire renewal process.",
    "places": {
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 1,
    "shot": "ai-pipeline/shots/APP-03.jpg",
