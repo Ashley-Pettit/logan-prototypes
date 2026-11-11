@@ -94,6 +94,16 @@
    "url": "https://claude.ai/artifact/NKZ3Tkw6ymxdqeaovMbQTs",
    "version": "4"
   },
+  "APP-06": {
+   "name": "Asset Specification Builder",
+   "places": {
+    "list": false,
+    "mock": false,
+    "polish": false,
+    "preview": false
+   },
+   "status": "In progress"
+  },
   "APP-07": {
    "area": "Transport",
    "desc": "Turns a site brief into three concept options for paths, car parks, street lighting or kerbs, each with a plan sketch, cost range and design checks. Compare them, mark a preferred option and copy a concept note to send.",
