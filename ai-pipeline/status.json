@@ -855,10 +855,10 @@
    "name": "Network Assurance (AIOps)",
    "notes": "New build on made-up sample data: 61 alerts from logs, device stats and packet captures are grouped by time, device dependency and site into 6 incidents with a rules-based likely root cause, AI explains the cause and rewords the incident summary for the network team, service desk or managers, six 14-day trends give early warnings with a planned work note, and pasted log lines can be grouped the same way; names, emails, phones, addresses, IP and MAC addresses are hidden from AI. Assumed generic council sites and device names as the request named no systems.",
    "places": {
-    "list": false,
-    "mock": false,
-    "polish": false,
-    "preview": false
+    "list": true,
+    "mock": true,
+    "polish": true,
+    "preview": true
    },
    "runs": 1,
    "shot": "ai-pipeline/shots/APP-51.jpg",
