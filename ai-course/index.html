@@ -311,6 +311,7 @@ thead th{font-weight:700;border-bottom:2px solid var(--line-2)}
 .types h3{font-size:1.1rem}
 .types .risk{align-self:flex-start;font-size:.8rem;font-weight:700;padding:2px 10px;border-radius:99px}
 .types .t1 .risk{background:var(--good-soft);color:var(--good)} .types .t2 .risk{background:var(--warn-soft);color:var(--warn)} .types .t3 .risk{background:var(--bad-soft);color:var(--bad)}
+.types .risks{display:flex;flex-wrap:wrap;gap:6px} .types .t2 .risk.rh{background:var(--bad-soft);color:var(--bad)}
 .types p{color:var(--ink-2)}
 .types .who{margin-top:auto;padding-top:8px;border-top:1px solid var(--line);color:var(--ink);font-weight:600}
 
@@ -604,7 +605,7 @@ footer.foot{color:var(--muted);font-size:.84rem;padding-block:22px 32px;border-t
   </div>
 </div>
 
-<footer class="foot gut"><div class="wrap">Version 3.9 · Updated November 2026 for the current Agent Builder in Microsoft 365 Copilot. Prototype training content for Logan City Council. Agent Builder screenshots are from <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/agent-builder" target="_blank" rel="noopener">Microsoft Learn</a>, used under CC BY 4.0, and show Microsoft's example agents.</div></footer>
+<footer class="foot gut"><div class="wrap">Version 3.10 · Updated November 2026 for the current Agent Builder in Microsoft 365 Copilot. Prototype training content for Logan City Council. Agent Builder screenshots are from <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/agent-builder" target="_blank" rel="noopener">Microsoft Learn</a>, used under CC BY 4.0, and show Microsoft's example agents.</div></footer>
 
 <!-- ================= LESSON CONTENT ================= -->
 <template id="t-how">
@@ -817,34 +818,34 @@ footer.foot{color:var(--muted);font-size:.84rem;padding-block:22px 32px;border-t
 
   <div class="block">
     <h2>Three types of agents</h2>
-    <p>Not all agents are the same. The more an agent can reach and do, the more care it needs. Most agents you build in Agent Builder are the first type.</p>
+    <p>Logan groups agents into three types. The more an agent can reach and do, the higher the risk and the more care it needs. Most agents you build in Agent Builder are prompt assistants.</p>
   </div>
   <ol class="types">
     <li class="t1">
       <span class="tn">1</span>
-      <h3>Assistant</h3>
-      <span class="risk">Low risk</span>
+      <h3>Prompt assistant</h3>
+      <span class="risk">Lower risk</span>
       <p><b>What it is:</b> instructions plus a few documents to answer from.</p>
-      <p><b>What it can do:</b> read and answer. It can't change anything.</p>
+      <p><b>What it can do:</b> answer questions and help you write. It can't reach other systems or change anything.</p>
       <p><b>Example:</b> a Process Helper that answers questions from your team's procedures.</p>
       <p class="who">You can build this in Agent Builder.</p>
     </li>
     <li class="t2">
       <span class="tn">2</span>
       <h3>Connected agent</h3>
-      <span class="risk">Medium risk</span>
-      <p><b>What it is:</b> an agent that reads live information from council systems through connectors.</p>
-      <p><b>What it can do:</b> look things up, like the status of a request. It still doesn't change anything.</p>
-      <p><b>Example:</b> an agent that checks where a work order is up to.</p>
+      <span class="risks"><span class="risk rm">Read: moderate risk</span><span class="risk rh">Write: higher risk</span></span>
+      <p><b>What it is:</b> an agent connected to council systems that can read and/or write information when someone asks.</p>
+      <p><b>Read:</b> looks up live information, like where a work order is up to.</p>
+      <p><b>Write:</b> creates or updates information, like logging a request in a council system.</p>
       <p class="who">Team up with the AI team. Connectors need IT authorisation.</p>
     </li>
     <li class="t3">
       <span class="tn">3</span>
       <h3>Autonomous agent</h3>
-      <span class="risk">High risk</span>
-      <p><b>What it is:</b> an agent that takes actions on its own.</p>
-      <p><b>What it can do:</b> send emails, trigger flows, or create and update records.</p>
-      <p><b>Example:</b> an agent that logs a request in a council system and emails the person when it's done.</p>
+      <span class="risk">Higher risk</span>
+      <p><b>What it is:</b> an agent that works on its own, without someone asking it each time.</p>
+      <p><b>What it can do:</b> start from a trigger or schedule, make decisions and take actions, like sending emails or updating records.</p>
+      <p><b>Example:</b> an agent that watches a shared inbox, sorts new requests and replies to them by itself.</p>
       <p class="who">An AI team build, with extra safeguards and approval.</p>
     </li>
   </ol>
@@ -852,7 +853,7 @@ footer.foot{color:var(--muted);font-size:.84rem;padding-block:22px 32px;border-t
 
   <div class="block">
     <h2>Great first agents, and bigger ideas</h2>
-    <p>Most ideas make a great first agent, as an assistant. Connected and autonomous agents are bigger builds that need council systems, extra safeguards or a different tool. The AI team can work with you on those.</p>
+    <p>Most ideas make a great first agent, as a prompt assistant. Connected and autonomous agents are bigger builds that need council systems, extra safeguards or a different tool. The AI team can work with you on those.</p>
   </div>
   <div class="table-wrap"><table>
     <thead><tr><th>Great first agents</th><th>Bigger ideas the AI team can help with</th></tr></thead>
@@ -1269,8 +1270,8 @@ footer.foot{color:var(--muted);font-size:.84rem;padding-block:22px 32px;border-t
       recap: ["Copilot finds relevant information, then writes the answer by predicting likely words", "Finding the right document doesn't guarantee the right answer", "Temperature controls how adventurous AI is. In Agent Builder, you can use the system prompt to make the agent more creative or more exact in a way that has a similar feeling to adjusting temperature", "The context window is limited, so keep chats on topic and knowledge focused", "Some reading between the lines makes AI useful. Too much leads to tangents", "Avoid 'always' and 'must' for things the agent might not have"] },
     { id: "choose", ms: ["Agent Builder overview", "agent-builder"], title: "Find your first agent", mins: 10, summary: "Spot the questions your team keeps asking, and turn one into an agent idea.", tags: ["Activity", "Quick check"],
       lede: "Every team has questions that get asked over and over. Those are your best agent ideas.",
-      goals: ["Spot agent ideas in your own team", "Know the three types of agents: assistant, connected and autonomous", "Turn an idea into a prompt you can paste into Agent Builder", "Know where the AI team can help with bigger ideas"],
-      recap: ["Three types: assistants read and answer, connected agents look up live data, autonomous agents take actions", "If people ask it a lot, the answer's written down, and a quick answer saves time, it's a good agent", "Turn your idea into a Describe prompt and paste it into Agent Builder", "For bigger ideas, like ones that use council systems, team up with the AI team", "Templates are a good starting point, but check every field"] },
+      goals: ["Spot agent ideas in your own team", "Know Logan's three types of agents: prompt assistant, connected and autonomous", "Turn an idea into a prompt you can paste into Agent Builder", "Know where the AI team can help with bigger ideas"],
+      recap: ["Three types: prompt assistants answer from documents (lower risk), connected agents read (moderate risk) or write (higher risk) council data, autonomous agents act on their own (higher risk)", "If people ask it a lot, the answer's written down, and a quick answer saves time, it's a good agent", "Turn your idea into a Describe prompt and paste it into Agent Builder", "For bigger ideas, like ones that use council systems, team up with the AI team", "Templates are a good starting point, but check every field"] },
     { id: "build", ms: ["Build agents with Agent Builder", "agent-builder-build-agents"], title: "Build it", mins: 18, summary: "A walkthrough of Agent Builder, and how to write instructions that work.", tags: ["Walkthrough", "Activity"],
       lede: "Follow along with Agent Builder open in another tab, then write the instructions for your own agent.",
       goals: ["Find your way around Agent Builder", "Know when to be purposely vague and when to be precise", "Write instructions, including how creative the agent should be"],
@@ -1406,7 +1407,7 @@ footer.foot{color:var(--muted);font-size:.84rem;padding-block:22px 32px;border-t
       { text: "An agent that answers your team's questions from the team's procedures and FAQ.", answer: 0,
         why: "Answering staff questions from your own documents is exactly what Agent Builder does well." },
       { text: "An agent that updates records in a council system when staff ask it to.", answer: 1,
-        why: "That's an autonomous agent. Changing records in other systems needs a different setup and extra safeguards. The AI team can help you get there." },
+        why: "That's a connected agent that writes, which is higher risk. Changing records in council systems needs a different setup and extra safeguards. The AI team can help you get there." },
       { text: "An agent that helps decide whether someone's request should be approved.", answer: 1,
         why: "It supports decisions about people, so it's worth building together with the AI team." },
       { text: "An agent that helps you draft replies using the team's approved email templates.", answer: 0,
@@ -1801,6 +1802,8 @@ footer.foot{color:var(--muted);font-size:.84rem;padding-block:22px 32px;border-t
       why: "False. Instructions aren't a lock. If it's private, leave it out." },
     { text: "A new agent is private until you share it.", options: ["True", "False"], answer: 0,
       why: "True. Only you can use it until you select Share." },
+    { text: "An agent that works on its own, without anyone asking it each time, is which type?", options: ["Prompt assistant", "Connected agent", "Autonomous agent"], answer: 2,
+      why: "Autonomous agent. It acts on its own, so it's higher risk and needs the AI team." },
     { text: "Edits to a shared agent go live for users as soon as you make them.", options: ["True", "False"], answer: 1,
       why: "False. Users only get your changes after you select Update." },
     { text: "In Agent Builder, you can make an agent more creative or more exact through its instructions.", options: ["True", "False"], answer: 0,
