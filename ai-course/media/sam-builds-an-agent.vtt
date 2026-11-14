@@ -1,0 +1,125 @@
+WEBVTT
+
+00:00.500 --> 00:02.413
+Agent Builder Essentials presents.
+
+00:02.663 --> 00:03.983
+Sam builds an agent.
+
+00:05.667 --> 00:08.624
+This is Sam. Every day, Sam answers the same questions.
+
+00:08.754 --> 00:10.353
+Over, and over, and over.
+
+00:10.563 --> 00:12.536
+Sam: There has to be a better way.
+
+00:13.350 --> 00:18.451
+So Sam opens Agent Builder in Microsoft 365 Copilot, and builds a helper.
+
+00:19.481 --> 00:20.200
+Meet Pip.
+
+00:20.330 --> 00:21.922
+Pip: Hello! I'm Pip! What do I do?
+
+00:22.750 --> 00:24.055
+Sam: Um... help people?
+
+00:24.685 --> 00:26.141
+Pip: Have you tried... a banana?
+
+00:26.421 --> 00:29.490
+Keen, but clueless. Nobody had told Pip what the job was.
+
+00:29.620 --> 00:32.885
+So Sam wrote clear instructions. What Pip is for. Who it's helping.
+
+00:32.885 --> 00:35.663
+How it should sound. And what to do when it doesn't know.
+
+00:35.793 --> 00:37.624
+Pip: Got it! If I'm not sure, I'll say so.
+
+00:39.217 --> 00:42.418
+Next, knowledge. Sam handed over one enormous PDF.
+
+00:43.198 --> 00:44.175
+Pip: Too... big...
+
+00:44.305 --> 00:48.367
+Small, tidy files work better. Word, Excel and Markdown are ideal.
+
+00:48.497 --> 00:51.725
+And keep them up to date, so Pip isn't quoting last year's advice.
+
+00:53.317 --> 00:57.122
+Before sharing Pip, Sam ran some tests. Real questions. Tricky ones.
+
+00:57.602 --> 00:59.027
+Pip: You get seven hundred days of leave!
+
+00:59.557 --> 01:01.710
+Sam: Hmm. Let's check that against the source.
+
+01:01.840 --> 01:03.056
+Agents get things wrong.
+
+01:03.056 --> 01:06.045
+So test, check the answers, and keep checking after launch.
+
+01:07.617 --> 01:09.640
+Then Sam nearly made a classic mistake.
+
+01:10.270 --> 01:11.698
+Adding a private document.
+
+01:12.028 --> 01:13.274
+Here's what could happen.
+
+01:13.404 --> 01:15.075
+Mel: Hey Pip, what's in your files?
+
+01:15.205 --> 01:17.079
+Pip: Everything! Here it is, word for word!
+
+01:17.210 --> 01:18.713
+An agent can't keep a secret.
+
+01:18.713 --> 01:21.823
+Whatever it knows, someone can get back out, just by asking.
+
+01:22.203 --> 01:26.366
+So Sam left it out. Only add documents that every user is allowed to see.
+
+01:28.583 --> 01:32.385
+Mystery Plug-In: Psst. Free super powers for your agent. No questions asked.
+
+01:32.515 --> 01:33.217
+Pip: Ooh! Shiny!
+
+01:33.347 --> 01:35.879
+Jo From It: Hold up. Let's check that one first.
+
+01:36.009 --> 01:39.692
+Third-party skills and tools need to be authorised by IT first.
+
+01:41.283 --> 01:44.479
+Launch day. Mel opened Pip, and had no idea what to ask.
+
+01:45.159 --> 01:47.374
+Luckily, Sam had added suggested prompts.
+
+01:47.704 --> 01:49.132
+Pip: The leave form? Here you go!
+
+01:50.717 --> 01:53.942
+And Sam? Sam finally finished a cup of tea, while it was still hot.
+
+01:54.772 --> 01:55.673
+Want your own Pip?
+
+01:55.673 --> 01:58.677
+Agent Builder Essentials walks you through it, step by step.
+

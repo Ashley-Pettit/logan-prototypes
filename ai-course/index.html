@@ -184,6 +184,9 @@ svg.i{width:1em;height:1em;flex:none;vertical-align:-.13em}
 figcaption{font-size:.84rem;color:var(--muted)}
 figcaption a{color:var(--muted)}
 .fig-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;align-items:start}
+.film{display:flex;flex-direction:column;gap:14px}
+.film video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#000;border:1px solid var(--line);border-radius:var(--r)}
+.film-tips{margin:12px 0 0;padding-left:1.4em;display:flex;flex-direction:column;gap:6px;font-size:.95rem}
 
 /* ---------- lesson ---------- */
 .lesson-shell .wrap{display:grid;grid-template-columns:250px minmax(0,1fr);gap:56px;padding-block:28px 72px;align-items:start}
@@ -544,6 +547,29 @@ footer.foot{color:var(--muted);font-size:.84rem;padding-block:22px 32px;border-t
   <section class="home-body gut">
     <div class="wrap">
       <div class="home-main">
+        <div class="film">
+          <div class="sec-head"><h2>Watch first: Sam builds an agent</h2><span>2 minute film</span></div>
+          <figure class="fig">
+            <video controls preload="none" playsinline poster="media/sam-builds-an-agent.jpg" width="1920" height="1080" aria-label="Sam builds an agent, a two minute film">
+              <source src="media/sam-builds-an-agent.mp4" type="video/mp4">
+              <track kind="captions" src="media/sam-builds-an-agent.vtt" srclang="en" label="English">
+              Your browser can't play this video. <a href="media/sam-builds-an-agent.mp4">Download the film</a>.
+            </video>
+            <figcaption>A short story about seven things worth getting right when you build an agent. It has sound, and the subtitles are on screen. Sam, Pip and the "700 days of leave" are made up.</figcaption>
+          </figure>
+          <details class="whatsnew">
+            <summary><span><b>Prefer to read? The seven tips from the film</b></span><span class="chev" aria-hidden="true"></span></summary>
+            <ol class="film-tips">
+              <li>Write clear instructions: what the agent is for, who it helps, how it should sound, and what to do when it doesn't know.</li>
+              <li>Use small, tidy, up-to-date files. Word, Excel and Markdown work better than one enormous PDF.</li>
+              <li>Test with real questions and tricky ones, check the answers against the source, and keep checking after launch.</li>
+              <li>Only add documents that every user of the agent is allowed to see.</li>
+              <li>Don't trust an agent with secrets. Whatever it knows, someone can get back out by asking.</li>
+              <li>Check with IT before adding third-party skills or tools.</li>
+              <li>Add suggested prompts so people know what to ask.</li>
+            </ol>
+          </details>
+        </div>
         <div class="flow-wrap">
           <h2>How an agent gets from idea to your team</h2>
           <ol class="flow" aria-label="Steps from idea to sharing an agent">
@@ -605,7 +631,7 @@ footer.foot{color:var(--muted);font-size:.84rem;padding-block:22px 32px;border-t
   </div>
 </div>
 
-<footer class="foot gut"><div class="wrap">Version 3.12 · Updated November 2026 for the current Agent Builder in Microsoft 365 Copilot. Prototype training content for Logan City Council. Agent Builder screenshots are from <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/agent-builder" target="_blank" rel="noopener">Microsoft Learn</a>, used under CC BY 4.0, and show Microsoft's example agents.</div></footer>
+<footer class="foot gut"><div class="wrap">Version 3.13 · Updated November 2026 for the current Agent Builder in Microsoft 365 Copilot. Prototype training content for Logan City Council. Agent Builder screenshots are from <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/agent-builder" target="_blank" rel="noopener">Microsoft Learn</a>, used under CC BY 4.0, and show Microsoft's example agents.</div></footer>
 
 <!-- ================= LESSON CONTENT ================= -->
 <template id="t-how">
